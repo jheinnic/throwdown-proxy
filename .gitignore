@@ -47,6 +47,6 @@ Thumbs.db
 
 logs/
 dist/
-MockServer.*pem
+MockServer*.pem
 matchDecks*/
 
