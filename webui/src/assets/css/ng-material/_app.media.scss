@@ -1,0 +1,13 @@
+// Media queries
+// Attempting to override bundled breakpoints to match those defined by bootstrap...
+// TODO: Is it Ok that mat-xsmall changes to break smaller while mat-small breaks at a large threshold?
+//
+//$mat-xsmall: 'max-width: 600px';
+//$mat-xsmall: 'max-width: 576px';
+//$mat-small: 'max-width: 960px';
+//$mat-small: 'max-width: 992px';
+
+
+$mat-toolbar-height-desktop: 66px;
+$mat-toolbar-height-mobile-portrait: 58px;
+$mat-toolbar-height-mobile-landscape: 50px;

@@ -1,0 +1,7 @@
+{
+  "realm": "mone",
+  "auth-server-url": "http://portfolio.dev.jchein.name:8180/auth",
+  "ssl-required": "none",
+  "resource": "angular2-app",
+  "public-client": true
+}

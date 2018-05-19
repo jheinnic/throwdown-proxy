@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+
+$warn:          mat-palette($mat-red);
+
+$control-primary: mat-palette($mat-light-blue, 700, 500, 900);
+$control-accent:  mat-palette($mat-amber, A700, 400, 800);
+$control-warn:    $warn;
+
+$dark-primary:  mat-palette($mat-pink);
+$dark-accent:   mat-palette($mat-yellow, A200, 300, 700);
+$dark-warn:     $warn;
+
+$light-primary: mat-palette($mat-cyan, A700, 400, 800);
+$light-accent:  mat-palette($mat-pink, 400, 300, 600);
+$light-warn:    $warn;
+
+

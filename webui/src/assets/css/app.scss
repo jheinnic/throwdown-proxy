@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro:400,700i');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500&amp;subset=latin-ext');
+@import "ng-material/app.media";
+//@import "ng-material/app.toolbar";
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  // font-family: Arial, Helvetica, sans-serif
+  font: 500 20px/32px 'Roboto', "Helvetica Neue", sans-serif !important;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+//div {
+//  height: inherit;
+//  overflow-x: inherit;
+//  width: inherit;
+//  overflow-y: inherit;
+//}
+
+div.flex-spacer, span.flex-spacer {
+  flex: 1 1 auto;
+}
+
+//.mat-toolbar span.brand-name {
+//  font-size: 1.5rem !important;
+//  padding-left: 10px !important;
+//  margin-bottom: 0px !important;
+//}
+
+//.mat-toolbar + .mat-dialog-content {
+//  margin: 0px -2px 0px -2px !important;
+//  padding: 2px 2px 24px 2px !important;
+//  border: 2px !important;
+//}
+
+//.mat-dialog-container {
+//  padding: 0px 0px 24px 0px !important;
+//}
+
+//md-toolbar-row > span.mat-dialog-title {
+//  font-size: 1.25rem;
+//  margin-bottom: 0px !important;
+//}
+
+//.mat-dialog-content > input {
+//  display:block !important;
+//}
+
+//.mat-dialog-actions {
+//  & > button, & > a {
+//    margin-left: 10px !important;
+//  }
+//}
+
+//.mat-toolbar-row > button.mat-mini-fab, .mat-toolbar-row > button.mat-raised-button {
+//  margin: 0px 4px !important;
+//}
+
+//.overlay{
+//  position: fixed;
+//  top: 0px;
+//  left: 0px;
+//  right: 0px;
+//  bottom: 0px;
+//  overflow: hidden;
+//  background-color: rgba(0, 0, 0, 0.8);
+//
+//  .overlay-content {
+//    height: 100%;
+//    overflow: scroll;
+//  }
+//}
+//
+//.background-content{
+//  height: 100%;
+//  overflow: auto;
+//}
+//
+
+
+@import "ng-material/app.theme";
