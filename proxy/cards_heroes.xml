@@ -1,0 +1,2644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<!--
+		Skill Definitions
+
+		Triggers
+			on_play: triggers once - when a card is put into the battlefield
+			on_activate: triggers once - when a card is first activated (countdown timer = 0)
+			upkeep: triggers at the beginning of each turn if the card is active
+			action: triggers on the card's turn if the card is active
+
+		Targets
+			random: picks a random target
+				type=ally: only allied targets
+				type=enemy: only enemy targets
+				num: the maximum number of targets.  defaults to 1.  will not repeat targets.  eg. if num=3 but there
+							are only 2 valid targets, this should return the two valid targets.
+			self: only targets self
+
+		Effects
+			heal: Adds health to target card(s) up to max health
+			damage: Deals damage to target card(s)
+				type=direct: deals direct damage (eg not blocked by armor)
+				type=attack: deals attack damage (eg blocked by armor)
+			apply_status: applies a particular effect to the target card
+				effect_id: the type of effect to be applied
+	 -->
+
+	<!-- Commanders -->
+	<unit>
+		<id>1001</id>
+		<name>Peter</name>
+		<desc>Voted Quahog's official town simpleton.</desc>
+		<picture>peter</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+		<fight_pose_asset asset="peter_fight" bundle_id="10" />
+        <fight_pose_asset_flipped asset="peter_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>14001</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>1</type>
+		<health>25</health>
+		<upgrade>
+			<level>2</level>
+			<skill id='rally' x='1' y='1' />
+			<health>29</health>
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>33</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>43</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>49</health>
+			<skill id='rally' x='2' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>56</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>62</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>69</health>
+			<skill id='rally' x='3' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>76</health>
+			<skill id='weaken' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>79</health>
+			<skill id='rally' x='4' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>85</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>88</health>
+			<skill id='rally' x='5' y='1' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>91</health>
+			<skill id='weaken' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>94</health>
+			<skill id='rally' x='6' y='1' />
+		</upgrade>										
+	</unit>
+
+	<unit>
+		<id>1002</id>
+		<name>Stewie</name>
+    	<desc>Got my tea cup here. Now all I need is a tea bag.</desc>
+		<picture>stewie</picture>
+		<asset_bundle>2</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="stewie_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="stewie_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>14002</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>1</type>
+		<health>21</health>
+		<upgrade>
+			<level>2</level>
+			<health>24</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>28</health>
+			<skill id='heal' x='1' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>33</health>
+			<skill id='heal' x='2' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>39</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>45</health>
+			<skill id='heal' x='3' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>51</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>58</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>65</health>
+			<skill id='heal' x='4' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>72</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>75</health>
+			<skill id='strike' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>78</health>
+			<skill id='heal' x='5' y='1' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>86</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>89</health>
+			<skill id='heal' x='6' y='1' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>92</health>
+			<skill id='strike' x='5' />
+		</upgrade>								
+	</unit>
+
+	<unit>
+		<id>1003</id>
+		<name>Brian</name>
+		<desc>For sure he's going to tell you about his hybrid car.</desc>
+		<picture>brian</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="brian_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="brian_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>14003</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>1</type>
+		<health>27</health>
+		<upgrade>
+			<level>2</level>
+			<health>30</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>34</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+			<skill id='barrierall' x='1' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>43</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>49</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>55</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>62</health>
+			<skill id='counter' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>70</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>79</health>
+			<skill id='barrierall' x='2' y='1' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>84</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>86</health>
+			<skill id='barrierall' x='3' y='1' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>91</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>93</health>
+			<skill id='counter' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>95</health>
+			<skill id='barrierall' x='4' y='1' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>1004</id>
+		<name>Consuela</name>
+		<desc>No, no, no.</desc>
+		<picture>consuela</picture>
+		<asset_bundle>4</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="consuela_fight" bundle_id="10" />
+        <fight_pose_asset_flipped asset="consuela_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<no_pvp_drop>1</no_pvp_drop>
+		<defense_card_id>14004</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>1</type>
+		<health>22</health>
+		<upgrade>
+			<level>2</level>
+			<health>26</health>
+			<skill id='healall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>30</health>
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>35</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>41</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>53</health>
+			<skill id='weakenall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>60</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>69</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>78</health>
+			<skill id='healall' x='2'/>
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>85</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>87</health>
+			<skill id='healall' x='3'/>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>93</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>95</health>
+			<skill id='weakenall' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>97</health>
+			<skill id='healall' x='4'/>
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>1005</id>
+		<name>The Giant Chicken</name>
+		<desc>All for an expired coupon.</desc>
+		<picture>ernie</picture>
+		<asset_bundle>36</asset_bundle>
+        <character_bust_asset_bundle>36</character_bust_asset_bundle>
+        <fight_pose_asset asset="ernie_fight" bundle_id="36" />
+        <fight_pose_asset_flipped asset="ernie_fight_flipped" bundle_id="36" />
+		<commander>1</commander>
+		<no_pvp_drop>1</no_pvp_drop>
+		<defense_card_id>14005</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>1</type>
+		<health>21</health>
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>25</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>29</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>34</health>	
+			<skill id='give' s='berserk' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>			
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>45</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>52</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>62</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>69</health>
+			<skill id='strike' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>76</health>
+			<skill id='give' s='berserk' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>84</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>87</health>
+			<skill id='strike' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>90</health>
+			<skill id='counter' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>93</health>
+			<skill id='strike' x='6' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>96</health>
+			<skill id='give' s='berserk' x='3' />
+		</upgrade>			
+	</unit>
+	
+	<unit>
+		<id>2001</id>
+		<name>Roger</name>
+		<desc>It's 67 degrees outside, and I hate you.</desc>
+		<picture>roger</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="roger_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="roger_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>24001</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>2</type>
+		<health>22</health>
+		<upgrade>
+			<level>2</level>
+			<health>25</health>
+			<skill id='rally' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>29</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>33</health>
+			<skill id='rally' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>44</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>50</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>57</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>64</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>71</health>
+			<skill id='weakenall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>78</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>80</health>
+			<skill id='weakenall' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>87</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>89</health>
+			<skill id='rally' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>91</health>
+			<skill id='weakenall' x='4' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>2002</id>
+		<name>Stan</name>
+		<desc>Be very careful out there today, we're at terror alert orange!</desc>
+		<picture>stan</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="stan_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="stan_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>24002</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>2</type>
+		<health>26</health>
+		<upgrade>
+			<level>2</level>
+			<health>29</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>33</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>37</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>42</health>
+			<skill id='rallyall' x='1' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>53</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>60</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>68</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>76</health>
+			<skill id='rallyall' x='2' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>82</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>84</health>
+			<skill id='rallyall' x='3' y='2' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>90</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>92</health>
+			<skill id='strike' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>94</health>
+			<skill id='rallyall' x='4' y='2' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>2003</id>
+		<name>Steve</name>
+		<desc>Do not enter that sauce in the county fair because it is weak.</desc>
+		<picture>steve</picture>
+		<asset_bundle>2</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="steve_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="steve_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>24003</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>2</type>
+		<health>24</health>
+		<upgrade>
+			<level>2</level>
+			<health>27</health>
+			<skill id='rally' x='1' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>31</health>
+			<skill id='heal' x='1' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>35</health>
+			<skill id='rally' x='2' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+			<skill id='heal' x='2' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>46</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>52</health>
+			<skill id='heal' x='3' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>59</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>66</health>
+			<skill id='rally' x='3' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>73</health>
+			<skill id='heal' x='4' y='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>81</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>84</health>
+			<skill id='rally' x='4' y='2' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>87</health>
+			<skill id='heal' x='5' y='2' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>90</health>
+			<skill id='heal' x='6' y='2' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>93</health>
+			<skill id='rally' x='5' y='2' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>2005</id>
+		<name>Ricky Spanish</name>
+		<desc></desc>
+		<picture>rickySpanish</picture>
+		<asset_bundle>32</asset_bundle>
+        <character_bust_asset_bundle>32</character_bust_asset_bundle>
+        <fight_pose_asset asset="rickySpanish_fight" bundle_id="32" />
+		<fight_pose_asset_flipped asset="rickySpanish_fight_flipped" bundle_id="32" />
+		<commander>1</commander>
+		<defense_card_id>24005</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>2</type>
+		<health>26</health>
+		<skill id='heal' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>30</health>
+			<skill id='barrier' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>34</health>
+			<skill id='give' s='bodyguard' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>42</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>48</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>56</health>
+			<skill id='give' s='bodyguard' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>64</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>72</health>
+			<skill id='barrier' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>80</health>
+			<skill id='give' s='bodyguard' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>82</health>
+			<skill id='heal' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>90</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>92</health>
+			<skill id='barrier' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>94</health>
+			<skill id='heal' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>96</health>
+			<skill id='give' s='bodyguard' x='4' />
+		</upgrade>				
+	</unit>
+
+	<unit>
+		<id>3001</id>
+		<name>Bob</name>
+		<desc>I'd fire all of you if I could.</desc>
+		<picture>bob</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="bob_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="bob_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>34001</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>3</type>
+		<health>24</health>
+		<upgrade>
+			<level>2</level>
+			<health>27</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>31</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>35</health>
+			<skill id='healall' x='1' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>46</health>
+			<skill id='healall' x='2' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>53</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>60</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>67</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>75</health>
+			<skill id='healall' x='3' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>78</health>
+			<skill id='weaken' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>86</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>89</health>
+			<skill id='healall' x='4' y='3' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>92</health>
+			<skill id='weaken' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>95</health>
+			<skill id='healall' x='5' y='3' />
+		</upgrade>												
+	</unit>
+
+	<unit>
+		<id>3002</id>
+		<name>Louise</name>
+		<desc>It's like I'm sad for another person. Is that a thing?</desc>
+		<picture>louise</picture>
+		<asset_bundle>3</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="louise_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="louise_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>34002</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>3</type>
+		<health>20</health>
+		<upgrade>
+			<level>2</level>
+			<health>23</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>27</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>31</health>
+			<skill id='rally' x='1' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>36</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>42</health>
+			<skill id='rally' x='2' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>48</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>55</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>62</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>70</health>
+			<skill id='rally' x='3' y='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>73</health>
+			<skill id='weaken' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>76</health>
+			<skill id='strike' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>86</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>89</health>
+			<skill id='rally' x='4' y='3' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>92</health>
+			<skill id='strike' x='4' />
+		</upgrade>		
+	</unit>
+
+	<unit>
+		<id>3003</id>
+		<name>Tina</name>
+		<desc>I'm a smart strong sensual woman.</desc>
+		<picture>tina</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="tina_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="tina_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>34003</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>3</type>
+		<health>27</health>
+		<upgrade>
+			<level>2</level>
+			<health>30</health>
+			<skill id='heal' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>33</health>
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>37</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>42</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>48</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>54</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>61</health>
+			<skill id='heal' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>69</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>77</health>
+			<skill id='weakenall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>80</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>84</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<skill id='heal' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>88</health>
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>90</health>
+			<skill id='weakenall' x='3' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>3004</id>
+		<name>Gene</name>
+		<desc>What kind of God would give you those legs and no rhythm?</desc>
+		<picture>gene</picture>
+		<asset_bundle>3</asset_bundle>
+        <character_bust_asset_bundle>31</character_bust_asset_bundle>
+        <fight_pose_asset asset="gene_fight" bundle_id="31" />
+		<fight_pose_asset_flipped asset="gene_fight_flipped" bundle_id="31" />
+		<commander>1</commander>
+		<defense_card_id>34004</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>3</type>
+		<health>28</health>
+		<skill id='rally' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>30</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>34</health>
+			<skill id='barrierall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+			<skill id='rally' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>55</health>
+			<skill id='rally' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>64</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>70</health>
+			<skill id='weaken' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>79</health>
+			<skill id='barrierall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>85</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>88</health>
+			<skill id='rally' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>91</health>
+			<skill id='weaken' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>94</health>
+			<skill id='rally' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>97</health>
+			<skill id='barrierall' x='3' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>4001</id>
+		<name>Hank</name>
+		<desc>You gotta give 110%. That's what's gonna give you the winning edge.</desc>
+		<picture>hank</picture>
+		<asset_bundle>2</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="hank_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="hank_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>44001</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>4</type>
+		<health>23</health>
+		<upgrade>
+			<level>2</level>
+			<health>26</health>
+		<skill id='barrier' x='1' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>30</health>
+			<skill id='heal' x='1' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>35</health>
+			<skill id='heal' x='2' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>41</health>
+			<skill id='barrier' x='2' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+			<skill id='heal' x='3' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>53</health>
+			<skill id='barrier' x='3' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>60</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>67</health>
+			<skill id='heal' x='4' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>75</health>
+			<skill id='barrier' x='4' y='4' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>83</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>86</health>
+			<skill id='barrier' x='5' y='4' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>89</health>
+			<skill id='heal' x='5' y='4' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>92</health>
+			<skill id='barrier' x='6' y='4' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>95</health>
+			<skill id='heal' x='6' y='4' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>4002</id>
+		<name>Bobby</name>
+		<desc>I'm a little worried about being a slut.</desc>
+		<picture>bobby</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="bobby_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="bobby_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>44002</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>4</type>
+		<health>22</health>
+		<upgrade>
+			<level>2</level>
+			<health>25</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>29</health>
+			<skill id='barrier' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>34</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>46</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>52</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>58</health>
+			<skill id='barrier' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>65</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>72</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>78</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>80</health>
+			<skill id='weaken' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>86</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>88</health>
+			<skill id='barrier' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>90</health>
+			<skill id='strike' x='4' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>4003</id>
+		<name>Dale</name>
+		<desc>Oh man. What kind of lefty hootenanny is this?</desc>
+		<picture>dale</picture>
+		<asset_bundle>2</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="dale_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="dale_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>44003</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>4</type>
+		<health>20</health>
+		<upgrade>
+			<level>2</level>
+			<health>23</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>26</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>35</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>41</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>47</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>54</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>62</health>
+			<skill id='counter' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>70</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>76</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>78</health>
+			<skill id='strike' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>84</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>86</health>
+			<skill id='counter' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>88</health>
+			<skill id='strike' x='5' />
+		</upgrade>		
+	</unit>
+
+	<unit>
+		<id>4004</id>
+		<name>John Redcorn</name>
+		<desc>It is difficult watching an idiot raise your son.</desc>
+		<picture>johnRedcorn</picture>
+		<asset_bundle>36</asset_bundle>
+        <character_bust_asset_bundle>36</character_bust_asset_bundle>
+        <fight_pose_asset asset="johnRedcorn_fight" bundle_id="36" />
+        <fight_pose_asset_flipped asset="johnRedcorn_fight_flipped" bundle_id="36" />
+		<commander>1</commander>
+		<no_pvp_drop>1</no_pvp_drop>
+		<defense_card_id>44004</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>4</type>
+		<health>23</health>
+		<skill id='barrier' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>27</health>
+			<skill id='give' s='inspire' x='1' />	
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>31</health>
+			<skill id='healall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>35</health>	
+			<skill id='give' s='inspire' x='2' />		
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>54</health>
+			<skill id='healall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>64</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>71</health>
+			<skill id='give' s='inspire' x='3' />	
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>78</health>
+			<skill id='healall' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>81</health>
+			<skill id='barrier' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>87</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>90</health>
+			<skill id='barrier' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>93</health>
+			<skill id='give' s='inspire' x='4' />	
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>96</health>
+			<skill id='healall' x='4' />
+		</upgrade>			
+	</unit>
+	
+	<unit>
+		<id>5016</id>
+		<name>Bender</name>
+		<desc>Model: Bending Unit 22 / Serial: 2716057 / Attitude: In your face</desc>
+		<picture>bender</picture>
+		<asset_bundle>4</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="bender_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="bender_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>54001</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>5</type>
+		<health>26</health>
+		<upgrade>
+			<level>2</level>
+			<health>29</health>
+			<skill id='heal' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>33</health>
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>44</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>50</health>
+			<skill id='heal' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>57</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>64</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>71</health>
+			<skill id='heal' x='3' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>78</health>
+			<skill id='barrierall' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>81</health>
+			<skill id='barrierall' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>89</health>
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>92</health>
+			<skill id='barrierall' x='3' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>95</health>
+			<skill id='weakenall' x='2' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>98</health>
+			<skill id='barrierall' x='4' y='5' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>5017</id>
+		<name>Fry</name>
+		<desc>FUN FACT: Fry is actually his own grandfather!</desc>
+		<picture>fry</picture>
+		<asset_bundle>2</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="fry_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="fry_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>54002</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>5</type>
+		<health>22</health>
+		<upgrade>
+			<level>2</level>
+			<health>25</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>29</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>34</health>
+			<skill id='rally' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>40</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>46</health>
+			<skill id='rally' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>52</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>59</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>66</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>73</health>
+			<skill id='rally' x='3' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>80</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>83</health>
+			<skill id='strike' x='3' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>86</health>
+			<skill id='rally' x='4' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>89</health>
+			<skill id='strike' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>92</health>
+			<skill id='strike' x='5' />
+		</upgrade>		
+	</unit>
+
+	<unit>
+		<id>5018</id>
+		<name>Leela</name>
+		<desc>A talented fighter, despite her poor depth perception.</desc>
+		<picture>leela</picture>
+		<asset_bundle>1</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="leela_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="leela_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>54003</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>5</type>
+		<health>24</health>
+		<upgrade>
+			<level>2</level>
+			<health>27</health>
+			<skill id='barrier' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>31</health>
+			<skill id='barrier' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>36</health>
+			<skill id='rallyall' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>42</health>
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>48</health>
+			<skill id='barrier' x='3' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>55</health>
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>61</health>
+			<skill id='barrier' x='4' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>68</health>
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>75</health>
+			<skill id='rallyall' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>80</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>83</health>
+			<skill id='rallyall' x='3' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>89</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>92</health>
+			<skill id='barrier' x='5' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>95</health>
+			<skill id='rallyall' x='4' y='5' />
+		</upgrade>			
+	</unit>
+
+	<unit>
+		<id>5019</id>
+		<name>Zapp Brannigan</name>
+		<desc>You're obviously confused and aroused.</desc>
+		<picture>zapp</picture>
+		<asset_bundle>5</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="zapp_fight" bundle_id="10" />
+		<fight_pose_asset_flipped asset="zapp_fight_flipped" bundle_id="10" />
+		<commander>1</commander>
+		<defense_card_id>54004</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>5</type>
+		<health>26</health>
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>30</health>
+			<skill id='heal' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>34</health>
+			<skill id='rallyall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>38</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>42</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>48</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>56</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>64</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>72</health>
+			<skill id='strike' x='4' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>80</health>
+			<skill id='rallyall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>83</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>85</health>
+			<skill id='heal' x='4' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>88</health>
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>90</health>
+			<skill id='strike' x='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>92</health>
+			<skill id='rallyall' x='3' />
+		</upgrade>		
+	</unit>
+
+	<unit>
+		<id>5020</id>
+		<name>Zoidberg</name>
+		<desc>Hooray! People are paying attention to me.</desc>
+		<picture>zoidberg</picture>
+		<asset_bundle>5</asset_bundle>
+        <character_bust_asset_bundle>10</character_bust_asset_bundle>
+        <fight_pose_asset asset="zoidberg_fight" bundle_id="32" />
+		<fight_pose_asset_flipped asset="zoidberg_fight_flipped" bundle_id="32" />
+		<commander>1</commander>
+		<defense_card_id>54005</defense_card_id>
+		<rarity>1</rarity>
+		<set>5000</set>
+		<type>5</type>
+		<health>25</health>
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>29</health>
+			<skill id='healall' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>33</health>
+			<skill id='barrierall' x='1' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>37</health>
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>41</health>
+			<skill id='healall' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>6</level>
+			<health>47</health>
+		</upgrade>
+		<upgrade>
+			<level>7</level>
+			<health>55</health>
+			<skill id='barrierall' x='2' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>8</level>
+			<health>63</health>
+		</upgrade>
+		<upgrade>
+			<level>9</level>
+			<health>71</health>
+			<skill id='barrierall' x='3' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>10</level>
+			<health>79</health>
+			<skill id='healall' x='3' y='5' />
+		</upgrade>
+		<upgrade>
+			<level>11</level>
+			<health>88</health>
+		</upgrade>
+		<upgrade>
+			<level>12</level>
+			<health>90</health>
+			<skill id='healall' x='4' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>13</level>
+			<health>92</health>
+			<skill id='weaken' x='2' />
+		</upgrade>	
+		<upgrade>
+			<level>14</level>
+			<health>94</health>
+			<skill id='barrierall' x='4' y='5' />
+		</upgrade>	
+		<upgrade>
+			<level>15</level>
+			<health>96</health>
+			<skill id='healall' x='5' y='5' />
+		</upgrade>		
+	</unit>
+	
+	<!-- Commander Defense Cards -->
+
+	<unit>
+		<id>14001</id>
+		<name>Peter's Defense</name>
+		<desc>Run along Stewie, Daddy had a rough night. </desc>
+		<picture>leaderdefense_peter</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>1</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='rally' x='1' />
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='rally' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rally' x='3' />
+			<skill id='weaken' x='4' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>14002</id>
+		<name>Stewie's Defense</name>
+		<desc>Yes, I'm cheating. What of it?</desc>
+		<picture>leaderdefense_stewie</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>1</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='heal' x='1' />
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='heal' x='4' />
+			<skill id='strike' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>14003</id>
+		<name>Brian's Defense</name>
+		<desc>My agent is making me do this.</desc>
+		<picture>leaderdefense_brian</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>1</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='counter' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='barrierall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='barrierall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>14004</id>
+		<name>Consuela's Defense</name>
+		<desc>No.</desc>
+		<picture>leaderdefense_consuela</picture>
+		<asset_bundle>18</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>1</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='healall' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='healall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='weakenall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='healall' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>14005</id>
+		<name>The Giant Chicken's Defense</name>
+		<desc></desc>
+		<picture>leaderdefense_ernie</picture>
+		<asset_bundle>36</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>1</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='counter' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='strike' x='4' />
+		</upgrade>
+	</unit>
+	
+	<unit>
+		<id>24001</id>
+		<name>Roger's Defense</name>
+		<desc>Pillow fight! ...whoops, forgot I put some sodas in there.</desc>
+		<picture>leaderdefense_roger</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>2</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='armored' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='armored' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='armored' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='weakenall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='armored' x='4' />
+			<skill id='weakenall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>24002</id>
+		<name>Stan's Defense</name>
+		<desc>You are a total waste of space. I often dream of killing you.</desc>
+		<picture>leaderdefense_stan</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>2</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='rallyall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rallyall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>24003</id>
+		<name>Steve's Defense</name>
+		<desc>That ass needs a pounding!</desc>
+		<picture>leaderdefense_steve</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>2</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='heal' x='1' />
+		<skill id='rally' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='rally' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='heal' x='4' />
+			<skill id='rally' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>24005</id>
+		<name>Ricky Spanish's Defense</name>
+		<desc></desc>
+		<picture>leaderdefense_rickySpanish</picture>
+		<asset_bundle>32</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>2</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='heal' x='1' />
+		<skill id='barrier' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='heal' x='4' />
+			<skill id='barrier' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>34001</id>
+		<name>Bob's Defense</name>
+		<desc>Burger Boss is gonna get you!</desc>
+		<picture>leaderdefense_bob</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>3</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='healall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='healall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>34002</id>
+		<name>Louise's Defense</name>
+		<desc>With four ears I can ignore you twice as hard.</desc>
+		<picture>leaderdefense_louise</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>3</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='strike' x='1' />
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='rally' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rally' x='2' />
+			<skill id='weaken' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>34003</id>
+		<name>Tina's Defense</name>
+		<desc>I can't be sweet on you before I beat on you.</desc>
+		<picture>leaderdefense_tina</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>3</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='armored' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='armored' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='armored' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='rallyall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='armored' x='4' />
+			<skill id='rallyall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>34004</id>
+		<name>Gene's Defense</name>
+		<desc>I can't be sweet on you before I beat on you.</desc>
+		<picture>leaderdefense_gene</picture>
+		<asset_bundle>31</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>3</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='rally' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='rally' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='rally' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='barrierall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='barrierall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>44001</id>
+		<name>Hank's Defense</name>
+		<desc>The best defense is a good old-fashion ass kicking.</desc>
+		<picture>leaderdefense_hank</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>4</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='heal' x='1' />
+		<skill id='barrier' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='heal' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='heal' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='heal' x='4' />
+			<skill id='barrier' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>44002</id>
+		<name>Bobby's Defense</name>
+		<desc>I don't know you! That's my purse.</desc>
+		<picture>leaderdefense_bobby</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>4</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='armored' x='1' />
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='weaken' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='armored' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='strike' x='3' />
+			<skill id='weaken' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>44003</id>
+		<name>Dale's Defense</name>
+		<desc>I have literally oodles of guns at home.</desc>
+		<picture>leaderdefense_dale</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>4</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='counter' x='1' />
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='counter' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='counter' x='4' />
+			<skill id='strike' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>44004</id>
+		<name>John Redcorn's Defense</name>
+		<desc></desc>
+		<picture>leaderdefense_johnRedcorn</picture>
+		<asset_bundle>36</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>4</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='healall' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='barrier' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='healall' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='healall' x='3' />
+			<skill id='barrier' x='3' />
+		</upgrade>
+	</unit>
+	
+	<unit>
+		<id>54001</id>
+		<name>Bender's Defense</name>
+		<desc>You two fight to the death, and I'll cook the loser.</desc>
+		<picture>leaderdefense_bender</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>5</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='armored' x='1' />
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='armored' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='armored' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='barrierall' x='1' />
+			<skill id='weaken' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>54002</id>
+		<name>Fry's Defense</name>
+		<desc>Our team is called "The Fighting Mongooses."</desc>
+		<picture>leaderdefense_fry</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>5</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='counter' x='1' />
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='rally' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='counter' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rally' x='2' />
+			<skill id='strike' x='3' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>54003</id>
+		<name>Leela's Defense</name>
+		<desc>Let's hit the gym. I'm gonna teach you to fight like a girl.</desc>
+		<picture>leaderdefense_leela</picture>
+		<asset_bundle>9</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>5</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='barrier' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='barrier' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='barrier' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='rallyall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rallyall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>54004</id>
+		<name>Zapp Brannigan's Defense</name>
+		<desc>You're obviously confused and aroused</desc>
+		<picture>leaderdefense_zapp</picture>
+		<asset_bundle>21</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>5</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='strike' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='strike' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='strike' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='rallyall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='rallyall' x='2' />
+		</upgrade>
+	</unit>
+
+	<unit>
+		<id>54005</id>
+		<name>Zoidberg's Defense</name>
+		<desc>Hooray! People are paying attention to me.</desc>
+		<picture>zoidberg_card</picture>
+		<asset_bundle>5</asset_bundle>
+		<rarity>3</rarity>
+		<set>6000</set>
+		<type>5</type>
+		<attack>0</attack>
+		<health>13</health>
+		<skill id='weaken' x='1' />
+		<upgrade>
+			<level>2</level>
+			<health>18</health>
+			<skill id='weaken' x='2' />
+		</upgrade>
+		<upgrade>
+			<level>3</level>
+			<health>24</health>
+			<skill id='weaken' x='3' />
+		</upgrade>
+		<upgrade>
+			<level>4</level>
+			<health>30</health>
+			<skill id='healall' x='1' />
+		</upgrade>
+		<upgrade>
+			<level>5</level>
+			<health>38</health>
+			<skill id='healall' x='2' />
+		</upgrade>
+	</unit>
+</root>
