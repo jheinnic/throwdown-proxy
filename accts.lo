@@ -1,0 +1,9 @@
+> client2.eth.accounts.create()
+{ address: '0x1e6a9d1975414792Def0CC54788591494Dc8234f',
+  privateKey: '0xee1a5234b5224c6f66eb608ed802a353896c7a47180f8f1126f3d80957aa5fd4',
+  signTransaction: [Function: signTransaction],
+  sign: [Function: sign],
+  encrypt: [Function: encrypt] }
+> client2.eth.accounts.wallet
+
+d
