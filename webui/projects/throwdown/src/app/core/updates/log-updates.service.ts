@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 
 @Injectable()
 export class LogUpdateService {
-
   constructor(updates: SwUpdate) {
     updates.available.subscribe(event => {
       console.log('current version is', event.current);

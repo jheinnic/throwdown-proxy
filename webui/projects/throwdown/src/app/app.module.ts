@@ -11,6 +11,7 @@ import {environment} from '../environments/environment';
 import {AppComponent} from './app.component';
 import {SharedModule} from './shared/shared.module';
 import {AppRoutingModule} from './app-routing.module';
+import { ToymodModule } from './toymod/toymod.module';
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import {AppRoutingModule} from './app-routing.module';
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     CoreModule,
     SharedModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ToymodModule
   ],
   declarations: [AppComponent],
   providers: [],

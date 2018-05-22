@@ -1,36 +1,50 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { KeycloakService, KeycloakAuthGuard } from 'keycloak-angular';
+import {inject, Inject, Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {KeycloakService} from 'keycloak-angular';
+import {keycloakLoginOptions} from '../di/app-di.tokens';
+import {Observable} from 'rxjs/Observable';
 
-@Injectable()
-export class AppAuthGuard extends KeycloakAuthGuard {
-  constructor(protected router: Router, protected keycloakAngular: KeycloakService) {
-    super(router, keycloakAngular);
+@Injectable({
+  providedIn: 'root',
+  useFactory: () => new AppAuthGuard(
+    inject(Router), inject(KeycloakService), inject(keycloakLoginOptions)
+  )
+})
+export class AppAuthGuard implements CanActivate {
+  constructor(
+    protected router: Router, protected keycloakAngular: KeycloakService, @Inject(keycloakLoginOptions) protected loginOptions
+  ) {
   }
 
-  isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      if (!this.authenticated) {
-        this.keycloakAngular.login();
-        return;
-      }
-
-      const requiredRoles = route.data.roles;
-      if (!requiredRoles || requiredRoles.length === 0) {
-        return resolve(true);
-      } else {
-        if (!this.roles || this.roles.length === 0) {
-          resolve(false);
-        }
-        let granted: boolean = false;
-        for (const requiredRole of requiredRoles) {
-          if (this.roles.indexOf(requiredRole) > -1) {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+      // console.log('Is expired says ', this.keycloakAngular.isTokenExpired(100));
+    return this.keycloakAngular.isLoggedIn()
+      .then((value) => {
+        if (!value) {
+          this.keycloakAngular.clearToken()
+          this.keycloakAngular.login(this.loginOptions);
+          return Promise.resolve(false);
+        } else {
+          let granted = false;
+          const requiredRoles = route.data.roles;
+          if (!requiredRoles || requiredRoles.length === 0) {
             granted = true;
-            break;
+          } else {
+            const userRoles = this.keycloakAngular.getUserRoles();
+            if ((!userRoles) || (userRoles.length === 0)) {
+              granted = false;
+            } else {
+              for (const requiredRole of requiredRoles) {
+                if (this.keycloakAngular.isUserInRole(requiredRole)) {
+                  granted = true;
+                  break;
+                }
+              }
+            }
           }
+
+          return Promise.resolve(granted);
         }
-        resolve(granted);
-      }
-    });
+      });
   }
 }

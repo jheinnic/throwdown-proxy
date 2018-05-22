@@ -5,7 +5,11 @@
 export const environment = {
   production: false,
   keycloakConfigPath: '/assets/keycloak.json',
-  baseAssetUrl: 'http://portfolio.jchein.name/'
+  keycloakServerUrl: 'http://portfolio.dev.jchein.name:28080/auth',
+  onLoginRedirectUrl: '/route-one',
+  onRegisterRedirectUrl: '/route-one',
+  onLogoutRedirectUrl: '/route-two',
+  baseAppUrl: 'http://portfolio.dev.jchein.name:4200'
 };
 
 /*

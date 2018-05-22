@@ -18,6 +18,7 @@ import {
   MatToolbarModule
 } from '@angular/material';
 
+import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {ApolloModule} from 'apollo-angular';
 import {HttpLinkModule} from 'apollo-angular-link-http';
 import {NgrxCache, NgrxCacheModule} from 'apollo-angular-cache-ngrx';
@@ -37,6 +38,7 @@ import {moduleImportGuard} from './module-import-guard.helper';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule, // provides HttpClient for HttpLink
+    LoggerModule.forRoot({serverLoggingUrl: '/api/logs', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.OFF}),
     FlexLayoutModule,
     MatSidenavModule,
     MatToolbarModule,
@@ -61,14 +63,6 @@ import {moduleImportGuard} from './module-import-guard.helper';
       multi: true,
       deps: [keycloakOptions, KeycloakService]
     }
-    // {
-    //   provide: diTokens.keycloakConfigPath,
-    //   useValue: environment.keycloakConfigPath
-    // },
-    // {
-    //   provide: diTokens.baseAssetUrl,
-    //   useValue: environment.baseAssetUrl
-    // }
   ],
   exports: [
     RouterModule,
@@ -93,6 +87,9 @@ export class CoreModule {
 function keycloakInitFactory(keycloakConfig: KeycloakOptions, keycloak: KeycloakService): () => Promise<any> {
   const asyncResult: Promise<any> = new Promise(async (resolve, reject) => {
     try {
+      keycloak.keycloakEvents$.subscribe((event) => {
+        console.log(JSON.stringify(event));
+      });
       await keycloak.init(keycloakConfig);
       resolve();
     } catch (error) {

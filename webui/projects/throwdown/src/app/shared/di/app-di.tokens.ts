@@ -1,10 +1,11 @@
 import {inject, InjectionToken} from '@angular/core';
-import {environment} from '../../../environments/environment';
 import {KeycloakOptions} from 'keycloak-angular';
 import {KeycloakLoginOptions} from 'keycloak-js';
 
+import {environment} from '../../../environments/environment';
+
 type EnvironmentTokenNames =
-  'baseAssetUrl'
+  'baseAppUrl'
   | 'keycloakConfigPath'
   | 'keycloakServerUrl'
   | 'onLoginRedirectUrl'
@@ -18,7 +19,7 @@ function injectFromEnvironment(tokenName: EnvironmentTokenNames): InjectionToken
   });
 }
 
-export const baseAssetUrl: InjectionToken<string> = injectFromEnvironment('baseAssetUrl');
+export const baseAppUrl: InjectionToken<string> = injectFromEnvironment('baseAppUrl');
 export const keycloakConfigPath: InjectionToken<string> = injectFromEnvironment('keycloakConfigPath');
 export const keycloakServerUrl: InjectionToken<string> = injectFromEnvironment('keycloakServerUrl');
 export const onLoginRedirectUrl: InjectionToken<string> = injectFromEnvironment('onLoginRedirectUrl');
@@ -52,9 +53,8 @@ export const keycloakLoginOptions: InjectionToken<KeycloakLoginOptions> =
     providedIn: 'root',
     factory: (): KeycloakLoginOptions => {
       return {
-        locale: 'en_US',
-        redirectUri: inject(onLoginRedirectUrl),
-        scope: 'openid'
+        // locale: 'en_US',
+        redirectUri: inject(baseAppUrl) + inject(onLoginRedirectUrl)
       };
     }
   });
@@ -65,9 +65,8 @@ export const keycloakRegisterOptions: InjectionToken<KeycloakLoginOptions> =
     factory: (): KeycloakLoginOptions => {
       return {
         action: 'register',
-        locale: 'en_US',
-        redirectUri: inject(onRegisterRedirectUrl),
-        scope: 'openid'
+        // locale: 'en_US',
+        redirectUri: inject(baseAppUrl) + inject(onRegisterRedirectUrl)
       };
     }
   });
@@ -77,7 +76,7 @@ export const keycloakLogoutOptions: InjectionToken<{ redirectUri: string }> =
     providedIn: 'root',
     factory: (): { redirectUri: string } => {
       return {
-        redirectUri: inject(onLogoutRedirectUrl)
+        redirectUri: inject(baseAppUrl) + inject(onLogoutRedirectUrl)
       };
     }
   });
