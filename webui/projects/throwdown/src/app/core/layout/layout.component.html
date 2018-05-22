@@ -5,7 +5,7 @@
     class="sidenav"
     [fixedInViewport]="true"
     [fixedTopGap]="8"
-    [attr.role]="isHandset ? 'dialog' : 'navigation'"
+    [attr.role]="(isHandset | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
     [opened]="!(isHandset | async)!.matches">
     <mat-toolbar color="primary">
@@ -35,11 +35,11 @@
     <tdn-navbar>
       <mat-tab-group>
         <mat-tab label="One">
-          <h1>Some tab content</h1>
+          <h1>Default tab content</h1>
           <p>...</p>
         </mat-tab>
         <mat-tab label="Two">
-          <h1>Some more tab content</h1>
+          <h1>Some more default tab content</h1>
           <button (click)="clickMe()" mat-button>Click me!</button>
           <p>...</p>
         </mat-tab>

@@ -19,7 +19,7 @@ import {SharedModule} from './shared/shared.module';
           <ng-template matTabContent>
             <h1>Some more tab content</h1>
             <p>Goo</p>
-            <button (click)="defaultClickMe()" mat-button>Click me!</button>
+            <button (click)="clickMe()" mat-button>Click me!</button>
           </ng-template>
         </mat-tab>
       </mat-tab-group>
@@ -27,7 +27,7 @@ import {SharedModule} from './shared/shared.module';
   `
 })
 export class RouteOneComponent {
-  public defaultClickMe(): void {
+  public clickMe(): void {
     console.log('Yippy Skippy Peanut Butter');
   }
 }

@@ -1,7 +1,9 @@
-///<reference path="../../../node_modules/@angular/router/src/router_module.d.ts"/>
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {PortalModule} from '@angular/cdk/portal';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import {
   MatButtonModule,
   MatCardModule,
@@ -15,11 +17,8 @@ import {LayoutModule} from '@angular/cdk/layout';
 
 import {SiegeDashboardComponent} from './siege-dashboard/siege-dashboard.component';
 import {NavbarTemplateDirective} from './navbar/navbar-template.directive';
-import {NavbarComponent} from './navbar/navbar.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
 import {NavbarContainerDirective} from './navbar/navbar-container.directive';
-import {PortalModule} from '@angular/cdk/portal';
-import {RouterModule} from '@angular/router';
+import {NavbarComponent} from './navbar/navbar.component';
 
 // Consider whether NavbarComponent could migrate to CoreModule, leaving NavbarTemplateDirective behind as its public-facing API.
 @NgModule({
