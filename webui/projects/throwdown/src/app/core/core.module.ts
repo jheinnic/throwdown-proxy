@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {LayoutModule} from '@angular/cdk/layout';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {
@@ -18,14 +18,15 @@ import {
   MatToolbarModule
 } from '@angular/material';
 
-import {LoggerModule, NgxLoggerLevel} from 'ngx-logger';
 import {ApolloModule} from 'apollo-angular';
 import {HttpLinkModule} from 'apollo-angular-link-http';
 import {NgrxCache, NgrxCacheModule} from 'apollo-angular-cache-ngrx';
 import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-angular';
+import {LoggerModule, NgxLoggerLevel, NGXLogger} from 'ngx-logger';
 
 import {SharedModule} from '../shared/shared.module';
 import {keycloakOptions} from '../shared/di/app-di.tokens';
+import {GradientTokenContractService} from './util/gradient-token-contract.service';
 import {LayoutComponent} from './layout/layout.component';
 import {moduleImportGuard} from './module-import-guard.helper';
 
@@ -61,7 +62,12 @@ import {moduleImportGuard} from './module-import-guard.helper';
       provide: APP_INITIALIZER,
       useFactory: keycloakInitFactory,
       multi: true,
-      deps: [keycloakOptions, KeycloakService]
+      deps: [keycloakOptions, KeycloakService, NGXLogger]
+    }, {
+      provide: APP_INITIALIZER,
+      useFactory: gradientTokenInitFactory,
+      multi: true,
+      deps: [GradientTokenContractService, HttpClient, NGXLogger]
     }
   ],
   exports: [
@@ -84,19 +90,32 @@ export class CoreModule {
   }
 }
 
-function keycloakInitFactory(keycloakConfig: KeycloakOptions, keycloak: KeycloakService): () => Promise<any> {
-  const asyncResult: Promise<any> = new Promise(async (resolve, reject) => {
-    try {
-      keycloak.keycloakEvents$.subscribe((event) => {
-        console.log(JSON.stringify(event));
-      });
-      await keycloak.init(keycloakConfig);
-      resolve();
-    } catch (error) {
-      console.error(error);
-      reject(error);
-    }
+function keycloakInitFactory(keycloakConfig: KeycloakOptions, keycloak: KeycloakService, logger: NGXLogger): () => Promise<any> {
+  // const asyncResult: Promise<any> = new Promise(async (resolve, reject) => {
+  //   try {
+  keycloak.keycloakEvents$.subscribe((event) => {
+    logger.info('Keycloak Event: ', JSON.stringify(event));
   });
+  //     await keycloak.init(keycloakConfig);
+  //     resolve();
+  //   } catch (error) {
+  //     console.error(error);
+  //     reject(error);
+  //   }
+  // });
+  //
+  // return (): Promise<any> => asyncResult;
+  return (): Promise<boolean> => keycloak.init(keycloakConfig);
+}
 
-  return (): Promise<any> => asyncResult;
+function gradientTokenInitFactory(gradientTokenService: GradientTokenContractService, http: HttpClient, logger: NGXLogger): () => Promise<any> {
+  return (): Promise<any> => {
+    return http.get('/assets/contracts/GradientToken.json')
+      .toPromise()
+      .then(
+        (resp: Response) => gradientTokenService.setupContract(resp),
+        (error: any): void => {
+          logger.error('Failed to load GradientToken contract: ', error);
+        });
+  };
 }

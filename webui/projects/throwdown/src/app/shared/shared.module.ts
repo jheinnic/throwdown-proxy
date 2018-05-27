@@ -15,6 +15,9 @@ import {
 } from '@angular/material';
 import {LayoutModule} from '@angular/cdk/layout';
 
+// import {NgColorModule} from 'ng-color';
+import {ColorPickerModule} from 'ngx-color-picker';
+
 import {SiegeDashboardComponent} from './siege-dashboard/siege-dashboard.component';
 import {NavbarTemplateDirective} from './navbar/navbar-template.directive';
 import {NavbarContainerDirective} from './navbar/navbar-container.directive';
@@ -35,7 +38,9 @@ import {NavbarComponent} from './navbar/navbar.component';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    // NgColorModule
+    ColorPickerModule
   ],
   declarations: [
     SiegeDashboardComponent,
@@ -56,6 +61,8 @@ import {NavbarComponent} from './navbar/navbar.component';
     MatCardModule,
     MatMenuModule,
     MatTabsModule,
+    // NgColorModule,
+    ColorPickerModule,
     SiegeDashboardComponent,
     NavbarTemplateDirective,
     NavbarTemplateDirective,

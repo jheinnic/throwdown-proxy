@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
 
-import {SharedModule} from '../shared/shared.module';
+import {SharedModule} from '../../shared/shared.module';
 import {ToymodRoutingModule} from './toymod-routing.module';
 import {RouteOneComponent} from './route-one/route-one.component';
 import {RouteTwoComponent} from './route-two/route-two.component';

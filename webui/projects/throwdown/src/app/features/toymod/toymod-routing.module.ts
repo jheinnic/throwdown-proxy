@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RouteOneComponent} from './route-one/route-one.component';
 import {RouteTwoComponent} from './route-two/route-two.component';
-import {AppAuthGuard} from '../shared/authz/app-auth.guard';
+import {AppAuthGuard} from '../../shared/authz/app-auth.guard';
 
 const routes: Routes = [
   {

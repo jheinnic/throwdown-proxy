@@ -20,7 +20,8 @@
             "tsConfig": "projects/throwdown/tsconfig.app.json",
             "assets": [
               "projects/throwdown/src/favicon.ico",
-              "projects/throwdown/src/assets"
+              "projects/throwdown/src/assets",
+              "projects/throwdown/src/assets/contracts/GradientToken.json"
             ],
             "styles": [
               {
@@ -85,7 +86,8 @@
             "scripts": [],
             "assets": [
               "projects/throwdown/src/favicon.ico",
-              "projects/throwdown/src/assets"
+              "projects/throwdown/src/assets",
+              "projects/throwdown/src/assets/contracts/GradientToken.json"
             ]
           }
         },

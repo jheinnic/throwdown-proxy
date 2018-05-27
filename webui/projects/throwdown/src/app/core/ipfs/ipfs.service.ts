@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Observable } from "rxjs/observable";
 import * as IPFS from 'ipfs';
-import { Observable } from "rxjs/Observable";
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
 

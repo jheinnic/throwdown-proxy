@@ -1,2 +1,2 @@
-export { metaReducers, reducers } from './root.reducers';
-export { AppEffects } from './app.effects';
+export {RootState, initialState, reducerMap, metaReducers} from './root.feature';
+export {CustomRouterStateSerializerService} from './custom-router-state-serializer.service';

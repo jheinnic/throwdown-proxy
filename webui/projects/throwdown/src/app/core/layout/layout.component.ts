@@ -1,6 +1,6 @@
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {Component} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs/observable';
 
 import {NavbarTemplateService} from '../../shared/navbar/navbar-template.service';
 

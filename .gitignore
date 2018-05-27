@@ -50,3 +50,6 @@ dist/
 MockServer*.pem
 matchDecks*/
 
+block/junk
+ganache_01.log
+repeat-test

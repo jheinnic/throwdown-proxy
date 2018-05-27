@@ -1,6 +1,10 @@
 import {inject, InjectionToken} from '@angular/core';
+
 import {KeycloakOptions} from 'keycloak-angular';
 import {KeycloakLoginOptions} from 'keycloak-js';
+
+import {HttpLink, HttpLinkHandler} from 'apollo-angular-link-http';
+import {InMemoryCache} from 'apollo-cache-inmemory';
 
 import {environment} from '../../../environments/environment';
 
@@ -10,7 +14,9 @@ type EnvironmentTokenNames =
   | 'keycloakServerUrl'
   | 'onLoginRedirectUrl'
   | 'onRegisterRedirectUrl'
-  | 'onLogoutRedirectUrl';
+  | 'onLogoutRedirectUrl'
+  | 'apolloGraphQueryUrl'
+  | 'neo4jGraphQueryUrl';
 
 function injectFromEnvironment(tokenName: EnvironmentTokenNames): InjectionToken<string> {
   return new InjectionToken<string>(tokenName, {
@@ -25,6 +31,8 @@ export const keycloakServerUrl: InjectionToken<string> = injectFromEnvironment('
 export const onLoginRedirectUrl: InjectionToken<string> = injectFromEnvironment('onLoginRedirectUrl');
 export const onRegisterRedirectUrl: InjectionToken<string> = injectFromEnvironment('onRegisterRedirectUrl');
 export const onLogoutRedirectUrl: InjectionToken<string> = injectFromEnvironment('onLogoutRedirectUrl');
+export const apolloGraphQueryUrl: InjectionToken<string> = injectFromEnvironment('apolloGraphQueryUrl');
+export const neo4jGraphQueryUrl: InjectionToken<string> = injectFromEnvironment('neo4jGraphQueryUrl');
 
 export const keycloakOptions: InjectionToken<KeycloakOptions> =
   new InjectionToken<KeycloakOptions>('keycloakOptions', {
@@ -80,3 +88,42 @@ export const keycloakLogoutOptions: InjectionToken<{ redirectUri: string }> =
       };
     }
   });
+
+export const apolloHttpLink =
+  new InjectionToken<HttpLinkHandler>('ApolloHttpLink', {
+    providedIn: 'root',
+    factory: provideApolloHttpLink
+  });
+export const neo4jHttpLink =
+  new InjectionToken<HttpLinkHandler>('ApolloHttpLink', {
+    providedIn: 'root',
+    factory: provideNeo4jHttpLink
+  });
+
+export const apolloInMemoryCache =
+  new InjectionToken<InMemoryCache>('ApolloInMemoryCache', {
+    providedIn: 'root',
+    factory: provideApolloInMemoryCache
+  });
+
+// export const apolloNgrxCache = new InjectionToken<Cache>('ApolloNgrxCache');
+
+
+// by default, this client will send queries to `/graphql` (relative to the URL of your app)
+export function provideApolloInMemoryCache(): InMemoryCache {
+  return new InMemoryCache();
+}
+
+export function provideApolloHttpLink(): HttpLinkHandler {
+  return inject(HttpLink).create({
+    uri: inject(apolloGraphQueryUrl),
+    includeExtensions: true
+  });
+}
+
+export function provideNeo4jHttpLink(): HttpLinkHandler {
+  return inject(HttpLink).create({
+    uri: inject(neo4jGraphQueryUrl),
+    includeExtensions: true
+  });
+}

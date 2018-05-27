@@ -1,0 +1,14 @@
+.static-gradient {
+  background-image: radial-gradient(
+    circle,
+    yellow,
+    #f06d06
+  );
+}
+
+
+.gradient {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}

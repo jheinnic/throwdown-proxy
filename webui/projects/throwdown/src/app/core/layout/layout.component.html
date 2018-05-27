@@ -1,4 +1,4 @@
-<ng-template #myTemplate><span fxFlex="9">Stoff</span><span fxFlex="4">Steff</span></ng-template>
+<ng-template #myTemplate><span fxFlex="2 1 auto">Stoff</span><span fxFlex="3 1 auto">Steff</span></ng-template>
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     #drawer
@@ -15,22 +15,24 @@
       <a mat-list-item [routerLink]="'/route-one'">Route one</a>
       <a mat-list-item routerLink="/route-two">Route two</a>
       <!--a mat-list-item [routerLink]="[{outlets: {sidebar: 'route-two-sidebar', primary: 'route-two'} }]">Route two</a-->
-      <a mat-list-item routerLink="/">Link 3</a>
+      <a mat-list-item routerLink="/">Home Page</a>
+      <a mat-list-item routerLink="/meta-sender">MetaSender</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary" fxLayout="row">
       <button
         fxFlexOffset="4"
+        fxFlex="0 0 auto"
         type="button"
-        aria-label="Toggle sidenav"
         mat-icon-button
+        aria-label="Toggle sidenav"
         (click)="drawer.toggle()"
         *ngIf="(isHandset | async).matches">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span fxFlex="10">Application Title</span>
-      <ng-container fxFlex="1" *ngTemplateOutlet="myTemplate"></ng-container>
+      <span fxFlex="12 1 auto">Application Title</span>
+      <ng-container fxFlex="1 1 auto" *ngTemplateOutlet="myTemplate"></ng-container>
     </mat-toolbar>
     <tdn-navbar>
       <mat-tab-group>

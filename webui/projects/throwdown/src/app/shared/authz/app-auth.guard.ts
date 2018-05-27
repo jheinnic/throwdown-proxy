@@ -1,8 +1,9 @@
 import {inject, Inject, Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {Observable} from 'rxjs/observable';
 import {KeycloakService} from 'keycloak-angular';
+
 import {keycloakLoginOptions} from '../di/app-di.tokens';
-import {Observable} from 'rxjs/Observable';
 
 @Injectable({
   providedIn: 'root',
