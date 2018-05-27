@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --project throwdown --verbose --watch --open --host portfolio.dev.jchein.name --deploy-url http://portfolio.dev.jchein.name:4200 --base-href / --source-map --live-reload --progress",
     "build": "ng build --project throwdown",
+    "postinstall": "node patch-build-angular.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
