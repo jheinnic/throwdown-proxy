@@ -1,0 +1,74 @@
+=============== May 27, 2018 (PDT) ===============
+04:57:37.067182 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+04:57:37.083472 db@open opening
+04:57:37.174648 version@stat F·[] S·0B[] Sc·[]
+04:57:37.256083 db@janitor F·2 G·0
+04:57:37.256139 db@open done T·172.64639ms
+=============== May 27, 2018 (PDT) ===============
+04:57:55.319254 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+04:57:55.319997 version@stat F·[] S·0B[] Sc·[]
+04:57:55.320068 db@open opening
+04:57:55.320268 journal@recovery F·1
+04:57:55.327849 journal@recovery recovering @1
+04:57:55.387450 memdb@flush created L0@2 N·629 S·51KiB "\x02i\xc3..U\xec\x93,v402":"\xffM&..\x13?m,v422"
+04:57:55.391829 version@stat F·[1] S·51KiB[51KiB] Sc·[0.25]
+04:57:55.487621 db@janitor F·3 G·0
+04:57:55.487692 db@open done T·167.596113ms
+04:59:38.696465 db@close closing
+04:59:38.696584 db@close done T·116.484µs
+=============== May 27, 2018 (PDT) ===============
+05:07:21.155317 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+05:07:21.155571 version@stat F·[1] S·51KiB[51KiB] Sc·[0.25]
+05:07:21.155597 db@open opening
+05:07:21.155673 journal@recovery F·1
+05:07:21.159599 journal@recovery recovering @3
+05:07:21.218313 memdb@flush created L0@5 N·13 S·970B "Blo..ion,v631":"r\x00\x00..\x8b\xc1\xc8,v639"
+05:07:21.224027 version@stat F·[2] S·52KiB[52KiB] Sc·[0.50]
+05:07:21.332965 db@janitor F·4 G·0
+05:07:21.333024 db@open done T·177.41362ms
+05:07:37.122747 db@close closing
+05:07:37.273487 db@close done T·150.730118ms
+=============== May 27, 2018 (PDT) ===============
+05:10:11.703256 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+05:10:11.703544 version@stat F·[2] S·52KiB[52KiB] Sc·[0.50]
+05:10:11.703569 db@open opening
+05:10:11.703649 journal@recovery F·1
+05:10:11.707892 journal@recovery recovering @6
+05:10:12.081525 memdb@flush created L0@8 N·2 S·243B "Blo..ion,v645":"Las..der,v646"
+05:10:12.088318 version@stat F·[3] S·52KiB[52KiB] Sc·[0.75]
+05:10:12.323070 db@janitor F·5 G·0
+05:10:12.323112 db@open done T·619.537732ms
+05:12:00.095248 db@close closing
+05:12:00.095636 db@close done T·385.047µs
+=============== May 27, 2018 (PDT) ===============
+05:13:59.092648 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+05:13:59.092917 version@stat F·[3] S·52KiB[52KiB] Sc·[0.75]
+05:13:59.092944 db@open opening
+05:13:59.093026 journal@recovery F·1
+05:13:59.096903 journal@recovery recovering @9
+05:13:59.098101 memdb@flush created L0@11 N·40 S·1KiB "Blo..ion,v648":"r\x00\x00..)\x12e,v683"
+05:13:59.102223 version@stat F·[4] S·53KiB[53KiB] Sc·[1.00]
+05:13:59.103348 db@janitor F·6 G·0
+05:13:59.103415 db@open done T·10.432068ms
+05:13:59.103509 table@compaction L0·4 -> L1·0 S·53KiB Q·688
+05:13:59.105413 table@build created L1@14 N·662 S·53KiB "\x02i\xc3..U\xec\x93,v402":"\xffM&..\x13?m,v422"
+05:13:59.105469 version@stat F·[0 1] S·53KiB[0B 53KiB] Sc·[0.00 0.00]
+05:13:59.105765 table@compaction committed F-3 S+69B Ke·0 D·22 T·2.215661ms
+05:13:59.105877 table@remove removed @11
+05:13:59.105971 table@remove removed @8
+05:13:59.106047 table@remove removed @5
+05:13:59.106149 table@remove removed @2
+05:17:10.021386 db@close closing
+05:17:10.030394 db@close done T·9.00103ms
+=============== May 27, 2018 (PDT) ===============
+05:17:11.964240 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+05:17:11.964509 version@stat F·[0 1] S·53KiB[0B 53KiB] Sc·[0.00 0.00]
+05:17:11.964536 db@open opening
+05:17:11.964618 journal@recovery F·1
+05:17:11.968627 journal@recovery recovering @12
+05:17:11.969856 memdb@flush created L0@15 N·2 S·243B "Blo..ion,v689":"Las..der,v690"
+05:17:11.974048 version@stat F·[1 1] S·54KiB[243B 53KiB] Sc·[0.25 0.00]
+05:17:11.975263 db@janitor F·4 G·0
+05:17:11.975305 db@open done T·10.747485ms
+05:23:20.669334 db@close closing
+05:23:20.716610 db@close done T·47.268468ms

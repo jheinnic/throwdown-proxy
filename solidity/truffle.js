@@ -1,5 +1,5 @@
 require("babel-register")({
-  ignore: /node_modules\/(?!zeppelin-solidity)/
+  ignore: /node_modules\/(?!openzeppelin-solidity)/
 });
 require("babel-polyfill");
 
@@ -9,8 +9,8 @@ module.exports = {
             host: "localhost",
             port: 8501,
             network_id: "*", // Match any network id
-            gas: 4e6,
-            gasPrice: 2e10
+            gas: 4712388,
+            gasPrice: 100000000000
         }
     },
     solc: {

@@ -1,0 +1,19 @@
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase: passOne
+Repeat passphrase: passOne
+Address: {c3e94a33aef39be9af77a001bf3dc68983d6aa01}
+
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase: passTwo
+Repeat passphrase: passTwo
+Address: {b5e82077bf08ca3d50dc0fef87d473dd6b5099d0}
+
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase: deployOne
+Repeat passphrase: deployOne
+Address: {9c1ddebbe74766bf1e36e1fb1806a36e50efa4da}
+
+Your new account is locked with a password. Please give a password. Do not forget this password.
+Passphrase: 
+Repeat passphrase: deplyTwo
+Address: {bea38e8e312e2c8ef0b0e8ced7d5cf95d7a16c45}
