@@ -25,10 +25,10 @@ import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-
 import {LoggerModule, NgxLoggerLevel, NGXLogger} from 'ngx-logger';
 
 import {SharedModule} from '../shared/shared.module';
-import {keycloakOptions} from '../shared/di/app-di.tokens';
-import {GradientTokenContractService} from './util/gradient-token-contract.service';
+import {keycloakOptions} from '../shared/di/keycloak-di.tokens';
+import {GradientTokenService} from '../features/gradient/gradient-token.service';
 import {LayoutComponent} from './layout/layout.component';
-import {moduleImportGuard} from './module-import-guard.helper';
+import {moduleImportGuard} from '../utils/module-import-guard.helper';
 
 
 @NgModule({
@@ -67,7 +67,7 @@ import {moduleImportGuard} from './module-import-guard.helper';
       provide: APP_INITIALIZER,
       useFactory: gradientTokenInitFactory,
       multi: true,
-      deps: [GradientTokenContractService, HttpClient, NGXLogger]
+      deps: [GradientTokenService, HttpClient, NGXLogger]
     }
   ],
   exports: [
@@ -108,7 +108,7 @@ function keycloakInitFactory(keycloakConfig: KeycloakOptions, keycloak: Keycloak
   return (): Promise<boolean> => keycloak.init(keycloakConfig);
 }
 
-function gradientTokenInitFactory(gradientTokenService: GradientTokenContractService, http: HttpClient, logger: NGXLogger): () => Promise<any> {
+function gradientTokenInitFactory(gradientTokenService: GradientTokenService, http: HttpClient, logger: NGXLogger): () => Promise<any> {
   return (): Promise<any> => {
     return http.get('/assets/contracts/GradientToken.json')
       .toPromise()

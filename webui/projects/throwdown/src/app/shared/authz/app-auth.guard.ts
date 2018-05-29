@@ -3,7 +3,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Observable} from 'rxjs/observable';
 import {KeycloakService} from 'keycloak-angular';
 
-import {keycloakLoginOptions} from '../di/app-di.tokens';
+import {keycloakLoginOptions} from '../di/keycloak-di.tokens';
 
 @Injectable({
   providedIn: 'root',

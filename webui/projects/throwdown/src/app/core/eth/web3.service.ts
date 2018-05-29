@@ -11,18 +11,20 @@ import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/operator/repeat';
 import 'rxjs/add/operator/map';
 
+import isEqualWith from 'lodash.isequalwith';
+
 import Web3 from 'web3';
 import * as Web3Types from 'web3/types';
 import {default as contract} from 'truffle-contract';
 
-import {WindowRefService} from '../window/window-ref.service';
+import {WindowRefService} from './window-ref.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Web3Service {
 
-  public accountsObservable: Observable<string>;
+  public accountsObservable: Observable<string[]>;
   private web3: Web3;
   private accounts: string[];
   private onRefreshAccounts = new Subject<any>();
@@ -56,30 +58,26 @@ export class Web3Service {
         this.web3.eth.getAccounts,
         (accs: string[]): string[] => {
           // Get the initial account balance so it can be displayed.
-          if (accs.length === 0) {
+          if ((! accs) || (accs.length === 0)) {
             alert(`Couldn't get any accounts!  Verify that your Ethereum client (MetaMask) is configured correctly.`);
-            return;
+            return [];
           }
 
           if (typeof accs === 'string') {
             accs = [accs];
           }
 
-          if (!this.accounts || this.accounts.length !== accs.length || this.accounts[0] !== accs[0]) {
-            console.log(`Observed new accounts`);
-            this.accounts = accs;
-          }
-
           return accs;
         }
       );
-    // this.accountsObservable = defer(callGetAccounts)
 
-    this.accountsObservable = defer(this.web3.eth.getAccounts)
+    // this.accountsObservable = defer(this.web3.eth.getAccounts)
+    this.accountsObservable = defer(callGetAccounts)
       .delayWhen<string[]>(of, this.onRefreshAccounts)
       .repeat()
-      .map((value: any) => value as string)
-      .distinctUntilChanged();
+      .distinctUntilChanged(
+        (p: string[], q: string[]) => isEqualWith(p, q)
+      );
 
     this.onRefreshAccounts.next(0);
   }

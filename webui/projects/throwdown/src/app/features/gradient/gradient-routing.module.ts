@@ -1,12 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {MetaSenderComponent} from './meta-sender/meta-sender.component';
+import {GradientContainerComponent} from './gradient-container/gradient-container.component';
 
 const routes: Routes = [
   {
-    path: 'meta-sender',
+    path: 'gradients',
     pathMatch: 'full',
-    component: MetaSenderComponent
+    component: GradientContainerComponent
   }
 ];
 

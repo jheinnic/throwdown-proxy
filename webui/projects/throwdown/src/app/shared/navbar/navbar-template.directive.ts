@@ -1,10 +1,22 @@
-import {Directive, OnDestroy, OnInit, TemplateRef, ViewRef} from '@angular/core';
-import {NavbarTemplateService} from './navbar-template.service';
+import {Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {CdkPortal} from '@angular/cdk/portal';
 
 @Directive({
-  selector: '[tdnNavbarTemplate]'
+  selector: '[tdn-navbar-template], [tdnNavbarTemplate]'
 })
-export class NavbarTemplateDirective implements OnInit, OnDestroy {
+export class NavbarTemplateDirective extends CdkPortal {
+  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+    super(templateRef, viewContainerRef);
+  }
+
+  @Input() private default: boolean = false;
+
+  public get isDefault(): boolean {
+    return this.default;
+  }
+}
+/*
+implements OnInit, OnDestroy {
   private embeddedView: ViewRef;
 
   constructor( private navbarTemplateService: NavbarTemplateService,
@@ -19,3 +31,4 @@ export class NavbarTemplateDirective implements OnInit, OnDestroy {
     this.navbarTemplateService.removeView(this.embeddedView);
   }
 }
+ */

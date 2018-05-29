@@ -1,16 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/subscription';
+import {NGXLogger} from 'ngx-logger';
 
 import {Web3Service} from '../../../core/eth/web3.service';
-import {GradientToken} from '../../gradient/gradient-token.interface';
-import {GradientTokenService} from '../../gradient/gradient-token.service';
+import {GradientToken} from '../gradient-token.interface';
+import {GradientTokenService} from '../gradient-token.service';
 
 @Component({
-  selector: 'tdn-meta-sender',
-  templateUrl: './meta-sender.component.html',
-  styleUrls: ['./meta-sender.component.css']
+  selector: 'tdn-gradient-container',
+  templateUrl: './gradient-container.component.html',
+  styleUrls: ['./gradient-container.component.css']
 })
-export class MetaSenderComponent implements OnInit {
+export class GradientContainerComponent implements OnInit, OnDestroy {
   @Input() color1: string = '#000000';
   @Input() color2: string = '#FFFFFF';
   accounts: string[];
@@ -24,15 +25,15 @@ export class MetaSenderComponent implements OnInit {
   };
   status = '';
 
-  constructor(private web3Service: Web3Service, private gradientTokenService: GradientTokenService) {
-    console.log('Constructor: ', web3Service, gradientTokenService);
+  constructor(
+    private web3Service: Web3Service, private gradientTokenService: GradientTokenService,
+    private logger: NGXLogger ) {
+    this.logger.info('Constructor: ', web3Service, gradientTokenService);
   }
 
   async ngOnInit() {
-    console.log(await this.watchAccount());
     this.metaCoinInstance = await this.gradientTokenService.deployed();
-    this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1);
-    console.log(this.model.balance);
+    this.watchAccount();
   }
 
   ngOnDestroy() {
@@ -43,16 +44,15 @@ export class MetaSenderComponent implements OnInit {
   }
 
   watchAccount() {
-    return new Promise((reject, resolve) => {
-      this.accountSubscription = this.web3Service.accountsObservable
-        .subscribe((accounts: string[]): void => {
-            this.accounts = accounts;
-            this.model.account = accounts[0];
-            console.log(this.model.account);
-            if (!! resolve) { resolve(accounts[0]); resolve = undefined; }
-          }
-        );
-    });
+    this.accountSubscription = this.web3Service.accountsObservable.subscribe(
+      (accounts: string[]): void => {
+        this.accounts = accounts;
+        this.model.account = accounts[0];
+        // this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1);
+        this.refreshBalance();
+        this.logger.info(this.model.account);
+      }
+    );
   }
 
   setStatus(status) {
@@ -68,8 +68,8 @@ export class MetaSenderComponent implements OnInit {
     const amount = this.model.amount;
     const receiver = this.model.receiver;
 
-    console.log('Sending ' + amount + ' coins to ' + receiver);
-    console.log('Minting ' + this.color1 + ' -> ' + this.color2);
+    this.logger.info('Sending ' + amount + ' coins to ' + receiver);
+    this.logger.info('Minting ' + this.color1 + ' -> ' + this.color2);
 
     this.setStatus('Initiating transaction... (please wait)');
 
@@ -82,21 +82,22 @@ export class MetaSenderComponent implements OnInit {
         this.refreshBalance();
       }
     }).catch((e) => {
-      console.log(e);
+      this.logger.info(e);
       this.setStatus('Error sending coin; see log.');
     });
 
   };
 
   refreshBalance() {
-    console.log('Refreshing balance');
+    this.logger.info('Refreshing balance');
 
-
-    this.metaCoinInstance.tokenOfOwnerByIndex.call(this.model.account).then((value) => {
-      console.log('Found balance: ', value);
-      this.model.balance = value.valueOf();
-    }).catch(function (e) {
-      console.log(e);
+    this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1).then(
+      (value) => {
+        this.logger.info('Found balance: ', value);
+        this.model.balance = value.valueOf();
+      }
+    ).catch(function (e) {
+      this.logger.error(e);
       this.setStatus('Error getting balance; see log.');
     });
   };
@@ -107,12 +108,12 @@ export class MetaSenderComponent implements OnInit {
   }
 
   setAmount(e) {
-    console.log('Setting amount: ' + e.target.value);
+    this.logger.info('Setting amount: ' + e.target.value);
     this.model.amount = e.target.value;
   }
 
   setReceiver(e) {
-    console.log('Setting receiver: ' + e.target.value);
+    this.logger.info('Setting receiver: ' + e.target.value);
     this.model.receiver = e.target.value;
   }
 }
