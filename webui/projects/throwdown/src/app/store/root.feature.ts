@@ -57,7 +57,7 @@ export const initialState: RootState = {
       paramMap: null,
       data: null
     },
-    navigationId: -1
+    navigationId: 0
   }
 };
 

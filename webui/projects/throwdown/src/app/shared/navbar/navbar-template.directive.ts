@@ -1,17 +1,21 @@
 import {Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
 import {CdkPortal} from '@angular/cdk/portal';
 
+import {NGXLogger} from 'ngx-logger';
+
 @Directive({
   selector: '[tdn-navbar-template], [tdnNavbarTemplate]'
 })
 export class NavbarTemplateDirective extends CdkPortal {
-  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef) {
+  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef, private logger: NGXLogger) {
     super(templateRef, viewContainerRef);
+    this.logger.info('NavbarTemplateDirective constructor');
   }
 
   @Input() private default: boolean = false;
 
   public get isDefault(): boolean {
+    this.logger.info('NavbarTemplateDirective isDefault check');
     return this.default;
   }
 }

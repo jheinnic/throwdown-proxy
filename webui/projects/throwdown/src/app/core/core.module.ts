@@ -22,7 +22,7 @@ import {ApolloModule} from 'apollo-angular';
 import {HttpLinkModule} from 'apollo-angular-link-http';
 import {NgrxCache, NgrxCacheModule} from 'apollo-angular-cache-ngrx';
 import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-angular';
-import {LoggerModule, NgxLoggerLevel, NGXLogger} from 'ngx-logger';
+import {LoggerModule, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
 
 import {SharedModule} from '../shared/shared.module';
 import {keycloakOptions} from '../shared/di/keycloak-di.tokens';
@@ -113,9 +113,12 @@ function gradientTokenInitFactory(gradientTokenService: GradientTokenService, ht
     return http.get('/assets/contracts/GradientToken.json')
       .toPromise()
       .then(
-        (resp: Response) => gradientTokenService.setupContract(resp),
+        (resp: Response) => {
+          gradientTokenService.setupContract(resp);
+        },
         (error: any): void => {
           logger.error('Failed to load GradientToken contract: ', error);
-        });
-  };
+        }
+      );
+  }
 }

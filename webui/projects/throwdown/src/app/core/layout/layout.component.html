@@ -34,21 +34,21 @@
       <span fxFlex="12 1 auto">Application Title</span>
       <!--ng-container fxFlex="1 1 auto" *ngTemplateOutlet="myTemplate"></ng-container-->
     </mat-toolbar>
-    <tdn-navbar [contentTemplates]="navbarTemplates">
+    <tdn-navbar [routeTemplate]="navbarTemplate">
+      <mat-tab-group>
+        <mat-tab label="One">
+          <h1>Default tab content</h1>
+          <p>...</p>
+        </mat-tab>
+        <mat-tab label="Two">
+          <h1>Some more default tab content</h1>
+          <button (click)="clickMe()" mat-button>Click me!</button>
+          <p>...</p>
+        </mat-tab>
+      </mat-tab-group>
     </tdn-navbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<ng-template tdn-navbar-template>
-  <mat-tab-group>
-    <mat-tab label="One">
-      <h1>Default tab content</h1>
-      <p>...</p>
-    </mat-tab>
-    <mat-tab label="Two">
-      <h1>Some more default tab content</h1>
-      <button (click)="clickMe()" mat-button>Click me!</button>
-      <p>...</p>
-    </mat-tab>
-  </mat-tab-group>
-</ng-template>
+<!--<ng-template tdn-navbar-template default="true">-->
+<!--</ng-template>-->
