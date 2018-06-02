@@ -31,7 +31,7 @@ export class MetaSenderComponent implements OnInit {
   async ngOnInit() {
     console.log(await this.watchAccount());
     this.metaCoinInstance = await this.gradientTokenService.deployed();
-    this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1);
+    this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1, {from: this.model.account});
     console.log(this.model.balance);
   }
 

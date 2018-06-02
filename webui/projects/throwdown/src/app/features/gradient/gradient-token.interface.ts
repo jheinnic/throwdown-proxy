@@ -6,7 +6,7 @@ export interface GradientToken {
   totalSupply(): Promise<number>;
   tokenURI(gradientId: number): Promise<string>;
   tokenByIndex(index: number): Promise<number>;
-  tokenOfOwnerByIndex(owner: any, index: number): Promise<number>;
+  tokenOfOwnerByIndex(owner: any, index: number, options: any): Promise<number>;
 
   getGradient(gradientId: number): Promise<Gradient>;
   mint(outer: string, inner: string, options: any): Promise<any>; // void;

@@ -19,7 +19,7 @@ import 'rxjs/add/operator/debounceTime';
 export class LayoutComponent {
   private isHandset: Observable<BreakpointState>;
   private _isXSmall: Observable<BreakpointState>;
-  private _onDestroyed: Subject;
+  private _onDestroyed: Subject<any>;
   private _subscribed: Subscription;
   public navbarMargin: { height: number };
 
@@ -27,7 +27,7 @@ export class LayoutComponent {
     this.logger.info('Layout constructor');
     this.isHandset = this.breakpointObserver.observe(Breakpoints.Handset);
     this._isXSmall = this.breakpointObserver.observe(Breakpoints.XSmall);
-    this._onDestroyed = new Subject();
+    this._onDestroyed = new Subject<any>();
 
     // this._validateNavMargin();
     this.navbarMargin = { height: 100 };

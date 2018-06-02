@@ -46,8 +46,8 @@ export class GradientTokenService implements GradientToken {
     return this.deployedGradientToken.tokenByIndex(index);
   }
 
-  tokenOfOwnerByIndex(owner: any, index: number): Promise<number> {
-    return this.deployedGradientToken.tokenOfOwnerByIndex(owner, index);
+  tokenOfOwnerByIndex(owner: any, index: number, options: any): Promise<number> {
+    return this.deployedGradientToken.tokenOfOwnerByIndex(owner, index, options);
   }
 
   tokenURI(gradientId: number): Promise<string> {

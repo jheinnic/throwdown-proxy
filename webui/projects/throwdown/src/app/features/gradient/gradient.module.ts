@@ -30,8 +30,8 @@ function gradientTokenInitFactory(gradientTokenService: GradientTokenService, ht
     return http.get('/assets/contracts/GradientToken.json')
       .toPromise()
       .then(
-        (resp: Response) => {
-          gradientTokenService.setupContract(resp);
+        async (resp: Response): Promise<GradientTokenService> => {
+          return await gradientTokenService.setupContract(resp);
         },
         (error: any): void => {
           logger.error('Failed to load GradientToken contract: ', error);

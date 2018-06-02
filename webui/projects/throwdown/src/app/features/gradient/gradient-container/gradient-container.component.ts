@@ -33,6 +33,7 @@ export class GradientContainerComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.metaCoinInstance = await this.gradientTokenService.deployed();
+    this.logger.info('About to query accounts with', this.metaCoinInstance);
     this.watchAccount();
   }
 
@@ -46,13 +47,16 @@ export class GradientContainerComponent implements OnInit, OnDestroy {
   watchAccount() {
     this.accountSubscription = this.web3Service.accountsObservable.subscribe(
       (accounts: string[]): void => {
+        this.logger.info('Accounts', accounts);
         this.accounts = accounts;
         this.model.account = accounts[0];
         // this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1);
+        this.logger.info('About to refresh with', this.metaCoinInstance);
         this.refreshBalance();
         this.logger.info(this.model.account);
       }
     );
+    this.web3Service.refreshAccounts();
   }
 
   setStatus(status) {
@@ -74,31 +78,35 @@ export class GradientContainerComponent implements OnInit, OnDestroy {
     this.setStatus('Initiating transaction... (please wait)');
 
     // this.metaCoinInstance.sendCoin(receiver, amount, {from: this.model.account}).then((success) => {
-    this.metaCoinInstance.mint(this.color1, this.color2, {from: this.model.account}).then((success) => {
+    this.metaCoinInstance.mint(this.color1, this.color2, {from: this.model.account}).then(
+      async (success) => {
       if (!success) {
         this.setStatus('Transaction failed!');
+        return -999;
       } else {
         this.setStatus('Transaction complete!');
-        this.refreshBalance();
+        return await this.refreshBalance();
       }
     }).catch((e) => {
-      this.logger.info(e);
+      this.logger.error('Error sending coin', e);
       this.setStatus('Error sending coin; see log.');
+      return -42;
     });
-
   };
 
-  refreshBalance() {
+  refreshBalance(): Promise<number> {
     this.logger.info('Refreshing balance');
 
-    this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1).then(
-      (value) => {
+    return this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1, { from: this.model.account }).then(
+      (value: number) => {
         this.logger.info('Found balance: ', value);
         this.model.balance = value.valueOf();
+        return value.valueOf();
       }
-    ).catch(function (e) {
-      this.logger.error(e);
+    ).catch((e: any) => {
+      this.logger.error('Failed to refresh balance', e);
       this.setStatus('Error getting balance; see log.');
+      return -5000;
     });
   };
 
