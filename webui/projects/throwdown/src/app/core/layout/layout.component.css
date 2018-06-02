@@ -3,7 +3,7 @@
 }
 
 .sidenav {
-  width: 12vw;
+  width: 200px;
   box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
 }
 
@@ -11,8 +11,29 @@
   z-index: 0;
 }
 
+.fixed-header {
+  position: fixed;
+  top: 8px;
+  width: 100vw;
+}
+
 mat-toolbar mat-icon {
-  height: 48px;
-  width: 48px;
-  font-size: 48px;
+  height: 1em;
+  width: 1em;
+  font-size: 36px;
+  line-height: 1em;
+}
+
+mat-toolbar, tdn-navbar {
+  position: fixed;
+  width: 100vw;
+}
+
+tdn-navbar {
+  position: fixed;
+  width: 100vw;
+}
+
+router-outlet {
+  height: 100vh;
 }

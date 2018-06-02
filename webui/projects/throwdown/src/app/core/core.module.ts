@@ -18,17 +18,21 @@ import {
   MatToolbarModule
 } from '@angular/material';
 
+import {StoreModule} from '@ngrx/store';
+import {EffectsModule} from '@ngrx/effects';
+
 import {ApolloModule} from 'apollo-angular';
 import {HttpLinkModule} from 'apollo-angular-link-http';
 import {NgrxCache, NgrxCacheModule} from 'apollo-angular-cache-ngrx';
-import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-angular';
 import {LoggerModule, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
+import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-angular';
 
 import {SharedModule} from '../shared/shared.module';
 import {keycloakOptions} from '../shared/di/keycloak-di.tokens';
 import {GradientTokenService} from '../features/gradient/gradient-token.service';
 import {LayoutComponent} from './layout/layout.component';
 import {moduleImportGuard} from '../utils/module-import-guard.helper';
+import {CoreFeature, LayoutEffects, ToymodEffects} from './store';
 
 
 @NgModule({
@@ -54,7 +58,9 @@ import {moduleImportGuard} from '../utils/module-import-guard.helper';
     NgrxCacheModule,
     HttpLinkModule,
     KeycloakAngularModule,
-    SharedModule
+    SharedModule,
+    StoreModule.forFeature(CoreFeature.featureKey, CoreFeature.reducerMap, { initialState: CoreFeature.initialState }),
+    EffectsModule.forFeature([LayoutEffects, ToymodEffects])
   ],
   declarations: [LayoutComponent],
   providers: [
@@ -63,11 +69,6 @@ import {moduleImportGuard} from '../utils/module-import-guard.helper';
       useFactory: keycloakInitFactory,
       multi: true,
       deps: [keycloakOptions, KeycloakService, NGXLogger]
-    }, {
-      provide: APP_INITIALIZER,
-      useFactory: gradientTokenInitFactory,
-      multi: true,
-      deps: [GradientTokenService, HttpClient, NGXLogger]
     }
   ],
   exports: [
@@ -108,17 +109,17 @@ function keycloakInitFactory(keycloakConfig: KeycloakOptions, keycloak: Keycloak
   return (): Promise<boolean> => keycloak.init(keycloakConfig);
 }
 
-function gradientTokenInitFactory(gradientTokenService: GradientTokenService, http: HttpClient, logger: NGXLogger): () => Promise<any> {
-  return (): Promise<any> => {
-    return http.get('/assets/contracts/GradientToken.json')
-      .toPromise()
-      .then(
-        (resp: Response) => {
-          gradientTokenService.setupContract(resp);
-        },
-        (error: any): void => {
-          logger.error('Failed to load GradientToken contract: ', error);
-        }
-      );
-  }
-}
+// function gradientTokenInitFactory(gradientTokenService: GradientTokenService, http: HttpClient, logger: NGXLogger): () => Promise<any> {
+//   return (): Promise<any> => {
+//     return http.get('/assets/contracts/GradientToken.json')
+//       .toPromise()
+//       .then(
+//         (resp: Response) => {
+//           gradientTokenService.setupContract(resp);
+//         },
+//         (error: any): void => {
+//           logger.error('Failed to load GradientToken contract: ', error);
+//         }
+//       );
+//   }
+// }

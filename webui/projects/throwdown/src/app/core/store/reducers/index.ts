@@ -39,6 +39,9 @@ export namespace CoreFeature {
 
   /* Sub-Feature Delegated Selectors */
 
-  export const selectLayoutActiveNavbarTemplate =
-    createSelector(selectLayoutState, fromLayout.getLayoutActiveNavbarTemplate);
+  export const selectNavbarTemplateStack =
+    createSelector(selectLayoutState, fromLayout.getNavbarTemplateStack);
+
+  export const selectActiveNavbarTemplate =
+    createSelector(selectNavbarTemplateStack, fromLayout.getActiveNavbarTemplate);
 }

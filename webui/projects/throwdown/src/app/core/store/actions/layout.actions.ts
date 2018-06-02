@@ -1,25 +1,31 @@
-import { Action } from '@ngrx/store';
+import {Action} from '@ngrx/store';
 import {NavbarTemplateDirective} from '../../../shared/navbar/navbar-template.directive';
 
 export namespace LayoutActions {
   export enum ActionTypes {
-    UpdateNavbarTemplates = '[Layout] Update Navbar Templates'
+    PushNavbarTemplate = '[Layout] Push Navbar Template',
+    PopNavbarTemplate = '[Layout] Pop Navbar Template'
   }
 
-  export class UpdateNavbarTemplates implements Action {
-    readonly type = ActionTypes.UpdateNavbarTemplates;
-    readonly payload: NavbarTemplateDirective;
+  export class PushNavbarTemplate implements Action {
+    readonly type = ActionTypes.PushNavbarTemplate;
 
-    constructor(payload: Array<NavbarTemplateDirective>) {
-      this.payload = payload.reduce((agg: NavbarTemplateDirective | undefined, current: NavbarTemplateDirective) => {
-        if (agg === undefined) {
-          return current;
-        }
-
-        return agg.compareTo(current);
-      })
+    constructor(public readonly payload: NavbarTemplateDirective) {
+      if (!this.payload) {
+        throw new Error('Incoming navbar templates must not be undefined');
+      }
     }
   }
 
-  export type Actions = UpdateNavbarTemplates;
+  export class PopNavbarTemplate implements Action {
+    readonly type = ActionTypes.PopNavbarTemplate;
+
+    constructor(public readonly payload: NavbarTemplateDirective) {
+      if (!this.payload) {
+        throw new Error('Outgoing navbar templates must not be undefined');
+      }
+    }
+  }
+
+  export type Actions = PushNavbarTemplate | PopNavbarTemplate;
 }

@@ -2,6 +2,9 @@
   <ng-content></ng-content>
 </ng-template>
 
+<ng-template #contentPortal="cdkPortal" [cdkPortal]="defaultTemplate"></ng-template>
+<ng-template [cdkPortalOutlet]="contentPortal"></ng-template>
+
 
 <!--ng-container #container *tdnNavbarContainer [ngStyle]="showNavbar ? { } : {display: 'none'}"-->
 <!--ng-container *ngIf="showNavbar" [ngStyle]="showNavbar ? { } : {display: 'none'}"-->
@@ -19,4 +22,4 @@
   </div>
 </ng-template>
 
-<ng-container [cdkPortalOutlet]="defaultPortal"></ng-container>
+<ng-template [cdkPortalOutlet]="defaultPortal"></ng-template>

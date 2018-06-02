@@ -8,10 +8,10 @@
     [attr.role]="(isHandset | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
     [opened]="!(isHandset | async)!.matches">
-    <mat-toolbar color="primary">
-      <mat-icon>menu</mat-icon>
+    <mat-toolbar #sidenavToolbar color="primary" fxLayout="row" fxLayoutAlign="flex-start center">
+      <mat-icon fxFlex="0 0 auto">menu</mat-icon>
     </mat-toolbar>
-    <mat-nav-list>
+    <mat-nav-list [style.margin-top.px]="navbarMargin.height">
       <a mat-list-item routerLink="/route-one">Route one</a>
       <a mat-list-item routerLink="/route-two">Route two</a>
       <a mat-list-item routerLink="/">Home Page</a>
@@ -20,35 +20,36 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary" fxLayout="row">
-      <button
-        fxFlexOffset="4"
-        fxFlex="0 0 auto"
-        type="button"
-        mat-icon-button
-        aria-label="Toggle sidenav"
-        (click)="drawer.toggle()"
-        *ngIf="(isHandset | async).matches">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-      <span fxFlex="12 1 auto">Application Title</span>
-      <!--ng-container fxFlex="1 1 auto" *ngTemplateOutlet="myTemplate"></ng-container-->
-    </mat-toolbar>
-    <tdn-navbar [routeTemplate]="navbarTemplate">
-      <mat-tab-group>
-        <mat-tab label="One">
-          <h1>Default tab content</h1>
-          <p>...</p>
-        </mat-tab>
-        <mat-tab label="Two">
-          <h1>Some more default tab content</h1>
-          <button (click)="clickMe()" mat-button>Click me!</button>
-          <p>...</p>
-        </mat-tab>
-      </mat-tab-group>
-    </tdn-navbar>
-    <router-outlet></router-outlet>
+    <div class="fixed-header">
+      <mat-toolbar #contentToolbar color="primary" fxLayout="row">
+        <button
+          fxFlex="0 0 auto"
+          type="button"
+          mat-icon-button
+          aria-label="Toggle sidenav"
+          (click)="drawer.toggle()"
+          *ngIf="(isHandset | async).matches">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span fxFlex="12 1 auto">Application Title</span>
+      </mat-toolbar>
+      <tdn-navbar [style.top.px]="navbarMargin.height"></tdn-navbar>
+    </div>
+    <mat-card [style.margin-top.px]="navbarMargin.height + 200">
+      <router-outlet cdk-scrollable></router-outlet>
+    </mat-card>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<!--<ng-template tdn-navbar-template default="true">-->
-<!--</ng-template>-->
+<ng-template tdn-navbar-template>
+  <mat-tab-group>
+    <mat-tab label="One">
+      <h1>Default tab content</h1>
+      <p>...</p>
+    </mat-tab>
+    <mat-tab label="Two">
+      <h1>Some more default tab content</h1>
+      <button (click)="clickMe()" mat-button>Click me!</button>
+      <p>...</p>
+    </mat-tab>
+  </mat-tab-group>
+</ng-template>

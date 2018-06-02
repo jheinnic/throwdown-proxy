@@ -15,7 +15,7 @@ export class NavbarContainerDirective extends CdkPortalOutlet implements OnInit,
   private templatesSubscription: Subscription;
 
   constructor(componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef,
-              private logger: NGXLogger, private navbar: NavbarComponent) {
+              private logger: NGXLogger, private store: NavbarComponent) {
     super(componentFactoryResolver, viewContainerRef);
 
     this.logger.info('Navbar Container Directive constructor');
@@ -24,40 +24,44 @@ export class NavbarContainerDirective extends CdkPortalOutlet implements OnInit,
   ngOnInit() {
     super.ngOnInit()
 
-    this.logger.info("Navbar container onInit")
+    this.logger.info("Navbar container onInit");
 
-    this.templatesSubscription = this.navbar.content.changes.subscribe(
-      (contentList: QueryList<NavbarTemplateDirective>) => {
-        this.logger.info("Navbar container changes", this.navbar.content, contentList);
+    /*
+    this.templatesSubscription = this.navbar.contentTemplate.subscribe(
+      (nextTemplate: NavbarTemplateDirective) => {
+        this.logger.info("Navbar container changes", this.navbar.contentTemplate, nextTemplate);
 
-        const nextTemplate = contentList.reduce(function (best, next) {
-          return ((!best) || (best.isDefault())) ? next : best;
-        }, undefined);
+        // const nextTemplate = contentList.reduce(function (best, next) {
+        //   return ((!best) || (best.isDefault())) ? next : best;
+        // }, undefined);
 
-        if ((!!nextTemplate) && (this.currentTemplate !== nextTemplate)) {
+        // if ((!!nextTemplate) && (this.currentTemplate !== nextTemplate)) {
           if (this.hasAttached()) {
             this.detach();
           }
 
-          this.currentTemplate = nextTemplate;
-          this.attachTemplatePortal(nextTemplate);
-        }
+          // this.currentTemplate = nextTemplate;
+          if (!! nextTemplate) {
+            this.attachTemplatePortal(nextTemplate);
+          }
+        // }
       }
     );
+      */
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
 
-    this.logger.info("Navbar container destroy", this.navbar.content);
+    this.logger.info("Navbar container destroy"); // , this.navbar.contentTemplate);
 
     if (this.templatesSubscription) {
       this.templatesSubscription.unsubscribe();
       this.templatesSubscription = undefined;
 
-      if (this.currentTemplate) {
+      if (this.hasAttached()) {
         this.detach();
-        this.currentTemplate = undefined;
+        // this.currentTemplate = undefined;
       }
     }
   }

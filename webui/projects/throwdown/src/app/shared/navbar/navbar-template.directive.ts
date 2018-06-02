@@ -1,38 +1,33 @@
-import {Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Directive, Input, SimpleChanges, TemplateRef, ViewContainerRef} from '@angular/core';
 import {CdkPortal} from '@angular/cdk/portal';
 
+import {Store} from '@ngrx/store';
 import {NGXLogger} from 'ngx-logger';
+
+import {RootStore} from '../../store';
+import {LayoutActions} from '../../core/store';
 
 @Directive({
   selector: '[tdn-navbar-template], [tdnNavbarTemplate]'
 })
 export class NavbarTemplateDirective extends CdkPortal {
-  constructor(templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef, private logger: NGXLogger) {
+  constructor(
+    templateRef: TemplateRef<any>,
+    viewContainerRef: ViewContainerRef,
+    private store: Store<RootStore.State>,
+    private logger: NGXLogger)
+  {
     super(templateRef, viewContainerRef);
     this.logger.info('NavbarTemplateDirective constructor');
   }
 
-  @Input() private default: boolean = false;
+  ngOnInit(): void {
+    this.logger.info('Push template:', this);
+    this.store.dispatch(new LayoutActions.PushNavbarTemplate(this))
+  }
 
-  public get isDefault(): boolean {
-    this.logger.info('NavbarTemplateDirective isDefault check');
-    return this.default;
+  ngOnDestroy(): void {
+    this.logger.info('Pop template:', this);
+    this.store.dispatch(new LayoutActions.PopNavbarTemplate(this))
   }
 }
-/*
-implements OnInit, OnDestroy {
-  private embeddedView: ViewRef;
-
-  constructor( private navbarTemplateService: NavbarTemplateService,
-               private tpl: TemplateRef<any> ) {
-  }
-
-  ngOnInit() {
-    this.embeddedView = this.navbarTemplateService.embedTemplate(this.tpl);
-  }
-
-  ngOnDestroy() {
-    this.navbarTemplateService.removeView(this.embeddedView);
-  }
-}
- */

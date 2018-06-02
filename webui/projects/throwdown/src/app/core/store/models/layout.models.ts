@@ -5,6 +5,6 @@ type Undefinable<T> = T | undefined;
 
 export namespace LayoutModels {
   export interface State {
-    activeNavbarTemplate: Undefinable<NavbarTemplateDirective>
+    navbarTemplateStack: Array<NavbarTemplateDirective>
   }
 }

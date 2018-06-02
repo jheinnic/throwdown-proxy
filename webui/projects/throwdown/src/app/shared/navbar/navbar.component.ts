@@ -1,40 +1,35 @@
-import {AfterViewInit, Component, Input, QueryList} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
+import {Store} from '@ngrx/store';
 import {NGXLogger} from 'ngx-logger';
+import {Observable} from 'rxjs/observable';
 
 import {NavbarTemplateDirective} from './navbar-template.directive';
+import {RootStore} from '../../store';
+import {CoreFeature} from '../../core/store/reducers';
 
 @Component({
   selector: 'tdn-navbar',
-  // templateUrl: './navbar.component.html',
-  template: '<ng-template tdnNavbarContainer></ng-template>',
+  template: '<ng-template [cdkPortalOutlet]="navbarTemplate | async"></ng-template>',
   styleUrls: ['./navbar.component.css']
 
 })
-export class NavbarComponent implements AfterViewInit {
+export class NavbarComponent {
   // @ViewChild('defaultTemplate', {read: TemplateRef})
   // private defaultTemplate: TemplateRef<any>;
 
   // @ViewChild('defaultPortal')
   // private defaultPortal: CdkPortal;
+  public readonly navbarTemplate: Observable<NavbarTemplateDirective>;
 
-  constructor(private logger: NGXLogger) {
+  constructor(private store: Store<RootStore.State>,  private logger: NGXLogger) {
     this.logger.info('Navbar Component constructor');
+    this.navbarTemplate = this.store.select(CoreFeature.selectActiveNavbarTemplate);
   }
 
-  @Input() private routeTemplate: NavbarTemplateDirective;
-  @ContentChild(NavbarTemplateDirective) private defaultTemplate: NavbarTemplateDirective;
-
-  public get content(): NavbarTemplateDirective {
-    this.logger.info('Get NavbarComponent content template ', this.routeTemplate, this.defaultTemplate)
-    return (!! this.routeTemplate) ? this.routeTemplate : this.defaultTemplate;
-  }
-
-  public ngAfterViewInit(): void {
-    this.logger.info('Navbar Component After View Init ', this.routeTemplate, this.defaultTemplate);
-  }
-
-  public clickMe(): void {
-    this.logger.info('Click-ity clack: ', this);
-  }
+  // public get content(): Observable<NavbarTemplateDirective> {
+  // this.logger.info('Get NavbarComponent content template ', this.routeTemplate, this.defaultTemplate)
+  // return (!! this.routeTemplate) ? this.routeTemplate : this.defaultTemplate;
+  // return this.contentTemplates;
+  // }
 }
