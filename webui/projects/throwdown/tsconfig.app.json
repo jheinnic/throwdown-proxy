@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDirs": ["src", "build/contracts"],
     "outDir": "../../out-tsc/app",
     "baseUrl": "./",
     "module": "es2015",
@@ -8,7 +9,7 @@
   },
   "include": [
      "src/**/*.ts",
-     "**/*.json"
+     "build/contracts/**/*.json"
   ],
   "exclude": [
     "src/test.ts",

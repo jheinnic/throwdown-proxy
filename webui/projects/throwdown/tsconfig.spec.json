@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDirs": ["src", "build/contracts"],
     "outDir": "../../out-tsc/spec",
     "module": "commonjs",
     "types": [
