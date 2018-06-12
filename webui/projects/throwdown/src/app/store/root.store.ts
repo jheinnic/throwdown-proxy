@@ -28,8 +28,8 @@ export namespace RootStore
    * is just a map of keys to inner state types.
    */
   export interface State {
-    apollo: fromApollo.CacheState,
-    routerReducer: fromRouter.RouterReducerState<RouterStateUrl>
+    apollo: fromApollo.CacheState;
+    routerReducer: fromRouter.RouterReducerState<RouterStateUrl>;
   }
 
   /**

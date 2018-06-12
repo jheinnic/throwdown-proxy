@@ -1,10 +1,9 @@
-import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 
 import {NGXLogger} from 'ngx-logger';
-import {Subject} from 'rxjs/subject';
-import {Observable} from 'rxjs/observable';
-import {Subscription} from 'rxjs/subscription';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {debounceTime, startWith, takeUntil, tap} from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/takeUntil';
@@ -16,55 +15,67 @@ import 'rxjs/add/operator/debounceTime';
   styleUrls: ['./layout.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit, OnDestroy
+{
   private isHandset: Observable<BreakpointState>;
+
   private _isXSmall: Observable<BreakpointState>;
+
   private _onDestroyed: Subject<any>;
+
   private _subscribed: Subscription;
+
   public navbarMargin: { height: number };
 
-  constructor(private breakpointObserver: BreakpointObserver, private logger: NGXLogger) {
+  constructor(private breakpointObserver: BreakpointObserver, private logger: NGXLogger)
+  {
     this.logger.info('Layout constructor');
     this.isHandset = this.breakpointObserver.observe(Breakpoints.Handset);
     this._isXSmall = this.breakpointObserver.observe(Breakpoints.XSmall);
     this._onDestroyed = new Subject<any>();
 
     // this._validateNavMargin();
-    this.navbarMargin = { height: 100 };
+    this.navbarMargin = {height: 100};
   }
 
-  @ViewChild("sidenavToolbar", {read: ElementRef}) private _sidenavToolbar: ElementRef<any>;
-  @ViewChild("contentToolbar", {read: ElementRef}) private _contentToolbar: ElementRef<any>;
+  @ViewChild('sidenavToolbar', {read: ElementRef}) private _sidenavToolbar: ElementRef<any>;
 
-  public clickMe(): void {
+  @ViewChild('contentToolbar', {read: ElementRef}) private _contentToolbar: ElementRef<any>;
+
+  public clickMe(): void
+  {
     this.logger.info('Click-ity clack: ', this);
   }
 
-  public ngOnInit(): void {
-    this._subscribed = this._isXSmall
-      .do((value: any) => { this.logger.info('Pretake', value);})
-      .takeUntil(this._onDestroyed)
-    // ).pipe(
-      .startWith(null)
-      .debounceTime(10)
-    // ).pipe(
-      .do((value: any) => { this.logger.info('Poststart', value);})
-    .subscribe((value: any) => {
-      this.logger.info('Trigger: ', value);
-      this._validateNavMargin();
-    }, (error: any) => {
-      this.logger.error(error);
-    }, () => {
-      this.logger.error('Completed');
-    })
+  public ngOnInit(): void
+  {
+    this._subscribed = this._isXSmall.pipe(
+      tap((value: any) => { this.logger.info('Pretake', value); }),
+      takeUntil(this._onDestroyed),
+      // ).pipe(
+      startWith(null),
+      debounceTime(10),
+      // ).pipe(
+      tap((value: any) => { this.logger.info('Poststart', value); })
+    )
+      .subscribe((value: any) => {
+        this.logger.info('Trigger: ', value);
+        this._validateNavMargin();
+      }, (error: any) => {
+        this.logger.error(error);
+      }, () => {
+        this.logger.error('Completed');
+      });
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy(): void
+  {
     this._onDestroyed.next(null);
     this._onDestroyed.complete();
   }
 
-  private _validateNavMargin() {
+  private _validateNavMargin()
+  {
     const currentHeight = this._toolbarHeight + 8;
 
     if (!this.navbarMargin || this.navbarMargin.height !== currentHeight) {
@@ -74,15 +85,22 @@ export class LayoutComponent {
     }
   }
 
-  get _toolbarHeight() {
+  get _toolbarHeight()
+  {
     return this._contentBarHeight || this._sidenavBarHeight || 0;
   }
 
-  get _sidenavBarHeight() {
-    return this._sidenavToolbar.nativeElement ? (this._sidenavToolbar.nativeElement.offsetHeight || 0) : 0;
+  get _sidenavBarHeight()
+  {
+    return this._sidenavToolbar.nativeElement ? (
+      this._sidenavToolbar.nativeElement.offsetHeight || 0
+    ) : 0;
   }
 
-  get _contentBarHeight() {
-    return this._contentToolbar.nativeElement ? (this._contentToolbar.nativeElement.offsetHeight || 0) : 0;
+  get _contentBarHeight()
+  {
+    return this._contentToolbar.nativeElement ? (
+      this._contentToolbar.nativeElement.offsetHeight || 0
+    ) : 0;
   }
 }

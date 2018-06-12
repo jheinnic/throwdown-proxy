@@ -14,7 +14,7 @@
     ],
     "lib": [
       "es2017",
-      "esnext",
+      "esnext.asynciterable",
       "dom"
     ],
     "paths": {
@@ -23,7 +23,22 @@
       ],
       "@jchptf/ngx-web3/*": [
         "dist/jchptf/ngx-web3/*"
+      ],
+      "@jchptf/ngx-random-art": [
+        "dist/jchptf/ngx-random-art"
+      ],
+      "@jchptf/ngx-random-art/*": [
+        "dist/jchptf/ngx-random-art/*"
+      ],
+      "@jchptf/ngx-message-channels": [
+        "dist/jchptf/ngx-message-channels"
+      ],
+      "@jchptf/ngx-message-channels/*": [
+        "dist/jchptf/ngx-message-channels/*"
       ]
     }
-  }
+  },
+  "exclude": [
+    "migration/**/*"
+  ]
 }

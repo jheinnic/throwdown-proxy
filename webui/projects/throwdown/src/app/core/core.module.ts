@@ -33,6 +33,7 @@ import {GradientTokenService} from '../features/gradient/gradient-token.service'
 import {LayoutComponent} from './layout/layout.component';
 import {moduleImportGuard} from '../utils/module-import-guard.helper';
 import {CoreFeature, LayoutEffects, ToymodEffects} from './store';
+import {NgxWeb3Module} from '../../../../jchptf/ngx-web3/src/lib/ngx-web3.module';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import {CoreFeature, LayoutEffects, ToymodEffects} from './store';
     NgrxCacheModule,
     HttpLinkModule,
     KeycloakAngularModule,
+    NgxWeb3Module.forRoot({withNgrx: true}),
     SharedModule,
     StoreModule.forFeature(CoreFeature.featureKey, CoreFeature.reducerMap, { initialState: CoreFeature.initialState }),
     EffectsModule.forFeature([LayoutEffects, ToymodEffects])

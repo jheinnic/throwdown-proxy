@@ -1,4 +1,4 @@
-import assertRevert from "zeppelin-solidity/test/helpers/assertRevert";
+const assertRevert = require("openzeppelin-solidity/test/helpers/assertRevert");
 
 const GradientToken = artifacts.require("GradientToken");
 

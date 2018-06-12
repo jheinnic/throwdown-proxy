@@ -1,32 +1,73 @@
 import {Injectable} from '@angular/core';
-import Web3 from 'web3';
-import * as Web3Types from 'web3/types';
+import {take, timeout, filter} from 'rxjs/operators';
+import {NGXLogger} from 'ngx-logger';
 
-import {Web3Service} from '../../core/eth/web3.service';
 import {GradientToken} from './gradient-token.interface';
 import {Gradient} from './shared/model/gradient.interface';
+import {Web3Service} from '../../../../../jchptf/ngx-web3/src/lib/web3.service';
+
+declare let require: any;
+const gradient_token_artifact = require('../../../../build/contracts/GradientToken.json');
+// console.log(gradient_token_artifact);
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GradientTokenService implements GradientToken {
-  constructor(private web3Service: Web3Service) {
+  constructor(private web3Service: Web3Service, private logger: NGXLogger) {
+    this.logger.info('Constructing GradientTokenService');
   }
 
   private gradientTokenContract: any; // Web3Types.Contract;
   private deployedGradientToken: GradientToken;
+  private deploymentPromise: Promise<boolean> | undefined;
 
-  public async setupContract(gradient_artifact: any): Promise<GradientTokenService> {
-    this.gradientTokenContract = this.web3Service.setupContract(gradient_artifact);
-    this.deployedGradientToken = await this.gradientTokenContract.deployed();
-    return this;
+  public setupContract(): Promise<boolean> {
+    if (! this.deploymentPromise) {
+      this.deploymentPromise = new Promise<boolean>(
+        (resolve, reject) => {
+          this.web3Service.initialized$.pipe(
+            filter((initState: boolean) => initState),
+            take(1),
+            timeout(25000)
+          ).subscribe(
+            (initState: boolean) => {
+              this.gradientTokenContract = this.web3Service.initTruffleContract(gradient_token_artifact);
+              this.gradientTokenContract.deployed()
+                .then((deployedToken) => {
+                  this.deployedGradientToken = deployedToken;
+                });
+              this.logger.info('Initialized deployed GradientToken contract', this.deployedGradientToken);
+              return resolve(true);
+            },
+            (err: any) => {
+              this.logger.error('Failed to initialize GradientToken contract', err);
+              return reject(err);
+            },
+            () => {
+              if (! this.gradientTokenContract) {
+                this.logger.error('Failed to initialize GradientToken contract');
+                return reject(undefined);
+              }
+            }
+          );
+        }
+      );
+    }
+
+    return this.deploymentPromise;
   }
 
-  public deployed(): GradientToken {
-    return this.deployedGradientToken;
+  public isDeployed(): boolean {
+    return !! this.deployedGradientToken;
   }
 
-  getGradient(gradientId: number): Promise<Gradient> {
+  // public deployed(): GradientToken {
+  //   return this.deployedGradientToken;
+  // }
+
+  public getGradient(gradientId: number): Promise<Gradient> {
     return this.deployedGradientToken.getGradient(gradientId);
   }
 
@@ -46,8 +87,9 @@ export class GradientTokenService implements GradientToken {
     return this.deployedGradientToken.tokenByIndex(index);
   }
 
-  tokenOfOwnerByIndex(owner: any, index: number, options: any): Promise<number> {
-    return this.deployedGradientToken.tokenOfOwnerByIndex(owner, index, options);
+  // tokenOfOwnerByIndex(owner: any, index: number, options: any): Promise<number> {
+  tokenOfOwnerByIndex(owner: any, index: number): Promise<number> {
+    return this.deployedGradientToken.tokenOfOwnerByIndex(owner, index);
   }
 
   tokenURI(gradientId: number): Promise<string> {

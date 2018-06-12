@@ -1,18 +1,18 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/subscription';
 
-import {Web3Service} from '../../../core/eth/web3.service';
 import {GradientToken} from '../../gradient/gradient-token.interface';
 import {GradientTokenService} from '../../gradient/gradient-token.service';
+import {Web3Service} from '../../../../../../jchptf/ngx-web3/src/lib/web3.service';
 
 @Component({
   selector: 'tdn-meta-sender',
   templateUrl: './meta-sender.component.html',
   styleUrls: ['./meta-sender.component.css']
 })
-export class MetaSenderComponent implements OnInit {
-  @Input() color1: string = '#000000';
-  @Input() color2: string = '#FFFFFF';
+export class MetaSenderComponent implements OnInit, OnDestroy {
+  @Input() color1 = '#000000';
+  @Input() color2 = '#FFFFFF';
   accounts: string[];
   metaCoinInstance: GradientToken;
   accountSubscription: Subscription;
@@ -30,9 +30,11 @@ export class MetaSenderComponent implements OnInit {
 
   async ngOnInit() {
     console.log(await this.watchAccount());
-    this.metaCoinInstance = await this.gradientTokenService.deployed();
-    this.model.balance = await this.metaCoinInstance.tokenOfOwnerByIndex(this.model.account, 1, {from: this.model.account});
-    console.log(this.model.balance);
+    if (this.gradientTokenService.isDeployed()) {
+      // this.model.balance = await this.gradientTokenService.tokenOfOwnerByIndex(this.model.account, 1, {from: this.model.account});
+      this.model.balance = await this.gradientTokenService.tokenOfOwnerByIndex(this.model.account, 1);
+      console.log(this.model.balance);
+    }
   }
 
   ngOnDestroy() {
@@ -44,7 +46,7 @@ export class MetaSenderComponent implements OnInit {
 
   watchAccount() {
     return new Promise((reject, resolve) => {
-      this.accountSubscription = this.web3Service.accountsObservable
+      this.accountSubscription = this.web3Service.pollClaimedAccounts()
         .subscribe((accounts: string[]): void => {
             this.accounts = accounts;
             this.model.account = accounts[0];
@@ -57,7 +59,7 @@ export class MetaSenderComponent implements OnInit {
 
   setStatus(status) {
     this.status = status;
-  };
+  }
 
   sendCoin() {
     if (!this.metaCoinInstance) {
@@ -85,8 +87,7 @@ export class MetaSenderComponent implements OnInit {
       console.log(e);
       this.setStatus('Error sending coin; see log.');
     });
-
-  };
+  }
 
   refreshBalance() {
     console.log('Refreshing balance');
@@ -99,7 +100,7 @@ export class MetaSenderComponent implements OnInit {
       console.log(e);
       this.setStatus('Error getting balance; see log.');
     });
-  };
+  }
 
   clickAddress(e) {
     this.model.account = e.target.value;

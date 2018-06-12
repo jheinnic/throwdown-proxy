@@ -3,14 +3,24 @@ require("babel-register")({
 });
 require("babel-polyfill");
 
+var HDWalletProvider = require("truffle-hdwallet-provider");
+require("process");
+
+// 12-word mnemonic
+var mnemonic = process.env.SOLIDITY_PUBLISH_MNEMONIC || "opinion destroy betray opinion destroy betray opinion destroy betray opinion destroy betray";
+
 module.exports = {
     networks: {
         development: {
             host: "localhost",
             port: 8501,
             network_id: "*", // Match any network id
-            gas: 4712388,
-            gasPrice: 100000000000
+            gas: 7e6,
+            gasPrice: 2e10
+        },
+        ropsten: {
+          provider: new HDWalletProvider(mnemonic, "https://ropsten.infura.io/"),
+          network_id: 3 // official id of the ropsten network
         }
     },
     solc: {

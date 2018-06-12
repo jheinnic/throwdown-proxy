@@ -126,10 +126,130 @@
           }
         }
       }
+    },
+    "@jchptf/ngx-web3": {
+      "root": "projects/jchptf/ngx-web3",
+      "sourceRoot": "projects/jchptf/ngx-web3/src",
+      "projectType": "library",
+      "prefix": "ngx-web3",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jchptf/ngx-web3/tsconfig.lib.json",
+            "project": "projects/jchptf/ngx-web3/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jchptf/ngx-web3/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jchptf/ngx-web3/src/test.ts",
+            "tsConfig": "projects/jchptf/ngx-web3/tsconfig.spec.json",
+            "karmaConfig": "projects/jchptf/ngx-web3/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jchptf/ngx-web3/tsconfig.lib.json",
+              "projects/jchptf/ngx-web3/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@jchptf/ngx-random-art": {
+      "root": "projects/jchptf/ngx-random-art",
+      "sourceRoot": "projects/jchptf/ngx-random-art/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jchptf/ngx-random-art/tsconfig.lib.json",
+            "project": "projects/jchptf/ngx-random-art/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jchptf/ngx-random-art/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jchptf/ngx-random-art/src/test.ts",
+            "tsConfig": "projects/jchptf/ngx-random-art/tsconfig.spec.json",
+            "karmaConfig": "projects/jchptf/ngx-random-art/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jchptf/ngx-random-art/tsconfig.lib.json",
+              "projects/jchptf/ngx-random-art/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@jchptf/ngx-message-channels": {
+      "root": "projects/jchptf/ngx-message-channels",
+      "sourceRoot": "projects/jchptf/ngx-message-channels/src",
+      "projectType": "library",
+      "prefix": "msg-ch",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jchptf/ngx-message-channels/tsconfig.lib.json",
+            "project": "projects/jchptf/ngx-message-channels/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jchptf/ngx-message-channels/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jchptf/ngx-message-channels/src/test.ts",
+            "tsConfig": "projects/jchptf/ngx-message-channels/tsconfig.spec.json",
+            "karmaConfig": "projects/jchptf/ngx-message-channels/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jchptf/ngx-message-channels/tsconfig.lib.json",
+              "projects/jchptf/ngx-message-channels/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "throwdown-webui",
   "cli": {
-    "defaultCollection": "@ngrx/schematics"
+    "defaultCollection": "@schematics/angular"
   }
 }
