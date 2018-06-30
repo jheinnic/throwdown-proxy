@@ -1,0 +1,40 @@
+version: "3.6"
+
+services:
+  redis-apigw:
+    image: redis:3.2.12-alpine
+    restart: unless-stopped
+    domainname: dev.jchein.name
+    hostname: redis-apigw
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-apigw-data:/data:delegated
+    networks:
+      - apigw-backnet
+
+  apigw:
+    image: treegateway/tree-gateway:3.1.2
+    restart: unless-stopped
+    domainname: dev.jchein.name
+    hostname: apigw
+    ports:
+      - 8000:8000
+    links:
+      - redis-apigw:redis-apigw
+      - geth-miner-1:geth-miner-1
+      - geth-miner-2:geth-miner-2
+      - geth-miner-3:geth-miner-3
+    networks:
+      - portfolio
+      - apigw-backnet
+      - keycloak-backnet
+      - chain-backnet
+      - app-backnet
+    environment:
+      - REDIS_PORT_6379_TCP_ADDR=redis-apigw
+      - REDIS_PORT_6379_TCP_PORT=6379
+
+volumes:
+  redis-apigw-data:
+

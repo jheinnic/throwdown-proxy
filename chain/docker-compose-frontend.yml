@@ -1,0 +1,56 @@
+version: "3.6"
+
+services:
+# apigateway:
+#   build: ./api-gateway-service/
+#   restart: unless-stopped
+#   ports:
+#     - "8080:8080"
+#   environment:
+#     JAVA_OPTS: -Xmx128m -Xms128m
+#     SPRING_DATA_MONGODB_URI: mongodb://mongodb/mydb
+#     ACCOUNTS_COMMANDSIDE_SERVICE_HOST: accountsservice
+#     TRANSFERS_COMMANDSIDE_SERVICE_HOST: transactionsservice
+#     ACCOUNTS_QUERYSIDE_SERVICE_HOST: accountsviewservice
+#     CUSTOMERS_COMMANDSIDE_SERVICE_HOST: customersservice
+#     CUSTOMERS_QUERYSIDE_SERVICE_HOST: customersviewservice
+
+  js-frontend:
+    build: ../js-frontend/
+    restart: unless-stopped
+    domainname: dev.jchein.name
+    hostname: webui
+    links:
+      - keycloak
+    ports:
+      - 8888:8888
+    networks:
+      - portfolio
+    environment:
+      NODE_VERSION: v8.9.3
+      
+  apiman:
+    build: ./apiman
+    image: jheinnic/apiman:1.3.1.Final
+    restart: unless-stopped
+    domainname: dev.jchein.name
+    hostname: api-gw
+    links:
+      - keycloak:keycloak
+      - minio1:minio1
+      - minio2:minio2
+      - minio3:minio3
+      - minio4:minio4
+    ports:
+      - 19300:19300
+      - 9290:9290
+      - 9293:9293
+      - 8280:8280
+      - 8243:8243
+    networks:
+      - portfolio
+    volumes:
+      - apiman-data:/opt/jboss/wildfly/standalone/data:delegated
+  
+volumes:
+  apiman-data:

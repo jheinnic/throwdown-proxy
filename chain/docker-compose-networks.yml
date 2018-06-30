@@ -1,0 +1,25 @@
+version: "3.6"
+
+networks:
+  portfolio: 
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.35.1.0/24
+  app-backnet:
+    ipam:
+      config:
+        - subnet: 172.35.128.0/24
+  apigw-backnet:
+    ipam:
+      config:
+        - subnet: 172.35.160.32/27
+  keycloak-backnet:
+    ipam:
+      config:
+        - subnet: 172.35.160.64/27
+  chain-backnet:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.35.160.96/27

@@ -1,0 +1,24 @@
+version: "3.6"
+
+services:
+  consul-server:
+    image: consul:1.0.7
+    restart: unless-stopped
+    domainname: dev.jchein.name
+    hostname: consul-server
+    ports:
+      - 8300:8300/tcp
+      - 8301:8301
+      - 8302:8302
+      - 8500:8500/tcp
+      - 8600:8600
+    networks:
+      - portfolio
+    volumes:
+      - consul-server-data:/consul/data:delegated
+    environment:
+      CONSUL_LOCAL_CONFIG: "{ \"datacenter\": \"home\", \"server\": true, \"enable_debug\": true, \"autopilot\": { \"cleanup_dead_servers\": true, \"last_contact_threshold\": \"250ms\", \"max_trailing_logs\": 50, \"server_stabilization_time\": \"15s\" }, \"bootstrap_expect\": 0, \"check_update_interval\": \"2m\", \"retry_join\": [ \"consul-server\" ] }"
+      CONSUL_BIND_INTERFACE: eth0
+
+volumes:
+  consul-server-data:

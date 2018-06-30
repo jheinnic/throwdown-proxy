@@ -1,0 +1,6 @@
+version: "3.6"
+
+services:
+  dev-homedir:
+    volumes:
+      - /Users/jheinnic/Git/throwdown-proxy:/home/jheinnic/throwdown-proxy
