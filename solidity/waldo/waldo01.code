@@ -1,0 +1,71 @@
+def isWaldo(a,p,q):
+	sym_0 = (p - 1)
+	# sym_1 = if sym_0 == 0 then 0 else 1 fi
+	# sym_2 = if sym_0 == 0 then 1 else (1 / sym_0) fi
+	sym_1 == (sym_0 * sym_2)
+	sym_3 = (1 - sym_1)
+	0 == (sym_3 * sym_0)
+	p1 = ((sym_3 * 0) + (sym_1 * 1))
+	sym_4 = (q - 1)
+	# sym_5 = if sym_4 == 0 then 0 else 1 fi
+	# sym_6 = if sym_4 == 0 then 1 else (1 / sym_4) fi
+	sym_5 == (sym_4 * sym_6)
+	sym_7 = (1 - sym_5)
+	0 == (sym_7 * sym_4)
+	q1 = ((sym_7 * 0) + (sym_5 * 1))
+	1 == (q1 * p1)
+	a == (p * q)
+	return 1
+def main(a0,a1,a2,a3,private index,private p,private q):
+	sym_0 = (index - 0)
+	# sym_1 = if sym_0 == 0 then 0 else 1 fi
+	# sym_2 = if sym_0 == 0 then 1 else (1 / sym_0) fi
+	sym_1 == (sym_0 * sym_2)
+	sym_3 = (1 - sym_1)
+	0 == (sym_3 * sym_0)
+	sym_4 = (sym_3 * a0)
+	waldo = (sym_4 + (sym_1 * 0))
+	sym_5 = (index - 1)
+	# sym_6 = if sym_5 == 0 then 0 else 1 fi
+	# sym_7 = if sym_5 == 0 then 1 else (1 / sym_5) fi
+	sym_6 == (sym_5 * sym_7)
+	sym_8 = (1 - sym_6)
+	0 == (sym_8 * sym_5)
+	sym_9 = (sym_8 * a1)
+	waldo_0 = (waldo + (sym_9 + (sym_6 * 0)))
+	sym_10 = (index - 2)
+	# sym_11 = if sym_10 == 0 then 0 else 1 fi
+	# sym_12 = if sym_10 == 0 then 1 else (1 / sym_10) fi
+	sym_11 == (sym_10 * sym_12)
+	sym_13 = (1 - sym_11)
+	0 == (sym_13 * sym_10)
+	sym_14 = (sym_13 * a2)
+	waldo_1 = (waldo_0 + (sym_14 + (sym_11 * 0)))
+	sym_15 = (index - 3)
+	# sym_16 = if sym_15 == 0 then 0 else 1 fi
+	# sym_17 = if sym_15 == 0 then 1 else (1 / sym_15) fi
+	sym_16 == (sym_15 * sym_17)
+	sym_18 = (1 - sym_16)
+	0 == (sym_18 * sym_15)
+	sym_19 = (sym_18 * a3)
+	waldo_2 = (waldo_1 + (sym_19 + (sym_16 * 0)))
+	isWaldo_i3o1_1_param_0 = waldo_2
+	isWaldo_i3o1_1_param_1 = p
+	isWaldo_i3o1_1_param_2 = q
+	isWaldo_i3o1_1_sym_0 = (isWaldo_i3o1_1_param_1 - 1)
+	# isWaldo_i3o1_1_sym_1 = if isWaldo_i3o1_1_sym_0 == 0 then 0 else 1 fi
+	# isWaldo_i3o1_1_sym_2 = if isWaldo_i3o1_1_sym_0 == 0 then 1 else (1 / isWaldo_i3o1_1_sym_0) fi
+	isWaldo_i3o1_1_sym_1 == (isWaldo_i3o1_1_sym_0 * isWaldo_i3o1_1_sym_2)
+	isWaldo_i3o1_1_sym_3 = (1 - isWaldo_i3o1_1_sym_1)
+	0 == (isWaldo_i3o1_1_sym_3 * isWaldo_i3o1_1_sym_0)
+	isWaldo_i3o1_1_p1 = ((isWaldo_i3o1_1_sym_3 * 0) + (isWaldo_i3o1_1_sym_1 * 1))
+	isWaldo_i3o1_1_sym_4 = (isWaldo_i3o1_1_param_2 - 1)
+	# isWaldo_i3o1_1_sym_5 = if isWaldo_i3o1_1_sym_4 == 0 then 0 else 1 fi
+	# isWaldo_i3o1_1_sym_6 = if isWaldo_i3o1_1_sym_4 == 0 then 1 else (1 / isWaldo_i3o1_1_sym_4) fi
+	isWaldo_i3o1_1_sym_5 == (isWaldo_i3o1_1_sym_4 * isWaldo_i3o1_1_sym_6)
+	isWaldo_i3o1_1_sym_7 = (1 - isWaldo_i3o1_1_sym_5)
+	0 == (isWaldo_i3o1_1_sym_7 * isWaldo_i3o1_1_sym_4)
+	isWaldo_i3o1_1_q1 = ((isWaldo_i3o1_1_sym_7 * 0) + (isWaldo_i3o1_1_sym_5 * 1))
+	1 == (isWaldo_i3o1_1_q1 * isWaldo_i3o1_1_p1)
+	isWaldo_i3o1_1_param_0 == (isWaldo_i3o1_1_param_1 * isWaldo_i3o1_1_param_2)
+	return 1

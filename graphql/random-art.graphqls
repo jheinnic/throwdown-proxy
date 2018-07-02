@@ -1,0 +1,18 @@
+type Query {
+    ecoSystem: PopulationPolicy[]
+}
+
+type Mutation {
+
+}
+
+type Subscription {
+
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
+

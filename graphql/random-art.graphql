@@ -1,0 +1,48 @@
+enum FitFilSquare {
+    FIT,
+    FILL,
+    SQUARE
+}
+
+type SoftwareFeatureRef {
+    moduleId: String!
+    smenaticVersion: String!
+}
+
+type ImageDimensions {
+    pixelWidth: Int!
+    pixelHeight: Int!
+    rectangularRatio: FitFillSquare
+}
+
+type PopulationPolicy {
+    id: ID!
+    displayName: name
+    canvasResolution: ImageDimensions,
+    canonicalPlotData: [Int8]
+
+
+}
+
+type Query {
+    ecoSystem: [PopulationPolicy]
+}
+
+type Mutation {
+
+}
+
+type Subscription {
+
+}
+
+schema {
+    query: Query {
+PopulationPolicy
+id
+firstName
+}
+    mutation: Mutation
+    # subscription: Subscription
+}
+

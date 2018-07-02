@@ -1,10 +1,10 @@
-.sidenav-container {
-  height: 100%;
+.root-layout-container, .sidenav-container {
+  height: calc(100vh - 16px);
 }
 
 .sidenav {
   width: 200px;
-  box-shadow: 3px 0 6px rgba(0, 0, 0, .24);
+  box-shadow: 4px 0 6px rgba(0, 0, 0, .16);
 }
 
 .sidenav.mat-drawer-side {
@@ -14,7 +14,7 @@
 .fixed-header {
   position: fixed;
   top: 8px;
-  width: 100vw;
+  width: calc(100vw - 216px);
 }
 
 mat-toolbar mat-icon {
@@ -24,16 +24,12 @@ mat-toolbar mat-icon {
   line-height: 1em;
 }
 
-mat-toolbar, tdn-navbar {
-  position: fixed;
-  width: 100vw;
-}
-
-tdn-navbar {
-  position: fixed;
-  width: 100vw;
-}
-
-router-outlet {
-  height: 100vh;
+#workspace-container {
+  margin-left: 16px;
+  margin-right: 8px;
+  margin-bottom: 96px;
+  min-height: calc(100vh - 16px - 113px - 48px);
+  /*min-width: calc(100vw - 200px - 16px);*/
+  display: flex;
+  flex-direction: column;
 }

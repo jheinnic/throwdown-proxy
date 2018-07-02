@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {HostBinding, ChangeDetectionStrategy, Component, ElementRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 
 import {NGXLogger} from 'ngx-logger';
@@ -17,9 +17,9 @@ import 'rxjs/add/operator/debounceTime';
 })
 export class LayoutComponent implements OnInit, OnDestroy
 {
-  private isHandset: Observable<BreakpointState>;
+  public readonly isHandset$: Observable<BreakpointState>;
 
-  private _isXSmall: Observable<BreakpointState>;
+  private _isXSmall$: Observable<BreakpointState>;
 
   private _onDestroyed: Subject<any>;
 
@@ -27,11 +27,14 @@ export class LayoutComponent implements OnInit, OnDestroy
 
   public navbarMargin: { height: number };
 
+  @HostBinding('class.root-layout-container')
+  public readonly rootLayoutContainer = true;
+
   constructor(private breakpointObserver: BreakpointObserver, private logger: NGXLogger)
   {
     this.logger.info('Layout constructor');
-    this.isHandset = this.breakpointObserver.observe(Breakpoints.Handset);
-    this._isXSmall = this.breakpointObserver.observe(Breakpoints.XSmall);
+    this.isHandset$ = this.breakpointObserver.observe(Breakpoints.Handset);
+    this._isXSmall$ = this.breakpointObserver.observe(Breakpoints.XSmall);
     this._onDestroyed = new Subject<any>();
 
     // this._validateNavMargin();
@@ -49,7 +52,7 @@ export class LayoutComponent implements OnInit, OnDestroy
 
   public ngOnInit(): void
   {
-    this._subscribed = this._isXSmall.pipe(
+    this._subscribed = this._isXSmall$.pipe(
       tap((value: any) => { this.logger.info('Pretake', value); }),
       takeUntil(this._onDestroyed),
       // ).pipe(

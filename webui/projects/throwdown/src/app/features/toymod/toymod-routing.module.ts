@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {RouteOneComponent} from './route-one/route-one.component';
 import {RouteTwoComponent} from './route-two/route-two.component';
 import {AppAuthGuard} from '../../shared/authz/app-auth.guard';
+import {CspOneComponent} from './csp-one/csp-one.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,12 @@ const routes: Routes = [
     path: 'route-two',
     pathMatch: 'full',
     component: RouteTwoComponent
+  },
+
+  {
+    path: 'csp-one',
+    pathMatch: 'full',
+    component: CspOneComponent
   }
 ];
 

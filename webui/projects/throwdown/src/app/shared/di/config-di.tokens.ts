@@ -1,6 +1,8 @@
 import {inject, InjectionToken} from '@angular/core';
 
 import {environment} from '../../../environments/environment';
+import {IpfsServiceModels} from '../../../../../jchptf/ngx-ipfs/src/lib/store/models/ipfs-service.models';
+import IpfsApiEndpoint = IpfsServiceModels.IpfsApiEndpoint;
 
 type EnvironmentTokenNames =
   'baseAppUrl'
@@ -10,7 +12,9 @@ type EnvironmentTokenNames =
   | 'onRegisterRedirectUrl'
   | 'onLogoutRedirectUrl'
   | 'apolloGraphQueryUrl'
-  | 'neo4jGraphQueryUrl';
+  | 'neo4jGraphQueryUrl'
+  | 'randomArtIpfsEndpoint'
+  | 'randomArtBootstrapPath';
 
 function injectFromEnvironment(tokenName: EnvironmentTokenNames): InjectionToken<string> {
   return new InjectionToken<string>(tokenName, {
@@ -27,4 +31,6 @@ export const onRegisterRedirectUrl: InjectionToken<string> = injectFromEnvironme
 export const onLogoutRedirectUrl: InjectionToken<string> = injectFromEnvironment('onLogoutRedirectUrl');
 export const apolloGraphQueryUrl: InjectionToken<string> = injectFromEnvironment('apolloGraphQueryUrl');
 export const neo4jGraphQueryUrl: InjectionToken<string> = injectFromEnvironment('neo4jGraphQueryUrl');
+export const randomArtIpfsEndpoint: InjectionToken<IpfsApiEndpoint> = injectFromEnvironment('randomArtIpfsEndpoint');
+export const randomArtBootstrapPath: InjectionToken<string> = injectFromEnvironment('randomArtBootstrapPath');
 

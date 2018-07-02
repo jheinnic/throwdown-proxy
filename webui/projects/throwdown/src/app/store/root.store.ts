@@ -17,9 +17,10 @@ import {initialState as apolloInitialState} from 'apollo-angular-cache-ngrx/redu
  import { storeFreeze } from 'ngrx-store-freeze';
  */
 
-import {RouterStateUrl} from '../shared/model/router-state-url.interface';
 import {actionLogger} from './action-logger.function';
 import {environment} from '../../environments/environment';
+import {RouterStateModels} from './models';
+import RouterStateUrl = RouterStateModels.RouterStateUrl;
 
 export namespace RootStore
 {

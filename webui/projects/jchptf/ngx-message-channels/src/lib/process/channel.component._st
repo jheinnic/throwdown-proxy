@@ -1,0 +1,19 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'ngx-msg-channel',
+  template: `
+    <p>
+      ngx-message-channels works!
+    </p>
+  `,
+  styles: []
+})
+export class ChannelComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

@@ -26,14 +26,17 @@ import {HttpLinkModule} from 'apollo-angular-link-http';
 import {NgrxCache, NgrxCacheModule} from 'apollo-angular-cache-ngrx';
 import {LoggerModule, NGXLogger, NgxLoggerLevel} from 'ngx-logger';
 import {KeycloakAngularModule, KeycloakOptions, KeycloakService} from 'keycloak-angular';
+import {CloudinaryModule} from '@cloudinary/angular-5.x';
+import * as Cloudinary from 'cloudinary-core';
 
-import {SharedModule} from '../shared/shared.module';
-import {keycloakOptions} from '../shared/di/keycloak-di.tokens';
-import {GradientTokenService} from '../features/gradient/gradient-token.service';
-import {LayoutComponent} from './layout/layout.component';
 import {moduleImportGuard} from '../utils/module-import-guard.helper';
-import {CoreFeature, LayoutEffects, ToymodEffects} from './store';
+import {keycloakOptions} from '../shared/di/keycloak-di.tokens';
+import {LayoutComponent} from './layout/layout.component';
+import {SharedModule} from '../shared/shared.module';
 import {NgxWeb3Module} from '../../../../jchptf/ngx-web3/src/lib/ngx-web3.module';
+import {NgxMessageChannelsModule} from '../../../../jchptf/ngx-message-channels/src/lib/ngx-message-channels.module';
+import {CoreFeature, LayoutEffects, ToymodEffects} from './store';
+import {environment} from '../../environments/environment';
 
 
 @NgModule({
@@ -55,12 +58,17 @@ import {NgxWeb3Module} from '../../../../jchptf/ngx-web3/src/lib/ngx-web3.module
     MatCardModule,
     MatMenuModule,
     MatTabsModule,
+    SharedModule,
     ApolloModule,
     NgrxCacheModule,
     HttpLinkModule,
     KeycloakAngularModule,
+    CloudinaryModule.forRoot(Cloudinary, {
+      cloud_name: environment.cloudinaryCloudName,
+      upload_preset: environment.cloudinaryUploadPreset
+    }),
     NgxWeb3Module.forRoot({withNgrx: true}),
-    SharedModule,
+    NgxMessageChannelsModule,
     StoreModule.forFeature(CoreFeature.featureKey, CoreFeature.reducerMap, { initialState: CoreFeature.initialState }),
     EffectsModule.forFeature([LayoutEffects, ToymodEffects])
   ],

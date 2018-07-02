@@ -1,0 +1,17 @@
+{
+    "extends": "../../../tslint.json",
+    "rules": {
+        "directive-selector": [
+            true,
+            "attribute",
+            "ngx-ipfs",
+            "camelCase"
+        ],
+        "component-selector": [
+            true,
+            "element",
+            "ngx-ipfs",
+            "kebab-case"
+        ]
+    }
+}

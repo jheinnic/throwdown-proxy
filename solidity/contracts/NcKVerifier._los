@@ -1,0 +1,270 @@
+// This file is MIT Licensed.
+//
+// Copyright 2017 Christian Reitwiessner
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+pragma solidity ^0.4.14;
+library Pairing {
+    struct G1Point {
+        uint X;
+        uint Y;
+    }
+    // Encoding of field elements is: X[0] * z + X[1]
+    struct G2Point {
+        uint[2] X;
+        uint[2] Y;
+    }
+    event PrecompiledCall(string message, bool postSuccess);
+    /// @return the generator of G1
+    function P1() pure internal returns (G1Point) {
+        return G1Point(1, 2);
+    }
+    /// @return the generator of G2
+    function P2() pure internal returns (G2Point) {
+        return G2Point(
+            [11559732032986387107991004021392285783925812861821192530917403151452391805634,
+             10857046999023057135944570762232829481370756359578518086990519993285655852781],
+            [4082367875863433681332203403145435568316851327593401208105741076214120093531,
+             8495653923123431417604973247489272438418190587263600148770280649306958101930]
+        );
+    }
+    /// @return the negation of p, i.e. p.addition(p.negate()) should be zero.
+    function negate(G1Point p) pure internal returns (G1Point) {
+        // The prime q in the base field F_q for G1
+        uint q = 21888242871839275222246405745257275088696311157297823662689037894645226208583;
+        if (p.X == 0 && p.Y == 0)
+            return G1Point(0, 0);
+        return G1Point(p.X, q - (p.Y % q));
+    }
+    /// @return the sum of two points of G1
+    function addition(G1Point p1, G1Point p2) internal returns (G1Point r) {
+
+        emit PrecompiledCall('Enter addition for G1 x G1, op code = 6', true);
+        uint[4] memory input;
+        input[0] = p1.X;
+        input[1] = p1.Y;
+        input[2] = p2.X;
+        input[3] = p2.Y;
+        bool success;
+        assembly {
+            success := call(sub(gas, 20), 6, 0, input, 0xc0, r, 0x60)
+            // Use "invalid" to make gas estimation work
+            switch success case 0 { invalid() }
+        }
+        emit PrecompiledCall('Returning from addition for G1 x G1, op code = 6', false);
+        require(success);
+    }
+    /// @return the product of a point on G1 and a scalar, i.e.
+    /// p == p.scalar_mul(1) and p.addition(p) == p.scalar_mul(2) for all points p.
+    function scalar_mul(G1Point p, uint s) internal returns (G1Point r) {
+        emit PrecompiledCall('Enter scalar_multiply by opcode = 7', success);
+        uint[3] memory input;
+        input[0] = p.X;
+        input[1] = p.Y;
+        input[2] = s;
+        bool success;
+        assembly {
+            success := call(sub(gas, 20), 7, 0, input, 0x80, r, 0x60)
+            // Use "invalid" to make gas estimation work
+            switch success case 0 { invalid() }
+        }
+        emit PrecompiledCall('Return from scalar multiply, op code 7', success);
+        require (success);
+    }
+    /// @return the result of computing the pairing check
+    /// e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1
+    /// For example pairing([P1(), P1().negate()], [P2(), P2()]) should
+    /// return true.
+    function pairing(G1Point[] p1, G2Point[] p2) internal returns (bool) {
+        emit PrecompiledCall('Enter point pairing by opcode = 8', success);
+        require(p1.length == p2.length);
+        uint elements = p1.length;
+        uint inputSize = elements * 6;
+        uint[] memory input = new uint[](inputSize);
+        for (uint i = 0; i < elements; i++)
+        {
+            input[i * 6 + 0] = p1[i].X;
+            input[i * 6 + 1] = p1[i].Y;
+            input[i * 6 + 2] = p2[i].X[0];
+            input[i * 6 + 3] = p2[i].X[1];
+            input[i * 6 + 4] = p2[i].Y[0];
+            input[i * 6 + 5] = p2[i].Y[1];
+        }
+        uint[1] memory out;
+        bool success;
+        assembly {
+            success := call(sub(gas, 20), 8, 0, add(input, 0x20), mul(inputSize, 0x20), out, 0x20)
+            // Use "invalid" to make gas estimation work
+            switch success case 0 { return(out, 0x20) }
+        }
+        require(success);
+        emit PrecompiledCall('Returning from pairing for G1 x G1, op code = 8', success);
+        return out[0] != 0;
+    }
+
+    /// Convenience method for a pairing check for two pairs.
+    function pairingProd2(G1Point a1, G2Point a2, G1Point b1, G2Point b2) internal returns (bool) {
+        G1Point[] memory p1 = new G1Point[](2);
+        G2Point[] memory p2 = new G2Point[](2);
+        p1[0] = a1;
+        p1[1] = b1;
+        p2[0] = a2;
+        p2[1] = b2;
+        return pairing(p1, p2);
+    }
+    /// Convenience method for a pairing check for three pairs.
+    function pairingProd3(
+            G1Point a1, G2Point a2,
+            G1Point b1, G2Point b2,
+            G1Point c1, G2Point c2
+    ) internal returns (bool) {
+        G1Point[] memory p1 = new G1Point[](3);
+        G2Point[] memory p2 = new G2Point[](3);
+        p1[0] = a1;
+        p1[1] = b1;
+        p1[2] = c1;
+        p2[0] = a2;
+        p2[1] = b2;
+        p2[2] = c2;
+        return pairing(p1, p2);
+    }
+    /// Convenience method for a pairing check for four pairs.
+    function pairingProd4(
+            G1Point a1, G2Point a2,
+            G1Point b1, G2Point b2,
+            G1Point c1, G2Point c2,
+            G1Point d1, G2Point d2
+    ) internal returns (bool) {
+        G1Point[] memory p1 = new G1Point[](4);
+        G2Point[] memory p2 = new G2Point[](4);
+        p1[0] = a1;
+        p1[1] = b1;
+        p1[2] = c1;
+        p1[3] = d1;
+        p2[0] = a2;
+        p2[1] = b2;
+        p2[2] = c2;
+        p2[3] = d2;
+        return pairing(p1, p2);
+    }
+}
+contract Verifier {
+    using Pairing for *;
+    struct VerifyingKey {
+        Pairing.G2Point A;
+        Pairing.G1Point B;
+        Pairing.G2Point C;
+        Pairing.G2Point gamma;
+        Pairing.G1Point gammaBeta1;
+        Pairing.G2Point gammaBeta2;
+        Pairing.G2Point Z;
+        Pairing.G1Point[] IC;
+    }
+    struct Proof {
+        Pairing.G1Point A;
+        Pairing.G1Point A_p;
+        Pairing.G2Point B;
+        Pairing.G1Point B_p;
+        Pairing.G1Point C;
+        Pairing.G1Point C_p;
+        Pairing.G1Point K;
+        Pairing.G1Point H;
+    }
+    function verifyingKey() pure internal returns (VerifyingKey vk) {
+        vk.A = Pairing.G2Point([0x4b8b4878aec222e5196ac33094c5e6f0ae1f9f16ce4585d2af0c2015c8847d7, 0x105567dd54a2e6ad6bdc9609712eefb27319d26e3679bd91a6123fce451404c], [0x1db2047be535a871cbf673d5b522e96a461fd3782e537e74769a5c352d406d76, 0x1ea211495be178bd18defda12c9b90609bf4326bf128d8e008c499dde8dba892]);
+        vk.B = Pairing.G1Point(0x2b2c56786ecbb8b0edff1a1d50f182875cfab62e7025c13ee65b3bc82bf03fbf, 0x195a4375e4c905c8fd9c789c9824cc8e229ba772b19f74a425fe3599962e479);
+        vk.C = Pairing.G2Point([0x12782d656810a66fbcc9d58e996ffa9e93641798998761097cc72cb2f6ce912e, 0x10a2620be3f980d4527033838138ba385d2742b973f8435250cdea1f56cf5c04], [0x17d623b86c318e03f585853aa8962287f6cce5c77cb972bf6419ca188195ea00, 0xe54dfaaabd59e33ebe748ed706c74a1326beda78236e3f1ffcf945bea8f0a49]);
+        vk.gamma = Pairing.G2Point([0xdafb8220354b3a5c38b5f32d7f42f2c26ef4c1a1c1104af351c9788b66d973f, 0x2fc648207bd47a8becf004da321991277249b86e4bfa4329d0a61b9ad1c7cc6], [0x1b25fd3380aa2962058648d996a4eae1a2e4917787baadff1cecc8c81aedaa5f, 0x24976614eb7f48cfdee144f0bc28c9a3b93c3df7345c82689f4bdd379bf0fe61]);
+        vk.gammaBeta1 = Pairing.G1Point(0x140112ce80c3dc180f3cb1dd9733419182921d6808a16e02c17bb8312fa11118, 0x2b34113f192850980679a232cecef450907eea40236304b3cd904fa483834043);
+        vk.gammaBeta2 = Pairing.G2Point([0x14b49a17eadbdfc219381b87707216941b3d2039316693fcdfb397721827517, 0x10efc20900d07c16cdb2fe130dd86695494f18b52a4bbbab89e6500b74643ff5], [0x1318f47ce277d94d7cbe4b7c0e56e3f60ae21ef5576997c38ab8c18a11aa7, 0x16a2fdb9a3da3608892abd0438fd05b2c423ff6c0e5428b9b06db87f28b301d3]);
+        vk.Z = Pairing.G2Point([0x1a8179aa64366188ecb68b7e72e4b45eb6c2d3412716f0a8263bbc60ccda4237, 0x120e09bd4a97bec8702dca7d0a2c5661b887823db2adbf571ce36af06ceb1d72], [0x2ad260f2c5732c032ad4b68bc476bf49f881e4a32ae6cd42a1e9e8b669c98e7a, 0x2e5db5ec6e3057ea056d1b9fc989d943d0d66dda9cc388912db6e44ef147c6fe]);
+        vk.IC = new Pairing.G1Point[](4);
+        vk.IC[0] = Pairing.G1Point(0x23acf5cc55a62204e84e94c363bc9100c50dd95e7af954ba5ecf00b8fe719854, 0x2e7b1e3934ea99f58546ae131f0586c8b74f48dc867a3c68642df46990e4a0df);
+        vk.IC[1] = Pairing.G1Point(0x1d0fd1fda6ab73bc03da793c4a99fa51dd012c4a834400fe83a5d6420c76cc0a, 0x19ea159f29a0141344e2235b6fd238f44843807e673b2ff15c5372a3d528ee34);
+        vk.IC[2] = Pairing.G1Point(0x22a0c07f96e5a6480071dcc0220f3cb1f3bad2ab5fe689c6bbcce5522f7eda6b, 0x71a28338e62e57e76b9ac05dc7334ba64bab2b72965f4ee20480fb989045e9d);
+        vk.IC[3] = Pairing.G1Point(0x1d20ba0aa47d7f44ef8363e5ecb88fa296d41b99fb02dbd43d5d1afb7f9b9314, 0x5d71d8ead8ccee486d51520e6740c71dae5418e5c9b76bdefecc448b965b283);
+    }
+    function verify(uint[] input, Proof proof) internal returns (uint) {
+        VerifyingKey memory vk = verifyingKey();
+        require(input.length + 1 == vk.IC.length);
+        // Compute the linear combination vk_x
+        Pairing.G1Point memory vk_x = Pairing.G1Point(0, 0);
+        for (uint i = 0; i < input.length; i++)
+            vk_x = Pairing.addition(vk_x, Pairing.scalar_mul(vk.IC[i + 1], input[i]));
+        vk_x = Pairing.addition(vk_x, vk.IC[0]);
+        emit Verified('Testing pairs', true);
+        if (!Pairing.pairingProd2(proof.A, vk.A, Pairing.negate(proof.A_p), Pairing.P2())) return 1;
+        emit Verified('Passed pairing 1', true);
+
+        // NOTE: THIS NEXT PAIRING TEST IS FAILING
+        if (!Pairing.pairingProd2(vk.B, proof.B, Pairing.negate(proof.B_p), Pairing.P2())) return 2;
+        emit Verified('Passed pairing 2', true);
+//        if (!Pairing.pairingProd2(proof.C, vk.C, Pairing.negate(proof.C_p), Pairing.P2())) return 3;
+        emit Verified('Passed pairing 3', true);
+//        if (!Pairing.pairingProd3(
+//            proof.K, vk.gamma,
+//            Pairing.negate(Pairing.addition(vk_x, Pairing.addition(proof.A, proof.C))), vk.gammaBeta2,
+//            Pairing.negate(vk.gammaBeta1), proof.B
+//        )) return 4;
+        emit Verified('Passed pairing 4', true);
+//        if (!Pairing.pairingProd3(
+//                Pairing.addition(vk_x, proof.A), proof.B,
+//                Pairing.negate(proof.H), vk.Z,
+//                Pairing.negate(proof.C), Pairing.P2()
+//        )) return 5;
+        emit Verified('Passed pairing 5', true);
+        return 0;
+    }
+
+    event Verified(string message, bool isGood);
+    event PrecompiledCall(string message, bool postSuccess);
+
+    function testEmit() public {
+        emit Verified("One", true);
+//        int four = 4;
+//        int zero = 0;
+//        int crash = four / zero;
+        emit PrecompiledCall("Two", false);
+        emit Verified("Three", false);
+    }
+
+    function verifyTx(
+            uint[2] a,
+            uint[2] a_p,
+            uint[2][2] b,
+            uint[2] b_p,
+            uint[2] c,
+            uint[2] c_p,
+            uint[2] h,
+            uint[2] k,
+            uint[3] input
+        ) public {
+        emit Verified('Begin proof configuration', true);
+
+        Proof memory proof;
+        proof.A = Pairing.G1Point(a[0], a[1]);
+        proof.A_p = Pairing.G1Point(a_p[0], a_p[1]);
+        proof.B = Pairing.G2Point([b[0][0], b[0][1]], [b[1][0], b[1][1]]);
+        proof.B_p = Pairing.G1Point(b_p[0], b_p[1]);
+        proof.C = Pairing.G1Point(c[0], c[1]);
+        proof.C_p = Pairing.G1Point(c_p[0], c_p[1]);
+        proof.H = Pairing.G1Point(h[0], h[1]);
+        proof.K = Pairing.G1Point(k[0], k[1]);
+
+        emit Verified('Begin input param copying', true);
+
+        uint[] memory inputValues = new uint[](input.length);
+        for(uint i = 0; i < input.length; i++){
+            inputValues[i] = input[i];
+        }
+        if (verify(inputValues, proof) == 0) {
+            emit Verified("Transaction successfully verified; returning soon!", true);
+//             return true;
+        } else {
+            emit Verified('Transaction failed to verify...', false);
+//             return false;
+        }
+    }
+}
