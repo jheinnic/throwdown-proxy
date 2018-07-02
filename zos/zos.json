@@ -1,0 +1,11 @@
+{
+  "name": "random-art-os",
+  "version": "0.1.0",
+  "contracts": {
+    "MyContract": "MyContract"
+  },
+  "stdlib": {
+    "name": "openzeppelin-zos",
+    "version": "1.9.1"
+  }
+}

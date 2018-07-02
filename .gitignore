@@ -42,6 +42,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Vi cache files
+.*.sw[pnoqrstuvwvxyz]
+.sw[pnoqrstuvwvxyz]
 .bit/
 .bitmap
 

@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "merkle-tree-payment-pool": "^1.0.1",
+    "openzeppelin-zos": "^1.9.1",
+    "zos-lib": "^1.2.1"
+  }
+}

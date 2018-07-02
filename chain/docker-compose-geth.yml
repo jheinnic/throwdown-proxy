@@ -1,5 +1,17 @@
 version: "3.6"
 
+x-geth-miner:
+  &x-geth-miner
+  build:
+    context: ./geth/miner
+  restart: unless-stopped
+  domainname: dev.jchein.name
+  depends_on: 
+    - geth-bootnode
+  links: 
+    - geth-bootnode
+
+
 services:
   geth-bootnode:
     build:
@@ -14,18 +26,10 @@ services:
         ipv4_address: 172.35.160.100 # The miners need to know the IP address later on
     environment: 
       - nodekeyhex=edd211f363b8b4ca76359467b48a1485ea279f899ed17e4f865370a53ef3890c # Fixed, so miners can fix corresponding enode id
+      - verbosity=4
 
   geth-miner-1:
-    build: 
-      context: ./geth/miner
-      args:
-        sealerAddress: "0xc0a09d35bece34f7606529683ad4300f745f2d2f" # Derives from private key 
-        sealerPrivateKey: c1553798fa0e7904f3542069792e65e1f5c5ec518029e454d1b61fb5da39c780 # Don't do this in production, okay?
-        sealerKeyPassword: abcd1234
-    depends_on: 
-      - geth-bootnode
-    restart: unless-stopped
-    domainname: dev.jchein.name
+    <<: *x-geth-miner
     hostname: geth-miner-1
     ports:
       - 8546:8545
@@ -38,24 +42,19 @@ services:
       - geth-keystore-1:/var/geth/keystore:delegated
     environment:
       - bootnodeId=34ba962916236f723df5a9cb3bb1c5867d14f810a824e8856da38e8bda7b23ffb9ecb95588e5d1a35676c16649cb34b8521f8ed1ef69fd70d07dc57be1fc655d # Derived from bootnode nodekeyhex
-      - bootnodeIp=172.35.160.100  
-      - chainSubnet="172.35.160.96/27"
+      - bootnodeIp=172.35.160.100
+      - chainSubnet=172.35.160.96/27
+      - sealerAddress=0xc0a09d35bece34f7606529683ad4300f745f2d2f # Derives from private key 
+      - sealerPrivateKey=c1553798fa0e7904f3542069792e65e1f5c5ec518029e454d1b61fb5da39c780 # Don't do this in production, okay?
+      - sealerKeyPassword=abcd1234
 
   geth-miner-2:
-    build: 
-      context: ./geth/miner
-      args:
-        sealerAddress: "0x97e28afaac157e6b88dbd75578652e9fa4701dfb" # Derives from private key 
-        sealerPrivateKey: "72bb94d8bb89f82c40bb4054357c6edd5a4ad201a6bd293ceb655549c979707a"
-        sealerKeyPassword: abcd1234
-    depends_on: 
-      - geth-bootnode
-    restart: unless-stopped
-    domainname: dev.jchein.name
+    <<: *x-geth-miner
     hostname: geth-miner-2
     ports:
       - 8547:8545
     networks:
+      portfolio:
       chain-backnet:
         ipv4_address: 172.35.160.102
     volumes:
@@ -64,23 +63,18 @@ services:
     environment:
       - bootnodeId=34ba962916236f723df5a9cb3bb1c5867d14f810a824e8856da38e8bda7b23ffb9ecb95588e5d1a35676c16649cb34b8521f8ed1ef69fd70d07dc57be1fc655d # Derived from bootnode nodekeyhex
       - bootnodeIp=172.35.160.100
-      - chainSubnet="172.35.160.96/27"
+      - chainSubnet=172.35.160.96/27
+      - sealerAddress=0x97e28afaac157e6b88dbd75578652e9fa4701dfb # Derives from private key 
+      - sealerPrivateKey=72bb94d8bb89f82c40bb4054357c6edd5a4ad201a6bd293ceb655549c979707a
+      - sealerKeyPassword=abcd1234
 
   geth-miner-3:
-    build: 
-      context: ./geth/miner
-      args:
-        sealerAddress: "0x8d10bd51ec34ced7ffc9f45b1afabcbb1ff01356" # Derives from private key 
-        sealerPrivateKey: "88a5c1108c582822f320cc6933707c96edb721c3dd4a43e78fc6caa18e0ae1d4"
-        sealerKeyPassword: abcd1234
-    depends_on: 
-      - geth-bootnode
-    restart: unless-stopped
-    domainname: dev.jchein.name
+    <<: *x-geth-miner
     hostname: geth-miner-3
     ports:
       - 8548:8545
     networks:
+      portfolio:
       chain-backnet:
         ipv4_address: 172.35.160.103
     volumes:
@@ -89,11 +83,14 @@ services:
     environment:
       - bootnodeId=34ba962916236f723df5a9cb3bb1c5867d14f810a824e8856da38e8bda7b23ffb9ecb95588e5d1a35676c16649cb34b8521f8ed1ef69fd70d07dc57be1fc655d # Derived from bootnode nodekeyhex
       - bootnodeIp=172.35.160.100
-      - chainSubnet="172.35.160.96/27"
+      - chainSubnet=172.35.160.96/27
+      - sealerAddress=0x8d10bd51ec34ced7ffc9f45b1afabcbb1ff01356 # Derives from private key 
+      - sealerPrivateKey=88a5c1108c582822f320cc6933707c96edb721c3dd4a43e78fc6caa18e0ae1d4
+      - sealerKeyPassword=abcd1234
 
   geth-monitor:
     build:
-      context: ./geth/monitor
+      context: ./geth/monitor2
     depends_on: 
       - geth-miner-1
       - geth-miner-2
@@ -101,8 +98,15 @@ services:
     restart: unless-stopped
     domainname: dev.jchein.name
     hostname: geth-monitor
+    expose: 
+      - 30303
+      - 30303/udp
     networks:
       chain-backnet:
+    environment:
+      - bootnodeId=34ba962916236f723df5a9cb3bb1c5867d14f810a824e8856da38e8bda7b23ffb9ecb95588e5d1a35676c16649cb34b8521f8ed1ef69fd70d07dc57be1fc655d # Derived from bootnode nodekeyhex
+      - bootnodeIp=172.35.160.100
+      - chainSubnet=172.35.160.96/27
 
   geth-dashboard:
     build:
@@ -128,3 +132,4 @@ volumes:
   geth-keystore-2:
   geth-data-3:
   geth-keystore-3:
+  geth-monitor:
