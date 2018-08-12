@@ -12,9 +12,10 @@ RUN apt-get update \
       && npm install -g pm2 \
       && git clone https://github.com/jheinnic/eth-net-intelligence-api.git \
       && cd eth-net-intelligence-api \
-      && mv ../app.json . \
+      && cp /opt/app.json /opt/eth-net-intelligence-api/app.json \
       && npm install \
-      && rm -rf /var/lib/apt/lists/*
+      && rm -rf /var/lib/apt/lists/* \
+      && ./bin/www/bin/update.sh
 
 WORKDIR "/opt/eth-net-intelligence-api"
 

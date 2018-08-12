@@ -18,7 +18,7 @@
       "INSTANCE_NAME"   : "geth-miner-1",
       "WS_SERVER"     : "http://172.35.160.101:3000",
       "WS_SECRET"     : "test",
-      "VERBOSITY":      "3"
+      "VERBOSITY":      "2"
     }
   },
   {
@@ -40,7 +40,7 @@
       "INSTANCE_NAME"   : "geth-miner-2",
       "WS_SERVER"     : "http://172.35.160.102:3000",
       "WS_SECRET"     : "test",
-      "VERBOSITY":      "3"
+      "VERBOSITY":      "2"
     }
   },
   {
@@ -62,7 +62,7 @@
       "INSTANCE_NAME"   : "geth-miner-3",
       "WS_SERVER"     : "http://172.35.160.103:3000",
       "WS_SECRET"     : "test",
-      "VERBOSITY":      "3"
+      "VERBOSITY":      "2"
     }
   }
 ]

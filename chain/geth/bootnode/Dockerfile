@@ -18,4 +18,5 @@ RUN apt-get update \
      && rm -rf $BINARY /var/lib/apt/lists/* 
 
 ENV nodekeyhex=""
-CMD exec /opt/geth/bin/bootnode -nodekeyhex ${nodekeyhex} -v5 -verbosity 5
+ENV verbosity=3
+CMD exec /opt/geth/bin/bootnode -nodekeyhex ${nodekeyhex} -v5 -verbosity ${verbosity}

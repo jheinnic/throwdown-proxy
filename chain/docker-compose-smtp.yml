@@ -1,0 +1,16 @@
+version: "3.6"
+
+services:
+  smtp:
+    image: namshi/smtp
+    domainname: dev.jchein.name
+    hostname: mail
+    ports:
+      - 2525:25
+    networks:
+      - portfolio
+    environment:
+      SKEY_PATH: a
+      SCERTIFICATE_PATH: a
+      MAILNAME: mail.dev.jchein.name
+      PORT: 25
