@@ -1,0 +1,30 @@
+{
+  "taskQueue": {
+    "hashDepth": 11,
+    "joinDepth": 11
+  },
+  "bip44": {
+    "key": "xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3",
+    "path": "m/44'/60'/9'/138/2'"
+  }
+  "blockLayout": {
+    "fieldSizes": {
+      "gameIndex": 12,
+      "poolIndex": 24,
+      "tierIndex": 22,
+      "prizeTier": 6
+      "serial": 160,
+      "publicKey": 32,
+      "signature": 256
+    },
+    "fieldOrder": [
+      { "fieldType": "gameIndex", "offset": 0 },
+      { "fieldType": "poolIndex", "offset": 12 },
+      { "fieldType": "tierIndex", "offset": 36 },
+      { "fieldType": "prizeTier", "offset": 78 },
+      { "fieldType": "serial", "offset": 84 },
+      { "fieldType": "publicKey", "offset", 224 },
+      { "fieldType": "signature", "offset", 256 }
+    ],
+    "filePrefix": "batches"
+  }

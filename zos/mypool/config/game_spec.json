@@ -1,0 +1,68 @@
+{
+  "sponsorId": 9,
+  "gameId": 138,
+  "prizeTiers": [
+    {
+      "prizeTier": 11,
+      "prizeValue": 75000,
+      "prizeCount": 2
+    },
+    {
+      "prizeTier": 10,
+      "prizeValue": 5000,
+      "prizeCount": 16
+    },
+    {
+      "prizeTier": 9,
+      "prizeValue": 500,
+      "prizeCount": 480
+    },
+    {
+      "prizeTier": 8,
+      "prizeValue": 250,
+      "prizeCount": 790
+    },
+    {
+      "prizeTier": 7,
+      "prizeValue": 100,
+      "prizeCount": 4560
+    },
+    {
+      "prizeTier": 6,
+      "prizeValue": 50,
+      "prizeCount": 10735
+    },
+    {
+      "prizeTier": 5,
+      "prizeValue": 30,
+      "prizeCount": 14250
+    },
+    {
+      "prizeTier": 4,
+      "prizeValue": 20,
+      "prizeCount": 47500
+    },
+    {
+      "prizeTier": 3,
+      "prizeValue": 15,
+      "prizeCount": 95045
+    },
+    {
+      "prizeTier": 2,
+      "prizeValue": 10,
+      "prizeCount": 123500
+    },
+    {
+      "prizeTier": 1,
+      "prizeValue": 5,
+      "prizeCount": 190000
+    }
+  ],
+  "noPrizeCount": 1413127,
+  "branding": {
+    "printName": "Proto Play",
+    "playStyle": "randomArt",
+    "styleConfig": { }
+  }
+}
+
