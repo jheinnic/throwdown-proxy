@@ -3,62 +3,79 @@
   "gameId": 138,
   "prizeTiers": [
     {
-      "prizeTier": 11,
-      "prizeValue": 75000,
-      "prizeCount": 2
+      "tierId": 11,
+      "value": 75000,
+      "count": 2,
+      "batched": false
     },
     {
-      "prizeTier": 10,
-      "prizeValue": 5000,
-      "prizeCount": 16
+      "tierId": 10,
+      "value": 5000,
+      "count": 16,
+      "batched": false
     },
     {
-      "prizeTier": 9,
-      "prizeValue": 500,
-      "prizeCount": 480
+      "tierId": 9,
+      "value": 500,
+      "count": 480,
+      "batched": true
     },
     {
-      "prizeTier": 8,
-      "prizeValue": 250,
-      "prizeCount": 790
+      "tierId": 8,
+      "value": 250,
+      "count": 790,
+      "batched": true
     },
     {
-      "prizeTier": 7,
-      "prizeValue": 100,
-      "prizeCount": 4560
+      "tierId": 7,
+      "value": 100,
+      "count": 4560,
+      "batched": true
     },
     {
-      "prizeTier": 6,
-      "prizeValue": 50,
-      "prizeCount": 10735
+      "tierId": 6,
+      "value": 50,
+      "count": 10735,
+      "batched": true
     },
     {
-      "prizeTier": 5,
-      "prizeValue": 30,
-      "prizeCount": 14250
+      "tierId": 5,
+      "value": 30,
+      "count": 14250,
+      "batched": true
     },
     {
-      "prizeTier": 4,
-      "prizeValue": 20,
-      "prizeCount": 47500
+      "tierId": 4,
+      "value": 20,
+      "count": 47500,
+      "batched": true
     },
     {
-      "prizeTier": 3,
-      "prizeValue": 15,
-      "prizeCount": 95045
+      "tierId": 3,
+      "value": 15,
+      "count": 95045,
+      "batched": true
     },
     {
-      "prizeTier": 2,
-      "prizeValue": 10,
-      "prizeCount": 123500
+      "tierId": 2,
+      "value": 10,
+      "count": 123500,
+      "batched": true
     },
     {
-      "prizeTier": 1,
-      "prizeValue": 5,
-      "prizeCount": 190000
+      "tierId": 1,
+      "value": 5,
+      "count": 190000,
+      "batched": true
+    },
+    {
+      "tierId": 0,
+      "value": 0,
+      "count": 1413127,
+      "batched": true
     }
   ],
-  "noPrizeCount": 1413127,
+  "batchSize": 2048,
   "branding": {
     "printName": "Proto Play",
     "playStyle": "randomArt",

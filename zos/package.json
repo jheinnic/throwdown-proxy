@@ -1,7 +1,27 @@
 {
   "dependencies": {
+    "@thi.ng/bitstream": "^0.4.15",
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "bip32": "^1.0.2",
+    "bip39": "^2.5.0",
+    "config": "^2.0.1",
+    "eth-sig-util": "^1.4.2",
+    "ethereumjs-util": "^5.2.0",
+    "ethereumjs-wallet": "^0.6.0",
+    "hdkey": "^1.0.0",
+    "merkle": "^0.6.0",
     "merkle-tree-payment-pool": "^1.0.1",
     "openzeppelin-zos": "^1.9.1",
+    "rxjs": "^6.2.1",
+    "sjcl": "^1.0.7",
     "zos-lib": "^1.2.1"
+  },
+  "devDependencies": {
+    "@types/bip39": "^2.4.0",
+    "@types/ethereumjs-util": "^5.2.0",
+    "@types/node": "8.10.16",
+    "@types/sjcl": "^1.0.28",
+    "dotenv": "^6.0.0"
   }
 }

@@ -1,28 +1,25 @@
 {
-  "taskQueue": {
-    "hashDepth": 11,
-    "joinDepth": 11
-  },
-  "bip44": {
+  "keySource": {
+    "mnemonic": "number ticket outer asthma wine define arctic butter tower settle answer weird error kiss rail negative assault demand satisfy describe flat suggest bird wall average tuna inspire invest cart length",
     "key": "xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3",
     "path": "m/44'/60'/9'/138/2'"
-  }
+  },
+  "proofDepths": [ 2, 3, 5, 7  ],
   "blockLayout": {
     "fieldSizes": {
-      "gameIndex": 12,
+      "gameIndex": 8,
       "poolIndex": 24,
-      "tierIndex": 22,
-      "prizeTier": 6
-      "serial": 160,
-      "publicKey": 32,
-      "signature": 256
+      "tierIndex": 20,
+      "prizeTier": 10,
+      "checkBit": 2,
+      "serial": 160
     },
     "fieldOrder": [
-      { "fieldType": "gameIndex", "offset": 0 },
-      { "fieldType": "poolIndex", "offset": 12 },
-      { "fieldType": "tierIndex", "offset": 36 },
-      { "fieldType": "prizeTier", "offset": 78 },
-      { "fieldType": "serial", "offset": 84 },
+      { "fieldType": "serial", "offset": 0 },
+      { "fieldType": "gameIndex", "offset": 160 },
+      { "fieldType": "poolIndex", "offset": 168 },
+      { "fieldType": "tierIndex", "offset": 192 },
+      { "fieldType": "prizeTier", "offset": 212 },
       { "fieldType": "publicKey", "offset", 224 },
       { "fieldType": "signature", "offset", 256 }
     ],

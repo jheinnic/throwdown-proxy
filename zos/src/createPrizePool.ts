@@ -1,35 +1,31 @@
 // import * as sjcl from 'sjcl';
 import * as fs from 'fs';
-import * as path fro 'path';
-import * as bip32 from 'bip32';
+import * as path from 'path';
 import * as crypto from 'crypto';
+import * as bip32 from 'bip32';
 import * as bip39 from 'bip39';
 import * as hdkey from 'ethereumjs-wallet/hdkey';
 import {asyncScheduler, from, merge, NEVER, range, zip} from 'rxjs';
 import {buffer, bufferCount, filter, flatMap, map, scan, shareReplay} from 'rxjs/operators';
+import {BitInputStream, BitOutputStream} from '@thi.ng/bitstream';
 import {MerkleTree} from './lib/merkle-tree';
 
-const mnemonic1 = 'reward decide comfort submit reopen average surface surge harbor work stove holiday'
-  + ' balcony adjust more come brass before snow afford labor vocal plate flash';
-const mnemonic2 = 'reward decide comfort submit reopen average surface surge harbor work stove holiday'
-  + ' balcony adjust more come brass before snow afford labor vocal plate flash';
-const mnemonic3 = 'reward decide comfort submit reopen average surface surge harbor work stove holiday'
-  + ' balcony adjust more come brass before snow afford labor vocal plate flash';
+//  fs.writeFileSync('private.key', signKey.privateKey);
+// fs.writeFileSync('public.key', signKey.publicKey);
+// fs.writeFileSync(`${signKey.network}.wif`, signKey.toWIF());
+// fs.writeFileSync(`${signKey.network}.b58`, signKey.toBase58());
 
-const hdRoot = hdkey.fromMasterSeed(
-  bip39.mnemonicToSeed(mnemonic1)
-);
-const signKey = bip32.fromSeed(
-  Buffer.from(
-      crypto.randomBytes(64)
-  )
-);
-fs.writeFileSync('private.key', signKey.privateKey);
-fs.writeFileSync('public.key', signKey.publicKey);
-fs.writeFileSync(`${signKey.network}.wif`, signKey.toWIF());
-fs.writeFileSync(`${signKey.network}.b58`, signKey.toBase58());
+interface ProofBatchStrategy {
+   readonly layerOrder: ProofForest[];
+}
 
-const hashType = 'sha256';
+interface ProofForest {
+   readonly rootLayerDepth: number;
+   readonly depthPerTask: number;
+   readonly leavesPerTask: number;
+   readonly fullTaskCount: number;
+   readonly partialTaskSize: number;
+}
 
 interface TierDistribution
 {
@@ -42,37 +38,35 @@ interface PrizeRegistration
 {
    prizeTier: number,
    tierIndex: number,
-   poolAddress: string,
-   privateKey: string,
+   poolIndex: string,
+   serial: string,
    publicKey: string,
-
+   privateKey: string,
    hmacSignature: string
 }
 
 const poolDir = './mypool';
 const configDir = path.join(poolDir, 'config');
-const prizeCounts = path.join(configDir, 'prize_counts.json');
-const
-const prizeConfig = require(
-  path.join(poolDir, 'pool_spec.json'));
-const prizeDist: TierDistribution[] = prizeConfig.prizeTiers;
+const gameSpecFile = path.join(configDir, 'game_spec.json');
+const proofSpecFile = path.join(configDir, 'proof_tree_spec.json');
 
-const tempDistro: TierDistribution[] = [
-   {
-      prizeTier: 2,
-      prizeValue: 10,
-      prizeCount: 480
-   },
-   {
-      prizeTier: 1,
-      prizeValue: 5,
-      prizeCount: 16
-   }
-].reverse();
-const noWinCount = 1413127;
-const hasWinCount = prizeDist.reduce((agg, item) => {
-   return agg + item.prizeCount;
-}, 0);
+const gameSpec = require(gameSpecFile);
+const proofSpec = require(proofSpecFile);
+const prizeDist: TierDistribution[] = gameSpec.prizeTiers;
+
+// const noWinCount = gameSpec.noWinCount;
+// const hasWinCount = gameSpec.prizeTiers.reduce(
+//   (agg, item) => ((item.value > 0) ? (agg + item.prizeCount) : agg), 0);
+const totalTicketCount = gameSpec.prizeTiers.reduce(
+  (agg, item) => ((item.value > 0) ? (agg + item.prizeCount) : agg), 0);
+
+const hashType = 'sha256';
+const hdRoot = bip32.fromSeed(
+  bip39.mnemonicToSeed(proofSpec.bip39.mnemonic)
+);
+
+const treeDepth = Math.ceil(Math.log2(noWinCount + hasWinCount));
+const proofDepthOrder = computeProofStrategy(treeDepth, proofSpecFile.proofDepths);
 
 const allWinnersSource = from(prizeDist, asyncScheduler)
   .pipe(
@@ -176,3 +170,104 @@ zip(allTicketIds, allTicketValues)
 //
 //    }
 // });
+
+
+interface PlanStackFrame {
+   currentProofIndex: number;
+}
+module.exports = computeProofStrategy;
+
+// Greedy algorithm for finding an optimal layer decomposition.
+function computeProofStrategy(targetDepth, totalLeafCount, availableProofDepths) {
+   const sortedDepths = availableProofDepths.sort( (a, b) => a - b );
+   const numDepths = sortedDepths.length;
+
+   const deepestProof = sortedDepths[numDepths - 1];
+   const shortestProof = sortedDepths[0];
+   const minSteps = Math.ceil(targetDepth / deepestProof);
+   const maxSteps = Math.ceil(targetDepth / shortestProof);
+   const planStack = [];
+
+   // Populate as many maxDepth layers as will fit in the target depth to start.
+   let currentTop;
+   let currentTotal = minSteps * deepestProof;
+   for (let ii=0; ii<minSteps; ii++) {
+      currentTop = { currentProofIndex: numDepths - 1 };
+      planStack.push(currentTop);
+   }
+
+   let count = 1;
+   while (currentTotal != targetDepth) {
+      console.log('Count:', count++);
+      console.log('Stack:', planStack);
+
+      if (currentTotal < targetDepth) {
+         // Score too low--add another card with the same rank as the latest 
+         // card we have added.
+         currentTop = { ...currentTop };
+         planStack.push(currentTop);
+         currentTotal += sortedDepths[currentTop.currentProofIndex];
+      } else {
+         // Score too high.  Discard current stack top until either we find a 
+         // card that is not using smallest proof or no cards remain.
+         while ((currentTop.currentProofIndex == 0) && (planStack.length > 0)) {
+            currentTotal -= sortedDepths[currentTop.currentProofIndex];
+            currentTop = planStack.pop();
+         }
+
+         // Score too high, and there are proof sizes smaller than one currentl
+         // on top of stack.  Try replacing it with the next smaller proof.
+         if (planStack.length > 0) {
+            currentTop.currentProofIndex = currentTop.currentProofIndex - 1;
+            currentTotal += sortedDepths[currentTop.currentProofIndex];
+         }
+      }
+   }
+
+   console.log('Count:', count++);
+   console.log('Stack:', planStack);
+
+   let nextTaskCount = totalLeafCount;
+   let nextRootLayerDepth = 0;
+   let leavesGroupedPerTask = 1;
+   let layerOrder = planStack.map(
+      (item, idx) => {
+         const rootLayerDepth = nextRootLayerDepth;
+         const depthPerTask = sortedDepths[item.currentProofIndex];
+
+         const treesGroupedPerTask = Math.pow(2, depthPerTask);
+	 const leavesGroupedPerTask *= treesGroupedPerTask;
+
+         const partialTaskSize = nextTaskCount % leavesPerTask;
+         const fullTaskCount = Math.floor(nextTaskCount / leavesPerTask);
+
+         nextTaskCount = (partialTaskSize > 0) ? (fullTaskCount + 1) : fullTaskCount;
+         nextRootLayerDepth = nextRootLayerDepth + depthPerTask;
+
+         return {
+             rootLayerDepth,
+             depthPerTask,
+             treeGroupedPerTask,
+             leavesGroupedPerTask,
+             fullTaskCount,
+             partialTaskSize
+         };
+      }
+   );
+
+   return { layerOrder };
+}
+
+
+interface ProofBatchStrategy {
+   readonly layerOrder: ProofForest[];
+}
+
+interface ProofForest {
+   readonly rootLayerDepth: number;
+   readonly depthPerTask: number;
+   readonly leavesPerTask: number;
+   readonly fullTaskCount: number;
+   readonly partialTaskSize: number;
+}
+
