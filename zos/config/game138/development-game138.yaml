@@ -1,0 +1,81 @@
+---
+eth:
+  lotto:
+    eventSpec:
+      sponsorId: 9
+      gameId: 138
+      prizePool:
+        batching:
+          randomSeedTtl: 2048
+        secondChanceCount: 1413127
+        prizeTiers:
+        - tierId: 11
+          prizeValue: 75000
+          prizeUnits: 0
+          instanceCount: 2
+          batched: false
+        - tierId: 10
+          prizeValue: 5000
+          prizeUnits: 0
+          instanceCount: 16
+          batched: false
+        - tierId: 9
+          prizeValue: 500
+          prizeUnits: 0
+          instanceCount: 480
+          batched: true
+        - tierId: 8
+          prizeValue: 250
+          prizeUnits: 0
+          instanceCount: 790
+          batched: true
+        - tierId: 7
+          prizeValue: 100
+          prizeUnits: 0
+          instanceCount: 4560
+          batched: true
+        - tierId: 6
+          prizeValue: 50
+          prizeUnits: 0
+          instanceCount: 10735
+          batched: true
+        - tierId: 5
+          prizeValue: 30
+          prizeUnits: 0
+          instanceCount: 14250
+          batched: true
+        - tierId: 4
+          prizeValue: 20
+          prizeUnits: 0
+          instanceCount: 47500
+          batched: true
+        - tierId: 3
+          prizeValue: 15
+          prizeUnits: 0
+          instanceCount: 95045
+          batched: true
+        - tierId: 2
+          prizeValue: 10
+          prizeUnits: 0
+          instanceCount: 123500
+          batched: true
+        - tierId: 1
+          prizeValue: 5
+          prizeUnits: 0
+          instanceCount: 190000
+          batched: true
+    eventSetup:
+      proofSeed:
+        batchBits: 3
+        generatedBits: 29
+        batchRuns:
+        - runId: 1
+          entryCount: 380001
+        - runId: 3
+          entryCount: 380001
+        - runId: 4
+          entryCount: 380001
+        - runId: 5
+          entryCount: 380001
+        - runId: 7
+          entryCount: 380001

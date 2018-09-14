@@ -1,0 +1,3 @@
+[submodule "zos/lib/isaac"]
+	path = zos/lib/isaac
+	url = https://github.com/macmcmeans/isaacCSPRNG

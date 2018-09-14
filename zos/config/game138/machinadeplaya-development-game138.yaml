@@ -1,0 +1,38 @@
+eth:
+  lotto:
+    taskWorker:
+      proofSeed:
+        allocatedRuns:
+        - 1
+        - 3
+        - 4
+        - 5
+        - 7
+        merge:
+          allocted: true
+          checkEvery: 30000
+        merkle:
+          allocated: true
+          checkEvery: 30000
+      seedArtSearch:
+        tasks:openSearch
+        collectionName
+          - taskId: openSearch
+            collectionName: randomCandidates
+            seedType: randomDraw
+            batchCount: 30000
+            batchParams:
+              - prefixCount: 3
+              - suffixCount: 3
+              - pairing: cartesian
+          - taskId: crossOver
+            readFromCollection: randomCandidates
+            writeToCollection:
+            seedType: randomDraw
+            batchCount: 30000
+            batchParams:
+            - prefixCount: 3
+            - suffixCount: 3
+            - pairing: cartesian
+
+

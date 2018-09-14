@@ -1,0 +1,93 @@
+// import {fromIterable, asap, queue} from 'rxjs';
+// import {take, map, buffer} from 'rxjs/operators';
+// import {range, zip, fromIterable} from 'rxjs';
+import {zip, asapScheduler, from, range, Observable, Subject, asyncScheduler} from 'rxjs';
+import { map, mapTo, take, bufferCount, tap, flatMap, observeOn } from "rxjs/operators";
+import { sprintf } from "sprintf-js";
+import { UniqueValueSource } from "./unique-value-source";
+
+// import {SHA256Compress} from "../services/SHA256Compress";
+// import * as merkleLib from "merkle-lib";
+import * as fs from "fs";
+import ErrnoException = NodeJS.ErrnoException;
+
+export function generateSeedTree(seedSource: UniqueValueSource, ticketCount: number, fileName: string) {
+    const recordsPerWrite = 2;
+    const bitsPerSeedEntry = 128;
+    const filesPerDir = 64;
+
+    // const concurrentWrites = 4;
+    const toWriteGuard: Subject<string> = new Subject<string>();
+    const fromWriteGuard = toWriteGuard.pipe(observeOn(asyncScheduler));
+
+    // Calculate the offset to begin writing leaf records in order to accomodate the full span of
+    // intermediate hash records that will be required for its minimal depth.
+    const treeDepth = Math.ceil(Math.log2(ticketCount));
+    const leafOffset = (1 << treeDepth) - 1;
+    const firstLeafByte = leafOffset * 256;
+    const writeOffsets =
+        range(0, Math.ceil(ticketCount/recordsPerWrite) - 1).pipe( //, queueScheduler).pipe(
+          map( (value: number) => firstLeafByte + (value * bitsPerSeedEntry * recordsPerWrite))
+        );
+    const directoryContentCount: Observable<number> =
+     range(0, Math.ceil(filesPerDir));
+    const directoryCreateCount: Observable<number> =
+        range(0, Math.ceil(ticketCount/filesPerDir)).pipe(
+          tap((dirIdx: number) => {fs.mkdirSync(`myPool/seedBlocks/${dirIdx}`)}),
+          flatMap((dirIdx: number) => directoryContentCount.pipe(mapTo(dirIdx)))
+        );
+    const computeSeedBits = from(seedSource, asapScheduler)
+        .pipe(
+          take(ticketCount), bufferCount(recordsPerWrite)
+        );
+
+    // Access output file.
+    // const openFlags =
+    //   fs.constants.O_WRONLY | fs.constants.O_CREAT |
+    //   fs.constants.O_NONBLOCK | fs.constants.O_NOATIME;
+    // const seedFd = fs.openSync(fileName, openFlags, 400);
+    console.log(fileName);
+
+    const retVal = zip(computeSeedBits, directoryCreateCount, writeOffsets, fromWriteGuard).subscribe(
+        (input: [Buffer[], number, number, string]) => {
+           const buffers = input[0];
+           const directoryIndex = input[1];
+           const writeOffset = input[2];
+           const writeGuardKey = input[3];
+           const iterCount = (
+             buffers.length < recordsPerWrite
+           ) ? buffers.length : recordsPerWrite;
+
+           for (let ii = 0; ii < iterCount; ii++) {
+              // fs.writeSync(
+              //   seedFd, buffers[ii], 0, bitsPerSeedEntry,
+              //   writeOffset + (ii * bitsPerSeedEntry)
+              // handleWriteReturn
+              // );
+              const file = sprintf("./mypool/seedBlocks/%d/block_%08d-%02d.dat", directoryIndex, writeOffset, ii);
+              fs.writeFile(file, buffers[ii], {flag: 'w+'}, (err: ErrnoException) => {
+                 if (!!err) {
+                    console.error(err);
+                 }
+
+                 if(ii == 0) {
+                    toWriteGuard.next(writeGuardKey);
+                 }
+              });
+              // console.log(buffers[ii].length, writeOffset);
+              // fs.writeFileSync(file, buffers[ii], {flag: 'w+'});
+           }
+        }
+    );
+
+    toWriteGuard.next("ThreadOne");
+    toWriteGuard.next("ThreadTwo");
+    toWriteGuard.next("ThreadThree");
+    toWriteGuard.next("ThreadFour");
+
+    return retVal;
+}
+
+// function handleWriteReturn( a: any, b: any, c: any ): void {
+//    console.log(a, b, c);
+// }
