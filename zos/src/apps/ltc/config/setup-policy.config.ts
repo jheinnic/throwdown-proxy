@@ -11,7 +11,7 @@ import {SerialNoncePolicy} from './serial-nonce-policy.config';
 @configClass("eth.lotto.setupPolicy")
 export class SetupPolicy {
    @configProp("randomSource")
-   @IsIn(["nodeCrypto", "randomOrg"])
+   @IsIn(["nodeCrypto", "isaacCrypto", "randomOrg"])
    public readonly randomSource: string = '';
 
    @configProp("secureStore")

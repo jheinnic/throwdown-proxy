@@ -1,9 +1,9 @@
 import {IsInt, IsPositive, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '../../../config/decorator/index';
+import {configClass, configProp} from '../../../config/decorator';
 import {PrizePool} from './prize-pool.config';
-import '../../../reflection/index';
+import '../../../reflection';
 
 @configClass("eth.lotto.eventSpec") // "eth.lotto.eventSpec")
 export class EventSpecification {

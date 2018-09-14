@@ -9,43 +9,9 @@ eth:
         endpoint: http://127.0.0.1:8200
         token: '1234'
         rootPath: lotto/events/game138
-      vaultPaths:
-        proveSeedNonce: setup/nonce/proof
-        prizeTierNonce: setup/nonce/tier
-        prizeSerialNonce: setup/nonce/serial
-        shufflePrizes: setup/shuffle/prizes
-        shuffleTickets: setup/shuffle/tickets
-        placePrizeWitness: setup/witness/prizes
-        ticketRandomWitness: resolve/witness/ticket
-        randomOrgApi: setup/access/random.org
-      keySource:
-        mnemonic: number ticket outer asthma wine define arctic butter tower settle answer
-          weird error kiss rail negative assault demand satisfy describe flat suggest bird
-          wall average tuna inspire invest cart length
-        key: xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3
-        path: m/44'/60'/9'/138/2'
     setupPolicy:
-      randomSource: nodeCrypto
+      randomSource: isaacCrypto
       secureStore: localFiles
-      blockLayout:
-        gameId:
-          fieldSize: 32
-          fieldOffset: 0
-        serial:
-          fieldSize: 160
-          fieldOffset: 64
-        checkBits:
-          fieldSize: 4
-          fieldOffset: 32
-        prizeTier:
-          fieldSize: 10
-          fieldOffset: 36
-        tierNonce:
-          fieldSize: 18
-          fieldOffset: 46
-        proofNonce:
-          fieldSize: 32
-          fieldOffset: 224
       shufflePolicy:
         sweepCount: 3
         sequenceWidth: 4
@@ -56,7 +22,7 @@ eth:
         entropyBits: 8192
         reseedEvery: 1536
       serialNoncePolicy:
-        entryopBits: 8192
+        entropyBits: 8192
         reseedEvery: 1024
       proofSeed:
         batchBits: 3
@@ -124,4 +90,3 @@ eth:
           prizeUnits: 0
           instanceCount: 190000
           batched: true
-

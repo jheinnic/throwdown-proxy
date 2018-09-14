@@ -14,14 +14,14 @@ export class PrizePool {
    @Type(() => PrizePoolBatching)
    public readonly batching: PrizePoolBatching = new PrizePoolBatching();
 
-   @configProp("secondChanceCount")
-   @IsPositive()
-   @IsInt()
-   public readonly secondChanceCount: number = 0;
+   // @configProp("secondChanceCount")
+   // @IsPositive()
+   // @IsInt()
+   // public readonly secondChanceCount: number = 0;
 
    @configProp("prizeTiers")
    @HasUniquePrizeTierIds()
-   @ValidateNested()
+   @ValidateNested({each: true})
    @Type(() => PrizeTier)
    public readonly prizeTiers: PrizeTier[] = [];
 }
