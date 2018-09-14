@@ -1,6 +1,6 @@
-import {LogicalSubtreeLocator} from './logical-subtree-locator.interface';
-import {MerkleTreeDescription} from '../merkle-tree-description.class';
-import {MerkleLayerLocator} from './merkle-layer-locator.interface';
+import {LogicalSubtreeLocator} from './logical-subtree-locator.value';
+import {MerkleTreeDescription} from './merkle-tree-description.value';
+import {MerkleLayerLocator} from './merkle-layer-locator.value';
 
 /**
  * Specialized subclass of LogicalSubtreeLocator that is suitable only for subtrees aligned with a
@@ -19,12 +19,12 @@ export class BlockMappedSubtreeLocator
     * proceeding through each block of each successive layer without resetting the addresses to
     * zero at each descent from one layer to next below.
     */
-   readonly offset: number;
+   public readonly offset: number;
 
    /**
     * Zero-based index of a block's height relative to the storage tree's root.
     */
-   readonly level: number;
+   public readonly level: number;
 
    /**
     * Zero-based index of a block relative to the first block at the same height.
@@ -36,15 +36,17 @@ export class BlockMappedSubtreeLocator
    {
       const rootDepth = merkleSubtree.rootDepth;
 
-      if (rootDepth > treeDescription.rootSubtreeDepth) {
+      if (rootDepth >= treeDescription.rootSubtreeDepth) {
          let iterDepth = rootDepth - treeDescription.rootSubtreeDepth;
          let storeLevel = 1;
          let offset = 1;
          let previousReach = treeDescription.rootSubtreeReach;
+         let previousFan = 1;
 
          while (iterDepth > 0) {
             storeLevel += 1;
-            offset += previousReach;
+            offset += previousReach * previousFan;
+            previousFan *= previousReach;
             previousReach = treeDescription.subtreeReach;
             iterDepth -= treeDescription.subtreeDepth;
          }
@@ -55,7 +57,7 @@ export class BlockMappedSubtreeLocator
 
          this.level = storeLevel;
          this.offset = offset + merkleSubtree.rootIndex;
-      } else if (rootDepth < treeDescription.rootSubtreeDepth) {
+      } else if (rootDepth > 0) {
          throw new Error(`${rootDepth} is not a block mapped subtree depth layer`);
       } else {
          this.level = 0;

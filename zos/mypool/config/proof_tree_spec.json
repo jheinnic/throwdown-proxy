@@ -4,24 +4,42 @@
     "key": "xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3",
     "path": "m/44'/60'/9'/138/2'"
   },
-  "proofDepths": [ 2, 3, 5, 7  ],
+  "proofDepths": [
+    2,
+    3,
+    5,
+    7
+  ],
   "blockLayout": {
     "fieldSizes": {
-      "gameIndex": 8,
-      "poolIndex": 24,
-      "tierIndex": 20,
+      "gameId": 32,
+      "checkBits": 4,
       "prizeTier": 10,
-      "checkBit": 2,
+      "tierNonce": 18,
       "serial": 160
     },
     "fieldOrder": [
-      { "fieldType": "serial", "offset": 0 },
-      { "fieldType": "gameIndex", "offset": 160 },
-      { "fieldType": "poolIndex", "offset": 168 },
-      { "fieldType": "tierIndex", "offset": 192 },
-      { "fieldType": "prizeTier", "offset": 212 },
-      { "fieldType": "publicKey", "offset", 224 },
-      { "fieldType": "signature", "offset", 256 }
+      {
+        "fieldType": "gameId",
+        "offset": 0
+      },
+      {
+        "fieldType": "checkBits",
+        "offset": 32
+      },
+      {
+        "fieldType": "prizeTier",
+        "offset": 36
+      },
+      {
+        "fieldType": "tierNonce",
+        "offset": 46
+      },
+      {
+        "fieldType": "serial",
+        "offset": 64
+      }
     ],
     "filePrefix": "batches"
   }
+}

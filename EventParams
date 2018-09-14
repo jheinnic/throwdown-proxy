@@ -1,0 +1,115 @@
+Public Given:  (Random Bits) 
+Public Secret: (Prize Tier, Previous Game Number Repeat, Previous Merkle Root, New Merkle Root
+Hidden Secret: (Serial Bits, Tier Nonce, Pool Index, Authentication Path)
+
+-- Serial # is assigned to original slotted prize, which may or may not have already been moved to its final home
+   spot.  The prize that was at the, source index, which may or may not have originally been the prize at that source
+   index, will not move again--all tickets will move zero, one, or two times, but no more and obviously no less.
+
+78 Bit Serial + 6 Bit
+
+The Seeding Tree and the Prize Pool Tree
+-- The Seeding Tree's initial leaf hashes are not derived from any source image.  They are simply all random 256 byte sequences, one for each winning game ticket to be "printed".  The Draft Tree's initial state is published in IPFS.  Its' IPFS address, the 8192 byte seed used to initialize its sequence, and a string identifying the PRNG used are published on the block chain.  The only supported PRNG at this time is "ISAAC".
+-- The Prize Pool Tree's initial leaf hashes are not derived from any source image.  They are initially set to one of two possible 256 bit sequences.   One is a fixed repeat of the pool's given event ID, and represents an open slot for populating a prize value.  The other is all padding (0's or 1's), and marks cells that will not be used in a given event.  The Prize Pool's initial state is NOT published in IPFS.  It's IPFS address, the event ID string, total ticket count, distribution of prize tiers are published, and the parity bit for marking unused ticket slots are published on the block chain.
+-- The initial block chain publications are constructor values presented to a contract factory that opens the event for funding and role assignment
+
+
+Event Parameters
+-- The contract instance ID serves as the event ID and is therefor immutable.
+-- Scheduled completion date defines the time window that must elapse before a "Normal" event closure is allowed.
+-- Prize Tier Layout labels up to 1024 unique prize tiers.  Each prize tier has the following properties:
+	-- Index is a unique identifier for the tier in this event ranging from 0 to 1023.
+	-- Quantity is the number of tickets to print that may be redeemed for a prize from described tier.  Quantity must be positive and no greater than 262,143
+	-- ValueMulti a multiplier for unit payout for prizes from described tier.  Value must be a positive value no greater than 16,383
+	-- ValueExp is an inverse exponent for unit payout for prizes from described tier.  0 yields a unit of 1 ether per unit of ValueMulti, and 16 yields a value of 10^-16 ether per unit of ValueMulti.  Value most be a non-negative value between 0 and 16.
+-- Non-Winning Count provides number of non-winning tickets that will be printed and must be a non-negative value between 0 and 268,435,455.
+-- SeedSeed is a sequence of 256 32-bit values used to initialize the Seeding Tree.  It is immutable once set.
+-- SeedPRNG identifies the PRNG used to seed the seed tree
+-- SeedMerkleRoot is the seed tree's generated Merkle Root
+-- SeedIPFS is the IPFS coordinates of a public copy of the Draft Tree initial state
+-- ParityBit is a boolean flag that is true if Seeding and PrizePool tree is initially padded with 1's, and false if it is initially padded with 0's.
+
+
+Event Roles
+-- The contract Owner will designate addresses for the following roles:
+	-- Sponsor is an independent party responsible for funding the event and recieves proceeds after its succesful completion.  The Spponsor is established at event creation and is immutable.
+	-- Operator is an independent party responsible for preserving secrecy and invests value equivalent to prize pool that is made available for withdrawl with a 
+	-- Grace is a representative of oversight committee with authority to suspend an event at any phase of its lifecycle and restore a suspended event to its prior operational phase.
+-- All steps that terminate an event require the consent of two of the above roles.  There are three terminal stages: 
+ 
+
+Funding, Delegation, Printing, Insuring, Seeding, OperatorCertification, SponsorCertification, and Launch Activities
+-- Funding, Delegation, Printing, Insuring, Seeding, Certification, and Locking occur concurrently.  An event does not launch until all activities are completed, but they may complete in any order with interleaved progress, subject to some constraints about certain actvities gating other activities.
+-- Funding is the simplest and refers to one or more deposit operations by Sponsor that accumulates the pool of ether used to pay out prizes according to the prize distribution.
+
+-- PrizeCertification requires the Sponsor sign a consent transaction with Oversight committee.  The Funding obligations of the stated prize pool must have been met, an Operator must have been delegated and cannot be changed without invalidating prior certification.  The prize pool is not strictly immutable, but any changes require co-authorization from both Sponsor and Operator.
+	-- PrizeCertification is one of two prerequesites for the Insuring activity.
+	-- PrizeCertification may be reversed if an event has no progress on Seeding or Printing, any Insurance deposits have been refunded, and the Operator's consent to insure is negated.
+
+-- Delegation is the task of designating an Operator.  Once PrizeCertification is granted, Delegation becomes unavailable.
+
+-- Insuring is the fund-matching obligation of the Operator.
+	-- Delegation and PrizeCertification must be satisfied before Insuring can begin.
+	-- Insuring begins once the Operator consents to accept the role and makes any partial or complete deposit towards Insurance value.
+	-- Sponsor may refund the full insurance fund and invalidate Operator consent to Insure in order to invalidate PrizeCertification.
+
+-- OperatorCertification requires Operator pay a flat event fee to Oversight committee, and consent to assignment of Grace by the commitee.  It concludes when Grace signs confirmation that the Operator, SeedSeed, SeedPRNG, InitialSeedMerkleRoot, InitialSeedIPFS, InitialPrizePoolMerkleRoot, and InitialPrizePoolIPFS tags values are correct, at which point they become immutable.
+	-- TODO: Recommend that Grace must select a secret key and prove she knows it so it can be used to authorize intervention activity?
+
+-- Printing and Seeding can begin as soon as Delegation, but Sponsor is not bound to accept any costs for this work until after OperatorCertification is granted.
+	-- TODO: Let Grace set paramters of seeding as the outcome of PrizeCertification, and lock down the prize pool instead of allowing mutual consent.  Grace initializes IPFS shares, but Operator accepts responsibility for pinning them.  OperatorCertification as a separate step folds into PrizeCertification and the fees are collected then.  Are Operator and Sponsor equally responsible?
+
+-- Printing is the task of selecting a unique and publicly visible bit string for each ticket to be sold.
+	-- Printed bit strings serve as a hashing salt during the random value handshake that determines a ticket's actual value when it is redeemed.  As a hashing salt, it prevents precalculation of viable rainbow tables that could otherwise allow players or operators to cheat the process of selecting prizes. plays a role in securing the randomization handshake between ticket holder and operator that determines a ticket's actual value not determine a prize without the combined inputs of the Operator and a TicketHolder, its handling has no security requirements.
+	-- Printed bit strings correspond to the unique display face of an unredeemed ticket.  They are therefore also part of the creative generation process that creates the experience of each ticket as a non-fungible item even though that non-fungibility does not in fact make any contribution to the ticket's actual prize value.
+	-- Each printed ticket has a 96-bit value.  When concatenated with the 160 bit ethereum address of an event's public contract, the result is a 256 bit value.  The initial state of the Prize Redemption Tree is a Merkle tree where each record is the 256 bit concatenation of a unique ticket ID and the event's contract.  Even entries use the ticket ID first, odd entries use the game contract bits first.  Unused slots in the tree follow the same pattern for placing the event's contract ID, but the space for a ticket ID is instead filled with the event's chosen parity bit or its inverse.  The rules follow from the following (mod 4) computation on an unused index:
+		-- 0 : parity bits then Event ID
+		-- 1 : EventID then inverse parity bits
+		-- 2 : inverse parity bits then Event ID
+		-- 3 : EventID then parity bits
+
+-- Seeding is the task of populating a Prize Pool Tree with a Hash of a record identifying each unique prize appearing once as a leaf in the table.
+	-- Seeding requires submitting one zkSnark proof for each ticket to be sold.
+	-- Seeding begins with a well-determined merkle tree constructed from leaf nodes that repeat the game event ID as many times as may fit into a 512-bit block, padding with the parity bit, then hashing the result.  Every leaf node must receive this same identical value at the start of seeding.
+	-- Operator is responsible for using a true source of randomness to extract two sequences of 128-bit values equal in length to the number of printed tickets minus one.  Beginning with the highest index value, and proceeding down to the number 1, take the next number off the series and compute its modulo (index + 1).  The resulting number will range from 0 to the current index value.  Swap the elements at the current and computed index.  The last such exchange will produce either 0 or 1 (modulo 2) and will either leave element 1 where it is, or swap it with element 0.
+	-- One sequence will be used to shuffle the records assigning each prize value a tier-scoped nonce and a pool-scoped serial number.  Pool-scoped serial numbers should be unique but collision prevention is not a hard requirement.  Tier nonces must never repeat.
+	-- Another will be used to shuffle a list of each unique index in the prize tree.
+	-- The record sequence, index sequence, and public Seed tree sequence will then be zipped together to yield the order and nature of each proof required to seed the prize pool.
+	-- Along with each proof, the operator will commit a transaction containing its index and bits from the seed tree, the prize tier that was seeded or 1024 (overflow value to tier 0) for a non-winner, the previous merkle root, and the new merkle root.  The serial bits, tier nonce, pool address, and merkle authentication path form a secret witness.  All node placements replace the fixed initialization leaf value, so it need not be repeated with each transaction, but must still be supplied when running the verification contract in Solidity.
+		-- Public Given:  (Random Bits, Seed Index) 
+		-- Public Secret: (Prize Tier, Previous Game Number Repeat, Previous Merkle Root, New Merkle Root
+		-- Hidden Secret: (Serial Bits, Tier Nonce, Pool Index, Authentication Path)
+		-- The proof demonstrates knowledge of the location of a prize and the content of its hashed record without revealing either.  
+		-- Any observer may also observe the unbroken chain of Merkle Root transitions, the correct number of times each prize tier was used, and the fact that each unique value from the public Seed tree was used in exactly one unique proof.
+	-- The completed prize pool tree is now published in its entirety.  
+	-- The above procedure must be modified slightly to allow for an insertion of non-coding control leaf at index 0.  This left-most low index can easily be removed from the rewardable prize range and will receive a pre-determined serial and non-winning nonce such that its initial presence in the tree at its expected location to demonstrate that the published tree is not a collection of random noise that happens to have the correct root.  
+
+
+-- Redemption is the process by which the operator and a ticket owner each select a random 256 bit value that are then combined to yield a prize index.
+	-- The exchange begins when the operator adds 160 bits of salt to the 96-bit ticket identifier, appends a 256 random value, and hashes the result.
+
+
+
+
+	-- A heuristic rule is applied to avoid paying an Ethereum cost for placing non-winning tickets individually.  There is currently insufficient proof material to guard this heuristic with a zkSnark, but should that change, manual verification by a Grace entity will be deprecated in favor of a zero knowledge proof that the Prize Pool Table's initial state is the deterministic product of a CRPNG sequence seeded with 8192 bits of randomness.
+	-- Compromising the CRPNG seed would enable a player to determine the location of winning tickets within the prize pool, but would not reveal the value at winning locations.  It would also not directly contribute to a player's ability to compromise the randomization of prize selection on ticket redemption, although it would serve to establish a goal for any manipulation of that process attempted.
+	-- The heuristic initialization proceeds as follows:
+		-- A data set is constructed consisting of a linear sequence of records.  The format for a non-winning ticket is used, which consists of the sequence 1111 for the tier index check bits, enabling the full range of tierID (10 bits) and tierIndex (18 bits) to be used to create a monotonicaly increasing series of 28 bit values.
+			-- The bitness required for the number of non-winning tickets is subtracted from 28.  The remaining bit count is used to determine a modulo for initial index and index step size.  The CRPNG seed can be used to reproduce the same sequence, allowing it to be used to certify the heuristic was applied correctly.
+			-- 160-bit serial IDs are allocated for each ticket.  As with winning tickets, collision avoidance is desirable, but not required.  For non-winning tickets, the 188 bits of serial and index serve as a nonce, and by ensuring uniqueness in the 28-bit subsequence, uniqueness across the 188 bit sequence is ensured.  The CRPNG is used to contribute this value set as well.
+			-- ID allocation is to be performed with 160 bits for a serial followed by a step modulo.  Bits are to be read as full words with the last word truncated as necessary.  If truncation of the last word to get 160 bits for a serial leaves enough for the step modulo, the remaining bits are used for that purpose, otherwise they are discarded and an additional word is read solely for the step.
+		-- A shuffle operation is performed in a second pass.  The first shuffle operation is at the right-most (highest value index) point and uses a modulo of that index to swap two entries.  The number of words drawn before each modulo operation is based on the least number of words required to be able to store the ticket count times the word length in bits.
+		-- A Merkle tree is constructed from the resulting record order.
+	-- The procedure for placing prize tickets requires 
+
+		
+
+
+
+
+
+
+-- A third tree is used to negotiate the prize value for a lottery ticket.  Every ticket has 
+
+
+Published: Random Bits, 

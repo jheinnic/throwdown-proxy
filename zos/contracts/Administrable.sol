@@ -1,7 +1,8 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.25;
 
-import "zeppelin-solidity/contracts/ownership/Ownable.sol";
-import "zeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-zos/contracts/ownership/Ownable.sol";
+import "openzeppelin-zos/contracts/math/SafeMath.sol";
+
 
 contract Administratable is Ownable {
     using SafeMath for uint256;
@@ -12,8 +13,8 @@ contract Administratable is Ownable {
     mapping (uint256 => address) public superAdminsForIndex;
     mapping (address => bool) public admins;
     mapping (address => bool) public superAdmins;
-    mapping (address => bool) processedAdmin;
-    mapping (address => bool) processedSuperAdmin;
+    mapping (address => bool) private processedAdmin;
+    mapping (address => bool) private processedSuperAdmin;
 
     event AddAdmin(address indexed admin);
     event RemoveAdmin(address indexed admin);

@@ -14,7 +14,7 @@
     * provides instances of this value interface on request to provide a convenient mapping between both
     * locations where a given data block is represented in a prepared Merkle data set.
     */
-import {MerkleOrientationType} from '../merkle-orientation-type.enum';
+import {MerkleOrientationType} from './merkle-orientation-type.enum';
 
 export interface LeafLocatorInterface
 {

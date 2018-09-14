@@ -1,7 +1,7 @@
-import {UniqueValueSource} from './prize/unique-value-source';
+import {UniqueValueSource} from './randomize/sources/unique-value-source';
 import {generateSeedTree} from './prize/generate-seed-tree';
 
-let seedValues = [
+let seedValues = Uint32Array.of(
    -425980141, 1103513639, 1942282457, -1527452113, 1959864891, 1523640013, 1336512345, 136845265,
    -994403274, -149684310, 233234833, -2097885300, -1658929744, 1394574865, 1697034403, 729307857,
    827282160, 766521433, -598681173, -661256816, -1460697820, -1243738789, 1476933610, -1355662760,
@@ -33,7 +33,7 @@ let seedValues = [
    -1923874733, 463417845, -1915780813, 1647575672, 1913807363, -85301533, 1786752785, -1075229122,
    1888471219, -1267657271, -1514671293, -88591680, 1608344103, 308578547, -1625341328, 53355786, 171943132,
    -1520216847, 1269558477, 214377904, -1016609140
-];
+);
 
 let bitSource = new UniqueValueSource(seedValues, 128, false, new Set<string>());
 let subscription = generateSeedTree(bitSource, 486875, 'mypool/prizeSeeds.dat');

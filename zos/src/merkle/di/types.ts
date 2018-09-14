@@ -1,12 +1,27 @@
 import {SymbolEnum} from '../../di';
 
-type MerkleTypeNames = 'LRUCache' | 'MerkleCalculator' | 'DigestStorageStrategy' | 'PreImageStorageStrategy' | 'BlockCacheStrategy' |
-   'MerkleTreeEngine' | 'MerkleTreeSyncTask' | 'MerkleTreeSwapTask' | 'MerkleTreeInsertTask' | 'MerkleTreeUpdateTask' |
-   'MerkleTreeProofTask' | 'MerkleTree' | 'MerkleTreeDescription';
+type MerkleTypeNames =
+   'LRUCache'
+   | 'LRUCacheType'
+   | 'MerkleCalculator'
+   | 'MerkleLocatorFactory'
+   | 'DigestStorageStrategy'
+   | 'PreImageStorageStrategy'
+   | 'BlockCacheStrategy'
+   | 'MerkleTreeEngine'
+   | 'MerkleTreeSyncTask'
+   | 'MerkleTreeSwapTask'
+   | 'MerkleTreeInsertTask'
+   | 'MerkleTreeUpdateTask'
+   | 'MerkleTreeProofTask'
+   | 'MerkleTree'
+   | 'MerkleTreeDescription';
 
 export const MERKLE_TYPES: SymbolEnum<MerkleTypeNames> = {
    LRUCache: Symbol.for('LRUCache'),
+   LRUCacheType: Symbol.for('LRUCache.Type'),
    MerkleCalculator: Symbol.for('MerkleCalculator'),
+   MerkleLocatorFactory: Symbol.for('MerkleLocatorFactory'),
    DigestStorageStrategy: Symbol.for('DigestStorageStrategy'),
    PreImageStorageStrategy: Symbol.for('PreImageStorageStrategy'),
    BlockCacheStrategy: Symbol.for('BlockCacheStrategy'),

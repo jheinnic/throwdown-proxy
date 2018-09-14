@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.25;
 
 import "zos-lib/contracts/migrations/Migratable.sol";
 //import "openzeppelin-zos/contracts/token/ERC721/MintableERC721Token.sol";

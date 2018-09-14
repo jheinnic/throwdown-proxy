@@ -25,8 +25,5 @@
         "pub": "lerna publish && yarn doc && scripts/upload-docs",
         "test": "yarn build && lerna run test"
     },
-    "dependencies": {
-        "openzeppelin-zos": "^1.9.1",
-        "zos-lib": "^1.2.1"
-    }
+    "dependencies": {}
 }

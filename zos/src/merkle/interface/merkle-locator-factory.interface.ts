@@ -1,12 +1,11 @@
-import {MerkleDigestLocator} from '../locator/merkle-digest-locator.value';
-import {MerkleLayerLocator} from '../locator/merkle-layer-locator.interface';
+import {MerkleDigestLocator, MerkleLayerLocator} from '../locator';
 
-export interface IMerkleLocator {
+export interface IMerkleLocatorFactory {
    findDigestByPosition(position: number): MerkleDigestLocator;
 
    findDigestByLayerIndex(layer: MerkleLayerLocator, index: number): MerkleDigestLocator;
 
    findDigestByRecordAddress(recordAddress: number): MerkleDigestLocator;
 
-   findLayerByIndex(index: number): MerkleLayerLocator;
+   findLayerByDepth(index: number): MerkleLayerLocator;
 }

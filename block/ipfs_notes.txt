@@ -1,0 +1,69 @@
+  Publish an <ipfs-path> with your default name:
+  
+    > ipfs name publish /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+    Published to QmbCMUZw6JFeZ7Wp9jkzbye3Fzp2GGcPgC3nmeUjfVF87n: /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+  
+  Publish an <ipfs-path> with another name, added by an 'ipfs key' command:
+  
+    > ipfs key gen --type=rsa --size=2048 mykey
+    > ipfs name publish --key=mykey /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+    Published to QmSrPmbaUKA3ZodhzPWZnpFgcPMFWF4QsxXbkWfEptTBJd: /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+  
+  Alternatively, publish an <ipfs-path> using a valid PeerID (as listed by 
+  'ipfs key list -l'):
+  
+   > ipfs name publish --key=QmbCMUZw6JFeZ7Wp9jkzbye3Fzp2GGcPgC3nmeUjfVF87n /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+    Published to QmbCMUZw6JFeZ7Wp9jkzbye3Fzp2GGcPgC3nmeUjfVF87n: /ipfs/QmatmE9msSfkKxoffpHwNLNKgwZG8eT9Bud6YoPab52vpy
+
+
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 02:58:38] $ ipfs get /ipfs/Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+Saving file(s) to Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+ 125.80 KB / 125.80 KB [=========================================================================================================] 100.00% 0s
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:00:07] $ ls Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR 
+Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:00:14] $ ls -la Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR 
+-rw-r--r--  1 jheinnic  staff  128754 Jun 14 03:00 Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:00:16] $ ifs key list -l
+-bash: ifs: command not found
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:00:22] $ ipfs key list -l
+QmT1pNJhEf5oFCpjJsKxA2ACbYqLJMa6pkERZMHA2PSxYb self  
+QmRgfRYvYa7DR7LagcAmyaRWq6sjx3jhbMpjZ8MNPZFDte mykey 
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:00:27] $ ipfs name publish --key=QmRgfRYvYa7DR7LagcAmyaRWq6sjx3jhbMpjZ8MNPZFDte /ipfs/Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+Published to QmRgfRYvYa7DR7LagcAmyaRWq6sjx3jhbMpjZ8MNPZFDte: /ipfs/Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:02:55] $ ipfs name
+USAGE
+  ipfs name - Publish and resolve IPNS names.
+
+  ipfs name
+
+  IPNS is a PKI namespace, where names are the hashes of public keys, and
+  the private key enables publishing new (signed) values. In both publish
+  and resolve, the default name used is the node's own PeerID,
+  which is the hash of its public key.
+
+SUBCOMMANDS
+  ipfs name publish <ipfs-path> - Publish IPNS names.
+  ipfs name pubsub              - IPNS pubsub management
+  ipfs name resolve [<name>]    - Resolve IPNS names.
+
+Use 'ipfs name --help' for more information about this command.
+
+
+jheinnic@MachinaDePlaya ~/Git/throwdown-proxy/webui (master)
+[Thu Jun 14, 03:03:42] $ ipfs name resolve /ipns/QmRgfRYvYa7DR7LagcAmyaRWq6sjx3jhbMpjZ8MNPZFDte
+/ipfs/Qmcey1jnC8FZPgFaMpgeoWfsEJqhwfShKC1XKDeXbCRUoR
+

@@ -246,6 +246,46 @@
           }
         }
       }
+    },
+    "@jchptf/ngx-ipfs": {
+      "root": "projects/jchptf/ngx-ipfs",
+      "sourceRoot": "projects/jchptf/ngx-ipfs/src",
+      "projectType": "library",
+      "prefix": "ngx-ipfs",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/jchptf/ngx-ipfs/tsconfig.lib.json",
+            "project": "projects/jchptf/ngx-ipfs/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/jchptf/ngx-ipfs/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/jchptf/ngx-ipfs/src/test.ts",
+            "tsConfig": "projects/jchptf/ngx-ipfs/tsconfig.spec.json",
+            "karmaConfig": "projects/jchptf/ngx-ipfs/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/jchptf/ngx-ipfs/tsconfig.lib.json",
+              "projects/jchptf/ngx-ipfs/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "throwdown-webui",

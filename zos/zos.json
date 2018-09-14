@@ -6,6 +6,6 @@
   },
   "stdlib": {
     "name": "openzeppelin-zos",
-    "version": "1.9.1"
+    "version": "^1.9.3"
   }
 }

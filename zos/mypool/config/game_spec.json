@@ -75,7 +75,10 @@
       "batched": true
     }
   ],
-  "batchSize": 2048,
+  "randomPolicies": {
+    "batchSize": 2048,
+    ""
+  },
   "branding": {
     "printName": "Proto Play",
     "playStyle": "randomArt",

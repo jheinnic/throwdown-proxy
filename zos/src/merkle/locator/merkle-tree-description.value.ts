@@ -36,7 +36,7 @@ export class MerkleTreeDescription {
       this.tierCount = Math.ceil(this.treeDepth / this.subtreeDepth);
 
       // Reduce the root subtree depth enough that the subtrees for every remaining tier
-      // can have maximum depth and accomodate the entire remaining tree.  Maximum tree
+      // can have maximum depth and accommodate the entire remaining tree.  Maximum tree
       // depth in the formula below is the depth a tree would be if the subtrees at every
       // layer (including the root layer) were at maximum depth.
       //

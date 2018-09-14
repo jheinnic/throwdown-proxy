@@ -35,6 +35,12 @@
       ],
       "@jchptf/ngx-message-channels/*": [
         "dist/jchptf/ngx-message-channels/*"
+      ],
+      "@jchptf/ngx-ipfs": [
+        "dist/jchptf/ngx-ipfs"
+      ],
+      "@jchptf/ngx-ipfs/*": [
+        "dist/jchptf/ngx-ipfs/*"
       ]
     }
   },

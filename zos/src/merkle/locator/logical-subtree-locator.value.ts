@@ -1,6 +1,6 @@
 import {MerkleDigestLocator} from './merkle-digest-locator.interface';
 import {MerkleSeriesLocator} from './merkle-series-locator.interface';
-import {MerkleOrientationType} from '../merkle-orientation-type.enum';
+import {MerkleOrientationType} from './merkle-orientation-type.enum';
 import {MerkleLayerLocator} from './merkle-layer-locator.interface';
 
 export class LogicalSubtreeLocator {

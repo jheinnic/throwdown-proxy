@@ -4,12 +4,15 @@
 
 export const environment = {
   production: false,
+  baseAppUrl: 'http://portfolio.dev.jchein.name:4200',
   keycloakConfigPath: '/assets/keycloak.json',
   keycloakServerUrl: 'http://portfolio.dev.jchein.name:28080/auth',
   onLoginRedirectUrl: '/route-one',
   onRegisterRedirectUrl: '/route-one',
   onLogoutRedirectUrl: '/route-two',
-  baseAppUrl: 'http://portfolio.dev.jchein.name:4200',
+  cloudinaryCloudName: 'dwcg6g6c7',
+  cloudinaryUploadPreset: 'MyPreset',
+  cloudinaryBaseDeliveryUrl: 'http://res.cloudinary.com/dwcg6g6c',
   apolloGraphQueryUrl: 'http://www.cnn.com',
   neo4jGraphQueryUrl: 'http://www.cnn.com'
 };

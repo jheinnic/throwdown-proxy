@@ -1,5 +1,3 @@
-import {MerkleTreeDescription} from '../merkle-tree-description.class';
-
 export class MerkleLayerLocator
 {
    /**
@@ -32,16 +30,14 @@ export class MerkleLayerLocator
     * a layer depth equal to the height (or depth) of the tree in which they are located, at
     * layer indices ranging from 0 to ((2^depth) - 1).
     */
-   public constructor(
-      public readonly treeDescription: MerkleTreeDescription,
-      public readonly depth: number)
+   public constructor(public readonly depth: number)
    {
       this.width = Math.pow(2, depth);
       this.leftPosition = this.width - 1;
       this.rightPosition = this.leftPosition * 2;
    }
 
-   public get treeDepth(): number {
-      return this.treeDescription.treeDepth;
-   }
+   // public get treeDepth(): number {
+   //    return this.treeDescription.treeDepth;
+   // }
 }

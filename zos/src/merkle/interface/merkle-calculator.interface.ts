@@ -1,17 +1,23 @@
 import {MonoTypeOperatorFunction, Observable, OperatorFunction} from 'rxjs';
-import {MerkleLayerLocator} from '../locator/merkle-layer-locator.interface';
-import {MerkleSeriesLocator} from '../locator/merkle-series-locator.interface';
-import {BlockMappedSubtreeLocator} from '../locator/block-mapped-subtree-locator.interface';
-import {MerkleDigestLocator} from '../locator/merkle-digest-locator.interface';
+import {MerkleLayerLocator} from '../locator/merkle-layer-locator.value';
+import {MerkleSeriesLocator} from '../locator/merkle-series-locator.value';
+import {BlockMappedSubtreeLocator} from '../locator/block-mapped-subtree-locator.value';
+import {MerkleDigestLocator} from '../locator/merkle-digest-locator.value';
 import {MerkleProofLocator} from '../locator/merkle-proof-locator.interface';
 
 export interface IMerkleCalculator {
+   getLayerLocators(): Observable<MerkleLayerLocator>;
+
+   getBlockMappedRootLayerLocators(): Observable<MerkleLayerLocator>;
+
+   getBlockMappedLeafLayerLocators(): Observable<MerkleLayerLocator>;
+
+   getTreeAssemblyBlockOrder(): Observable<BlockMappedSubtreeLocator>;
+
    /**
     * Given a Merkle Tree layer index, return the storage layer it can be found in.
-    *
-    * TODO: This needs a better signature
     */
-   mapDepthToStorageLevel(merkleDepth: number): Observable<MerkleLayerLocator>;
+   mapDepthToStorageLevel(): MonoTypeOperatorFunction<MerkleLayerLocator>;
 
    /**
     * Given a storage layer index, return the merkle tree layer that maps to it as root.
@@ -24,27 +30,17 @@ export interface IMerkleCalculator {
    mapStorageLevelToLeafDepth(storageLevel: number): Observable<MerkleLayerLocator>;
     */
 
-   recordAddressToLocator(recordAddress: number): Observable<MerkleDigestLocator>;
+   mapRecordAddressToDigestLocator(): OperatorFunction<number, MerkleDigestLocator>;
 
-   digestPositionToLocator(digestPosition: number): Observable<MerkleDigestLocator>;
+   mapPositionToDigestLocator(): OperatorFunction<number, MerkleDigestLocator>;
 
-   depthAndIndexToLocator(depth: number, index: number): Observable<MerkleDigestLocator>;
+   mapLayerAndIndexToDigestLocator(): OperatorFunction<[MerkleLayerLocator, number], MerkleDigestLocator>;
 
-   getSiblingLocator(): MonoTypeOperatorFunction<MerkleDigestLocator>;
+   mapDigestLocatorToSibling(): MonoTypeOperatorFunction<MerkleDigestLocator>;
 
-   getMerkleProofLocator(): OperatorFunction<MerkleDigestLocator, MerkleProofLocator>;
+   mapLayerToDigestLocators(): OperatorFunction<MerkleLayerLocator, Observable<MerkleDigestLocator>>;
 
-   // getMerkleProofLocator(recordAddress: number): Observable<MerkleProofLocator>;
+   mapLayerToSeriesLocators(runLength: number): OperatorFunction<MerkleLayerLocator, Observable<MerkleSeriesLocator>>;
 
-   getMerkleLayerLocators(): Observable<MerkleLayerLocator>;
-
-   // getMerkleDigestLocatorsByLayer(layerLocator: MerkleLayerLocator): Observable<MerkleDigestLocator>;
-   getMerkleDigestLocatorsByLayer(): OperatorFunction<MerkleLayerLocator, MerkleDigestLocator>;
-
-   // getMerkleDigestRunLocators(layerLocator: MerkleLayerLocator, runLength: number): Observable<MerkleSeriesLocator>;
-   getMerkleDigestRunLocators(runLength: number): OperatorFunction<MerkleLayerLocator, MerkleSeriesLocator>;
-
-   getBlockMappedMerkleLayerLocators(): Observable<MerkleLayerLocator>;
-
-   getTreeAssemblyBlockOrder(): Observable<BlockMappedSubtreeLocator>;
+   mapDigestToMerkleProofLocator(): OperatorFunction<MerkleDigestLocator, MerkleProofLocator>;
 }

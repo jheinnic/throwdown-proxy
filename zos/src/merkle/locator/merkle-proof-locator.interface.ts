@@ -1,6 +1,6 @@
-import {MerkleOrientationType} from '../merkle-orientation-type.enum';
-import {BlockMappedSubtreeLocator} from './block-mapped-subtree-locator.interface';
-import {MerkleDigestLocator} from './merkle-digest-locator.interface';
+import {MerkleOrientationType} from './merkle-orientation-type.enum';
+import {BlockMappedSubtreeLocator} from './block-mapped-subtree-locator.value';
+import {MerkleDigestLocator} from './merkle-digest-locator.value';
 import {LeafLocatorInterface} from './leaf-locator.interface';
 
 export interface MerkleProofLocator {

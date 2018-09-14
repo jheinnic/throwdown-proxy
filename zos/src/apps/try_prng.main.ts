@@ -1,10 +1,11 @@
-import {NodeCryptoRandomSource} from '../node-crypto-random-source.service';
 import {of, range} from 'rxjs';
+import {bufferCount, map, tap} from 'rxjs/operators';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
-import {bufferCount, map, tap} from 'rxjs/operators';
 
-const randomSource = new NodeCryptoRandomSource();
+import {NodeCryptoPseudoRandomSource} from '../randomize/sources/node-crypto-pseudo-random-source.service';
+
+const randomSource = new NodeCryptoPseudoRandomSource();
 
 /*
 range(0, 100)

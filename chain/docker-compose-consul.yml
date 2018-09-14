@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   consul-server:
-    image: consul:1.0.7
+    image: consul:1.2.2
     restart: unless-stopped
     domainname: dev.jchein.name
     hostname: consul-server
