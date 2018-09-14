@@ -1,0 +1,32 @@
+import config from 'config';
+import {configMeta} from './config-meta.symbols';
+import '../../reflection';
+
+interface Constructor
+{
+   new(...args: any[]): {}
+}
+
+
+// export function configProp(configKey: string): (...args: [object, string]) => void {
+export function configProp(configKey: string) { // PropertyDecorator {
+   return (configClass: Constructor, propertyKey: string | symbol) => {
+      let actualConfigKey = configKey;
+
+      const relativeRoot = Reflect.getMetadata(configMeta.relativeRoot, configClass);
+      if (!! relativeRoot) {
+         actualConfigKey = `${relativeRoot}.${actualConfigKey}`;
+      }
+      console.log('Target', configClass, 'propKey', propertyKey, 'and relative root', relativeRoot );
+
+      let readResolved = Reflect.getMetadata(configMeta.resolved, configClass);
+      if (! readResolved) {
+         readResolved = {};
+         Reflect.defineMetadata(configMeta.resolved, readResolved, configClass);
+      }
+
+      readResolved[propertyKey] = config.get(actualConfigKey);
+
+      return;
+   };
+}

@@ -1,4 +1,4 @@
-import {MerkleOrientationType} from '../merkle-orientation-type.enum';
+import {MerkleOrientationType} from '../merkle/locator/merkle-orientation-type.enum';
 
 export interface MerkleProofStep {
    readonly digest: Buffer;

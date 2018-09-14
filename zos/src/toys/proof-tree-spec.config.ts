@@ -1,5 +1,5 @@
 import {configClass, configProp} from './config-class.decorator';
-import '../reflection';
+import '../reflection/index';
 
 @configClass( "relativeToLastDir")
 export class ProofTreeSpec {

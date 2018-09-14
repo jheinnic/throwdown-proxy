@@ -6,15 +6,16 @@ class DoneSentinel {
    static INSTANCE: DoneSentinel = new DoneSentinel();
 }
 
-type Potential<T> = T | null | DoneSentinel;
+// type Potential<T> = T | null | DoneSentinel;
 
 interface PendingMessage<T>
 {
-   err: any;
-   value: Potential<T>
+   err?: any;
+   value?: T;
+   done: boolean;
 }
 
-export type PendingCallback<T> = (err: any, value: Potential<T>) => void;
+// export type PendingCallback<T> = (err: any, value: Potential<T>) => void;
 
 const doneSentinel: DoneSentinel = DoneSentinel.INSTANCE;
 
@@ -30,6 +31,19 @@ interface SubscribedIterableIterator<T> extends IterableIterator<T>
    unsubscribe(): void;
 }
 */
+
+/**
+ * Returns a function that, when called,
+ * returns a generator object that is immediately
+ * ready for input via `next()`
+ */
+function coroutine(generatorFunction) {
+   return function (...args) {
+      const generatorObject = generatorFunction(...args);
+      generatorObject.next();
+      return generatorObject;
+   };
+}
 
 /**
  * Accepts an RxJS Observable object and converts it to an ES6 generator
@@ -55,77 +69,46 @@ export class AsyncObservableIterator<T> implements Iterable<T>
       do {
          if ((value.value !== null) && (value.value !== doneSentinel)) {
             const msg = yield value.value as T;
+         }
          value = { err: null, value: yield value.value; };
-      } while ((! value.value) || (value.value === doneSentinel)) {
+      } while ((! value.value) || (value.value === doneSentinel));
    }
 
-   // private * iter (): IterableIterator<(cb: PendingCallback<T>) => void> {
-   private * iter(altIter: IterableIterator<T>): Iterator<T>
+   private * iter(): IterableIterator<T> {
+
+   }
+
+   private * workIter(toOutput: IterableIterator<PendingMessage<T>>): IterableIterator<PendingMessage<T>>
    {
-      const produce = (pendingValue: PendingMessage<T>) => {
-         altIter.next(pendingValue);
+      let subscribeHandle;
+      // let isDone = false;
+      // let isError = false;
+
+      try {
+         subscribeHandle = this._observable.subscribe(
+            value => toOutput.next({
+               err: null,
+               value: value
+            }),
+            err => toOutput.next({
+               err: err,
+               value: null
+            }),
+            () => toOutput.next({
+               err: null,
+               value: doneSentinel
+            }));
+      } finally {
+         if (!!subscribeHandle) {
+            subscribeHandle.unsubscribe();
+         }
       }
-
-      const subscribeHandle = this._observable.subscribe(
-         value => produce({
-            err: null,
-            value: value
-         }),
-         err => produce({
-            err: err,
-            value: null
-         }),
-         () => produce({
-            err: null,
-            value: doneSentinel
-         }));
-
-      do {
-         yield* altIter;
-      } while(subscribeHandle.closed === false);
    }
 
    [Symbol.iterator]()
    {
-      let obsIter = this.altIter();
-      let myIter = this.iter(obsIter);
-
-      /*
-      async function consumeViaCallback(cb: PendingCallback<T>) {
-         let item = pendingValues.shift();
-         if (item === undefined) {
-            pendingCallback = cb;
-         } else {
-            return await callTheCallback(cb, item);
-         }
-      };
-      let isDone: boolean = false;
-
-      while (!isDone) {
-         let item = pendingValues.shift();
-         console.log('Value requested');
-         if (!!item && !!item.value) {
-            if (item.value instanceof DoneSentinel) {
-               isDone = true;
-            } else {
-               yield item.value;
-               console.log('Yielded', item.value);
-            }
-
-            // callback(item.err, item.value);
-            // isDone gets modified in callTheCallback, above.
-            // new Promise<T>((resolve, reject) => {
-            // consumeViaCallback(function(err, value) {
-            //    if (!! err) {
-            //       reject(err);
-            //    } else {
-            //       resolve(value);
-            //    }
-            // });
-            // });
-         }
-      }
-      */
+      const fromObservable = this.iter();
+      coroutine(this.workIter(fromObservable));
 
       return myIter;
    }

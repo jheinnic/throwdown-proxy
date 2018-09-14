@@ -50,10 +50,21 @@ export class AsyncObservableIterator<T> implements Iterable<T>
       // this._iter = undefined;
    }
 
-   private * altIter(): Iterator<T>
+   private * altIter(): IterableIterator<T> {
+
+   }
+
    // private * iter (): IterableIterator<(cb: PendingCallback<T>) => void> {
-   private * iter(): Iterator<T>
+   private * iter(altIter: IterableIterator<T>): Iterator<T>
    {
+      yield* altIter;
+   }
+
+   [Symbol.iterator]()
+   {
+      let obsIter = this.altIter();
+      let myIter = this.iter(obsIter);
+
       let isDone = false;
 
       let pendingCallback: PendingCallback<T> | null;
@@ -67,6 +78,7 @@ export class AsyncObservableIterator<T> implements Iterable<T>
          callback(pendingValue.err, pendingValue.value);
       };
 
+      /*
       const produce = (pendingValue: PendingMessage<T>) => {
          if (!!pendingCallback) {
             const cb = pendingCallback;
@@ -76,6 +88,10 @@ export class AsyncObservableIterator<T> implements Iterable<T>
             pendingValues.push(pendingValue);
          }
       };
+      */
+      const produce = (pendingValue: PendingMessage<T>) => {
+         obsIter.next(pendingValue);
+      }
 
       const subscribeHandle = this._observable.subscribe(
          value => produce({
@@ -92,14 +108,14 @@ export class AsyncObservableIterator<T> implements Iterable<T>
          }));
 
       // const consumeViaCallback =
-         async function consumeViaCallback(cb: PendingCallback<T>) {
-            let item = pendingValues.shift();
-            if (item === undefined) {
-               pendingCallback = cb;
-            } else {
-               return await callTheCallback(cb, item);
-            }
-         };
+      async function consumeViaCallback(cb: PendingCallback<T>) {
+         let item = pendingValues.shift();
+         if (item === undefined) {
+            pendingCallback = cb;
+         } else {
+            return await callTheCallback(cb, item);
+         }
+      };
 
       while (!isDone) {
          let item = pendingValues.shift();
@@ -127,11 +143,6 @@ export class AsyncObservableIterator<T> implements Iterable<T>
       }
    }
 
-
-   [Symbol.iterator]()
-   {
-      return this.iter();
-   }
 
    /*
    * nextValue () {
