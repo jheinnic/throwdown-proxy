@@ -1,3 +1,4 @@
 node-modules/
+./src/toys/**
 mypool
 logs
