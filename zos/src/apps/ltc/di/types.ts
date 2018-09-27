@@ -1,8 +1,7 @@
-import {SymbolEnum} from '../../../di';
+import {SymbolEnum} from '../../../infrastructure/lib';
 
-export const LTC_TYPES: SymbolEnum<'Deployment' | 'EventSpecification' | 'SetupPolicy' > = {
-   Deployment: Symbol.for("Deployment"),
-   EventSpecification: Symbol.for("EventSpecification"),
-   SetupPolicy: Symbol.for("SetupPolicy")
-};
-
+type LtcWorkerTypes = 'CreateTicketPoolTaskDef' | 'CreateTicketPoolWorker'
+export const LTC_WORKER_TYPES: SymbolEnum<LtcWorkerTypes> = {
+   CreateTicketPoolTaskDef: Symbol.for('CreateTicketPoolTaskDef'),
+   CreateTicketPoolWorker: Symbol.for('CreateTicketPoolWorker')
+}

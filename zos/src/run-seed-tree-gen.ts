@@ -1,5 +1,5 @@
-import {UniqueValueSource} from './randomize/sources/unique-value-source';
-import {generateSeedTree} from './prize/generate-seed-tree';
+import {UniqueValueSource} from './infrastructure/randomize/sources/unique-value-source';
+import {generateSeedTree} from './modules/prizes/generate-seed-tree';
 
 let seedValues = Uint32Array.of(
    -425980141, 1103513639, 1942282457, -1527452113, 1959864891, 1523640013, 1336512345, 136845265,

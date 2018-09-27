@@ -3,12 +3,12 @@ eth:
   lotto:
     deployment:
       localAccess:
-        rootPath: lotto/events/game138
+        rootPath: myLotto/events/game138
       vaultAccess:
         apiVersion: v1
         endpoint: http://127.0.0.1:8200
         token: '1234'
-        rootPath: lotto/events/game138
+        rootPath: myLotto/events/game138
     setupPolicy:
       randomSource: isaacCrypto
       secureStore: localFiles

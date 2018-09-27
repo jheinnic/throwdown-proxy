@@ -3,21 +3,30 @@ eth:
   lotto:
     deployment:
       localAccess:
-        rootPath: lotto/events/game138
+        rootPath: myLotto/events/game138
       vaultAccess:
         apiVersion: v1
         endpoint: http://127.0.0.1:8200
         token: '1234'
-        rootPath: lotto/events/game138
-      vaultPaths:
+        rootPath: myLotto/events/game138
+      dataSetPaths:
+        randomOrgApi: config/access/random.org
         proveSeedNonce: setup/nonce/proof
-        prizeTierNonce: setup/nonce/tier
-        prizeSerialNonce: setup/nonce/serial
-        shufflePrizes: setup/shuffle/prizes
-        shuffleTickets: setup/shuffle/tickets
-        placePrizeWitness: setup/witness/prizes
-        ticketRandomWitness: resolve/witness/ticket
-        randomOrgApi: setup/access/random.org
+        prizeTierNonce: minting/prizes/tierNonce
+        prizeSerialNonce: minting/prizes/serial
+        placementKeyPairs: minting/prizes/keyPair
+        shufflePrizes: minting/prizes/shuffle
+        ticketKeyPairs: minting/tickets/keyPair
+        shuffleTickets: minting/tickets/shuffle
+        ticketArtwork: minting/tickets/artwork
+        ticketRandomWitness: event/reveals/random
+      entropy:
+        devFake:
+          hexSeedBits: abcdef0123456789
+        hmacDrbg:
+          entropyBitCount: 64
+          nonceBitCount: 32
+          additionalEntropyWords: 2
       keySource:
         mnemonic: number ticket outer asthma wine define arctic butter tower settle answer
           weird
@@ -45,15 +54,18 @@ eth:
         proofNonce:
           fieldSize: 32
           fieldOffset: 224
+        privateKey:
+          fieldSize: 256
+          fieldOffset: 256
       shufflePolicy:
-        sweepCount: 3
-        sequenceWidth: 4
+        passCount: 3
+        concurrentRuns: 3
         wordBits: 64
-        entropyBits: 8192
-        reseedEvery: 256
+        entropySeedBits: 8192
+        algorithmKey: hmac-drbg
       tierNoncePolicy:
-        entropyBits: 8192
-        reseedEvery: 1536
+        batchEntropyBits: 8192
+        batchedSetSize: 1536
       serialNoncePolicy:
         entropyBits: 8192
         reseedEvery: 1024

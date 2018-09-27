@@ -1,0 +1,308 @@
+import {Builder, Ctor, Instance} from 'fluent-interface-builder';
+
+import {Director, MixableConstructor, Mutable} from './utility';
+import {
+   MetadataAccessor, MetadataInspector, MethodDecoratorFactory, ParameterDecoratorFactory
+} from '@loopback/metadata';
+
+// export type FluentTemplate<C extends MixableConstructor, T extends InstanceType<C> = InstanceType<C>,
+//    F extends FluentTemplate<C, T, F> = FluentTemplate<C, T, F>> =
+//    BagOfMapsTo<F, T, keyof T>
+
+//
+// // export interface FluentSetter<Self extends FluentBuilder<Self>, P extends any[] = any[]> extends Function
+// // {
+// //    (...args: P): Self
+// // }
+//
+// export interface FluentBuilder<Self extends FluentBuilder<Self>>
+// {
+//    [K: string]: FluentSetter<Self>;
+// }
+//
+// export type FluentSetterParamTypes<Self extends FluentBuilder<Self>, K extends keyof Self> =
+//    Self[K] extends (...args: infer P) => Self ? P : never;
+// export type FluentBuilderPropertyNames<Self extends FluentBuilder<Self>> = {
+//    [K in keyof Self]: Self[K] extends FluentSetter<Self> ? K : never
+// }[FunctionPropertyNames<Self>];
+// export type FluentBuilderApiQualifier<Self extends FluentBuilder<Self>> = {
+//    [K in keyof Self]: K extends FluentBuilderPropertyNames<Self> ? Self[K] : never
+// }
+// export type FluentBuilderApi<Self extends FluentBuilder<Self>> =
+//    Pick<FluentBuilderApiQualifier<Self>, FluentBuilderPropertyNames<Self>>;
+// type FluentBuilderState<Self extends FluentBuilder<Self>> = {
+//    -readonly [K in keyof Self]+?: FluentSetterParamTypes<Self, K>
+// }
+//
+// export type FluentDirector<Self extends FluentBuilder<Self>, I extends FluentBuilderApi<Self>> = Director<I>;
+//
+// export interface Sample extends FluentBuilder<Sample>
+// {
+//    one(param: boolean): Sample;
+//
+//    two(param: number, arg: string): Sample;
+//
+//    three(bad: number): string;
+// }
+//
+// /*
+// export interface OptionsDirector<T extends OptionsBag<T>> {
+//    (builder: FluentOptionsBuilder<T>): void;
+// }
+// export abstract class AbstractOptionsBag {
+//    static create(director: OptionsDirector<any>): ThisType<AbstractOptionsBag>
+//    {
+//       throw director;
+//    }
+//
+//    clone(director: OptionsDirector<any>): ThisType<AbstractOptionsBag>
+//    {
+//       throw director;
+//    }
+// }
+// */
+//
+// export type FluentOptionsBuilder<T extends OptionsBag<T>,
+//    P extends OptionsBagPropertyNames<T> = OptionsBagPropertyNames<T>,
+//    F extends FluentOptionsBuilder<T, P> = FluentOptionsBuilder<T, P, F>> =
+//    {
+//       [K in Exclude<P & (ValuePropertyNames<T> | SetterPropertyNames<T>), 'clone'>]:
+//       T[K] extends Setter<T[K]>
+//          ? (...values: SetterParamTypes<T[K]>) => F
+//          : (value: T[K]) => F
+//    }
+// //, C extends MixableConstructor<T> = MixableConstructor<T>,
+// // F = FluentTemplate<T, C, F>> = BagOfMapsTo<F, T, keyof T>
+//
+// // export type IfOptionsBag<T extends AbstractOptionsBag> = T extends OptionsBag<T> ?
+// // FluentOptionsBuilder<T> : never;
+//
+// // export interface OptionsConstructor<O extends AbstractOptionsBag> extends MixableConstructor<O> {
+// //    create( director: (builder: FluentOptionsBuilder<O>) => void): O;
+// // }
+//
+// export function FluentlyBuilt<O extends OptionsBag<O>, C extends MixableConstructor>(Base: C): C & {
+//    create(director: (builder: FluentOptionsBuilder<O>) => void): any;
+// }
+// {
+//    type InternalBuilder<M> =
+//       FluentOptionsBuilder<O>
+//       & Instance<Mutable<M>>
+//
+//    return class FluentlyBuilt extends Base
+//    {
+//       private static ctor?: Ctor<Mutable<FluentlyBuilt>, InternalBuilder<FluentlyBuilt>>;
+//
+//       private static initClass(): void
+//       {
+//          if (!FluentlyBuilt.ctor) {
+//             const myBuilder = new Builder<Mutable<FluentlyBuilt>, InternalBuilder<FluentlyBuilt>>();
+//
+//             const sample = new Base();
+//             for (let prop of Object.getOwnPropertyNames(sample)) {
+//                console.log(prop);
+//                myBuilder.cascade(prop, (value: any) => (orig: Mutable<FluentlyBuilt>) => {
+//                   console.log(prop);
+//                   orig[prop as keyof FluentlyBuilt] = value;
+//                });
+//             }
+//
+//             // It's easier to just use the Instance<> interface already present in what's
+//             // inherited from fluent-interface-builder, and cast the result there.
+//             //
+//             // myBuilder.unwrap('build', () => (mutable: Mutable<FluentlyBuilt>) => {
+//             //   return mutable as FluentlyBuilt;
+//             // });
+//
+//             FluentlyBuilt.ctor = myBuilder.value;
+//          }
+//       }
+//
+//       static create(director: (builder: FluentOptionsBuilder<O>) => void): FluentlyBuilt
+//       {
+//          FluentlyBuilt.initClass();
+//          if (!FluentlyBuilt.ctor) {
+//             throw Error('initClass failed to init ctor');
+//          }
+//
+//          let retVal: Mutable<FluentlyBuilt> = new FluentlyBuilt() as Mutable<FluentlyBuilt>;
+//          let builderImpl: InternalBuilder<FluentlyBuilt> = new FluentlyBuilt.ctor(retVal);
+//          director(builderImpl);
+//          return builderImpl.value as FluentlyBuilt;
+//       }
+//
+//       public clone(director: (builder: FluentOptionsBuilder<O>) => void): FluentlyBuilt
+//       {
+//          FluentlyBuilt.initClass();
+//          if (!FluentlyBuilt.ctor) {
+//             throw Error('initClass failed to init ctor');
+//          }
+//
+//          let retVal = Object.assign(new FluentlyBuilt() as Mutable<FluentlyBuilt>, this);
+//          let builderImpl: InternalBuilder<FluentlyBuilt> = new FluentlyBuilt.ctor(retVal);
+//          director(builderImpl);
+//          return builderImpl.value as FluentlyBuilt;
+//       }
+//    }
+// }
+//
+// export interface FactoryMethodMarker
+// {
+// }
+//
+// export interface BindToBuilder<FB extends FluentBuilder<FB>>
+// {
+//    builderMethod: keyof FB;
+//    inputIndex: number;
+// }
+//
+// const FACTORY_METHOD_KEY = MetadataAccessor.create<FactoryMethodMarker, MethodDecorator>(
+//    'factory-method-marker-key'
+// );
+// const BIND_TO_BUILDER_KEY = MetadataAccessor.create<FactoryMethodMarker, MethodDecorator>(
+//    'bind-to-builder-input-key'
+// );
+//
+// export function factoryMethod(spec: FactoryMethodMarker): MethodDecorator
+// {
+//    return (a1: any, a2: any, a3: any): void => {
+//       console.log('I am in method decorator');
+//       const real = MethodDecoratorFactory.createDecorator<FactoryMethodMarker>(
+//          FACTORY_METHOD_KEY,
+//          spec
+//       );
+//
+//       real(a1, a2, a3);
+//
+//       console.log(a1, a2, a3);
+//    }
+// }
+//
+// export function bindToBuilder<FB extends FluentBuilder<FB>>(spec: BindToBuilder<FB>): ParameterDecorator
+// {
+//    return (
+//       (target: Object, propKey: string | symbol, index: number): void => {
+//          console.log('I am in parameter decorator');
+//          const real: ParameterDecorator =
+//             ParameterDecoratorFactory.createDecorator(BIND_TO_BUILDER_KEY, spec);
+//          real(target, propKey, index);
+//
+//          console.log(target, propKey, index);
+//       };
+// }
+//
+// export function fluentOptionsBag<C extends MixableConstructor, Self extends FluentBuilder<Self>>(Target: C): C
+// {
+//    type InternalState = FluentBuilderState<Self>
+//    type InternalBuilder = Self & Instance<InternalState>
+//    // type InternalBuilder<M> = FluentOptionsBuilder<O> & Instance<M>;
+//
+//    const FluentlyBuilt = class FluentlyBuilt extends Target
+//    {
+//       private static ctor?: Ctor<InternalState, InternalBuilder>
+//
+//       private static initClass(): void
+//       {
+//          if (!FluentlyBuilt.ctor) {
+//             const myBuilder = new Builder<InternalState, InternalBuilder>();
+//
+//             const allParamsForConstructor =
+//                MetadataInspector.getAllParameterMetadata<BindToBuilder<Self>>(
+//                   BIND_TO_BUILDER_KEY, Target, '');
+//
+//             for (let prop of Object.getOwnPropertyNames(sample)) {
+//                console.log(prop);
+//                myBuilder.cascade(prop, (value: any) => (orig: Mutable<FluentlyBuilt>) => {
+//                   console.log(prop);
+//                   orig[prop as keyof FluentlyBuilt] = value;
+//                });
+//             }
+//
+//             // It's easier to just use the Instance<> interface already present in what's
+//             // inherited from fluent-interface-builder, and cast the result there.
+//             //
+//             // myBuilder.unwrap('build', () => (mutable: Mutable<FluentlyBuilt>) => {
+//             //   return mutable as FluentlyBuilt;
+//             // });
+//
+//             FluentlyBuilt.ctor = myBuilder.value;
+//          }
+//       }
+//
+//       static create(director: (builder: FluentOptionsBuilder<O>) => void): FluentlyBuilt
+//       {
+//          FluentlyBuilt.initClass();
+//          if (!FluentlyBuilt.ctor) {
+//             throw Error('initClass failed to init ctor');
+//          }
+//
+//          let retVal: Mutable<FluentlyBuilt> = new FluentlyBuilt() as Mutable<FluentlyBuilt>;
+//          let builderImpl: InternalBuilder<FluentlyBuilt> = new FluentlyBuilt.ctor(retVal);
+//          director(builderImpl);
+//          return builderImpl.value as FluentlyBuilt;
+//       }
+//
+//       public clone(director: (builder: FluentOptionsBuilder<O>) => void): FluentlyBuilt
+//       {
+//          FluentlyBuilt.initClass();
+//          if (!FluentlyBuilt.ctor) {
+//             throw Error('initClass failed to init ctor');
+//          }
+//
+//          let retVal = Object.assign(new FluentlyBuilt() as Mutable<FluentlyBuilt>, this);
+//          let builderImpl: InternalBuilder<FluentlyBuilt> = new FluentlyBuilt.ctor(retVal);
+//          director(builderImpl);
+//          return builderImpl.value as FluentlyBuilt;
+//       }
+//    }
+//
+//    let newConstructor: any = function (this: any) {
+//       Target.apply(this);
+//    };
+//
+//    console.log('I am in class decorator!');
+//
+//    newConstructor.prototype = Object.create(Target.prototype);
+//    newConstructor.prototype.constructor = Target;
+//
+//    const clonePropName: string | undefined =
+//       Object.getOwnPropertyNames(Target.prototype)
+//          .find((propName: string) => {
+//             if (propName === 'constructor') {
+//                return false;
+//             }
+//
+//             // Inspect a class with the key
+//             const factoryMethodData: OptionsFactory | undefined =
+//                MetadataInspector.getMethodMetadata(FACTORY_METHOD_KEY, Target.prototype, propName);
+//
+//             console.log(propName, factoryMethodData);
+//             return !!factoryMethodData;
+//          });
+//    if (!!clonePropName) {
+//       newConstructor.prototype[clonePropName] = (a: number): string => {
+//          return a.toString(2);
+//       };
+//       console.log('Found and overrode ' + clonePropName);
+//    }
+//
+//    const createPropName: string | undefined =
+//       Object.getOwnPropertyNames(Target)
+//          .find((propName: string) => {
+//             // Inspect a class with the key
+//             const factoryMethodData: OptionsFactory | undefined =
+//                MetadataInspector.getMethodMetadata(FACTORY_METHOD_KEY, Target, propName);
+//
+//             console.log(propName, factoryMethodData);
+//             return !!factoryMethodData;
+//          });
+//    if (!!createPropName) {
+//       newConstructor[createPropName] = (a: number): string => {
+//          return a.toString(2);
+//       };
+//       console.log('Found and overrode ' + createPropName);
+//    }
+//
+//    return newConstructor as any;
+// }
+// }

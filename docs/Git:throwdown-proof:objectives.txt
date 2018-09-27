@@ -1,0 +1,39 @@
+Given:
+	-- An array of prize counts by tier, pSizes
+	-- A Merkle tree root
+Prove I know:
+	-- An array of shuffle indices of size (sum(prizeCounts) - 1)
+	-- An array of 32 bit salt values of size (sum(prizeCounts))
+	-- Some kind of digital signature key
+Such that:
+	-- The resulting tree has a Merkle Root that matches the given value
+
+
+N = 1,900,000 tickets require:
+M = 1,400,000 losing tickets require:
+P = 190,000 smallest prize tickets:
+log2(N) ~= 20.86 bits to index
+log2(M) ~= 20.3 bits to index
+log2(P) ~= 17.53 bits to label 
+
+
+Given
+	-- Merkle tree root hash from previous prize pool
+	-- Merkle tree root hash from post-award prize pool
+	-- A prize tier label value, which maps to the prize value
+        -- Prize pool index for prize being awared
+        -- Prize pool index for right-most unclaimed prize 
+Prove I know:
+	-- Means to construct the leaf value for awarded prize
+		-- Index of awarded prize instance within its tier
+		-- Random salt of awarded prize
+	-- Four merkle proof paths
+		-- Path to awarded before it is rotated right
+		-- Path to awarded after it is rotated right
+		-- Path to right-most unclaimed before it is rotated left
+		-- Path to right-most unclaimed after it is rotated left
+Such that:
+	-- First and third Merkle Proofs accurately describe awarded at its original index and unclaimed on the far right
+	-- Second and fourth Merkle Proofs accurately describe awarded on far right and unclaimed at awarded's previous index
+	-- Merkle roots before and after are accurate
+		
