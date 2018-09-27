@@ -1,0 +1,17 @@
+{
+  "valueSize": 237,
+  "length": 11,
+  "values": [
+    {"index":0,"hash":"1+2z7TaWljlJk23d35ELe30W9rae6Ws5futFA2gkeYw=","balance":"250","key":"8Si+RIyi0ZzBX+8L/ZhZ3Y2Pqf0sv+/1tFgrT99q1z0=","signature":"EJ8Kfb/eihoYHrKdzZyLxbpeEeuY5hUpNqwQcdVHAR2Wl8Hv2+jVI92GieZ1QTyUo72Sg4afcXN/0fV238irBg=="},
+    {"index":1,"hash":"fvCtXaIpYuvnJUxF+njWEAbPV4lg6fu/s2phvNj47zk=","balance":"250100"},                                                                                                                                                         
+    {"index":2,"hash":"2axbErNpdti2WY6CK1czqc0jw/J+QBp1pnQZigyO5R4=","balance":"100","key":"M4olfngQkbazdOZuuAJfXuCRcoE85xNPUs9M/q091MI=","signature":"DGfAGB5dnfLnPhjfDm0JZpXWiDzQ7+m6xKWu2UHjF4sqEpyAM67rEv3wdPzBAH+7HbGwLbUTEIfogo1xGdtYBQ=="},
+    {"index":3,"hash":"wWqKVIUVaBv6ZfjWEwSA57IUCde3ie/hjemNrS7NXiE=","balance":"25010035"},                                                                                                                                                       
+    {"index":4,"hash":"jUHr2hjJIE3qxTbUkxHVCSu082MJVra5fraFKsgFpOc=","balance":"3","key":"X1BidxEeqN3fh70xhTwFqlp3K7x+jjxFSGD6F7hPwdE=","signature":"T1AthWBHUSwAbGoe/Vr/O29oowPY8kiqX9gkC9HHQy1za77eyRIlMrqgIaLoryxZtCq2/vGuwXRY3IZUPdVSBA=="},  
+    {"index":5,"hash":"LWv62mket8gJah0iQ41QNLCuMl+19AmhH/xwYHG+mek=","balance":"35"},                                                                                                                                                             
+    {"index":6,"hash":"OKwC/HqYIcUzDOx0NM9KB+g8NbGhV5mN3Nq5XOTaiS0=","balance":"5","key":"hj0Vkoyp1Q1VGdhscenriyCKgBTpRtPA/rvjWBGyhCc=","signature":"icbMPdFAqgmKbEI0qJPtkq6Eh9vPvd6be3gnhM+eSczSEuqp9j/u0DM6/DLcVWy1XxGbvpmnj91hRhOybfy1Bw=="},  
+    {"index":7,"placeholder":true},                                                                                                                                                                                                               
+    {"index":8,"hash":"HUENu5qzrwTns3st23WHtpAwpHIG96tV7g2C4E3f2tI=","balance":"0","key":"olSOS9mMUXChBYjpSv0nSB0gxKYJ13eBWbSe9Y5hm9Y=","signature":"zfubxabBKq6ss9dYAkDNVDNBuV+TlFu+Uz0jS5SIp9sIpPNJsJfrvV8euUoJCBdrnHaJjgfBFPNLEZMOycU/Bg=="},  
+    {"index":9,"placeholder":true},                                                                                                                                                                                                               
+    {"index":10,"hash":"2JEaBfcS3SU2m8IffqTrffDM0S1/+NkAUO1jCJu+Kl0=","balance":"0250100350"}                                                                                                                                                     
+  ]
+}
