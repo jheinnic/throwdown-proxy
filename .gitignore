@@ -8,6 +8,7 @@
 
 # dependencies
 node_modules/
+installed_contracts/
 
 # IDEs and editors
 .idea/
