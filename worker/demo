@@ -1,0 +1,33 @@
+{
+  "name": "@jchptf/simple.webui",
+  "version": "0.0.1-bootstrap-SNAPSHOT",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run build:protoc:tsc; npm run build:tsc;",
+    "build:cev": "mv config/custom-environment-variables.json .cevTemp; cev --prefix BSTOCK > new.json; mv new.json config/custom-environment-variables.json",
+    "build:tsc": "tsc -p tsconfig.json",
+    "build:docker": "docker build -t `npm run what` .",
+    "build:protoc:tsc": "protoc --js_out=import_style=commonjs,binary:generated --ts_out=service=true:generated --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts `ls -d ../../../target/protoc-dependencies/* | xargs -I {} echo -I {}` `find ../../../target/protoc-dependencies -name grpc-spec.proto -print -o -name actions.proto -print`",
+    "build:protoc:grpc": "protoc --js_out=import_style=commonjs,binary:generated --grpc_out=generated --ts_out=generated --plugin=protoc-gen-grpc=./node_modules/grpc-tools/bin/grpc_node_plugin -I ./protos protos/*.proto",
+    "what": "echo `git log | head -1 | awk '{print $2}'`",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- lib/server.ts"
+  },
+  "main": "dist/server.js",
+  "dependencies": {
+    "google-protobuf": "^3.5.0",
+    "grpc-web-client": "^0.5.0",
+    "tslib": "^1.9.0",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/google-protobuf": "^3.2.7",
+    "@types/node": "8.9.3",
+    "config-cev-generator": "^0.1.6",
+    "http-server": "^0.11.1",
+    "ts-node": "^7.0.1",
+    "ts-protoc-gen": "^0.6.0",
+    "typescript": "^3.0.3"
+  }
+}

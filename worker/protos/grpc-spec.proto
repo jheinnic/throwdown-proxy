@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_outer_classname = "PlaceholderProto";
+option java_package = "name.jchein.demo.zumepizza.services.simple.webui.grpc.proto";
+
+// import "name/jchein/portfolio/common/grpc/action/actions.proto";
+
+// Placeholder service definition.
+service Placeholder {
+	rpc doIt (Message) returns (Message) { }
+}
+
+message Message {
+	string id = 1;
+}
