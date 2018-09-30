@@ -1,9 +1,9 @@
 import {Canvas} from 'canvas';
 import {from, Observable, OperatorFunction, zip} from 'rxjs';
-import {concatAll, count, map, shareReplay, take, windowCount} from 'rxjs/operators';
+import {bufferCount, count, flatMap, map, shareReplay, take, tap, windowCount} from 'rxjs/operators';
 
 import {
-   ITaskLoader, CanvasAndPlotModel, ITaskContentAdapter, ImageDimensions
+   ImageDimensions, ITaskContentAdapter, ITaskLoader, PaintEngineTaskModel
 } from '../interfaces';
 import {PointMap, RandomArtModel} from '.';
 
@@ -97,73 +97,84 @@ export class TaskLoader<Content> implements ITaskLoader
       console.log(`actualBufferSize = ${this.actualBufferSize}`);
       console.log(`iterationCount = ${this.iterationCount}`);
       this.pointMapBatches = this.pointMaps.pipe(
-         windowCount<PointMap>(this.actualBufferSize),
+         bufferCount<PointMap>(this.actualBufferSize),
          take(this.iterationCount + 1),
-         map((window: Observable<PointMap>) => {
-            const retVal = window.pipe(
-               shareReplay(this.actualBufferSize));
-            const subscription = retVal.pipe(count())
-               .subscribe((value) => {
-                  console.log(`Window-time count yields ${value} point maps`);
-                  subscription.unsubscribe();
-               });
-
-            return retVal;
-         }),
          shareReplay(this.iterationCount + 1));
+      // map((window: Observable<PointMap>) => {
+      //    const retVal = window.pipe(
+      //       shareReplay(this.actualBufferSize));
+      const subscription = this.pointMapBatches.pipe(count())
+         .subscribe((value) => {
+            console.log(`Window-time count yields ${value} point maps`);
+            subscription.unsubscribe();
+         });
+
+      // return this.pointMapBatches;
+
+      // return retVal;
+      // }),
+      // shareReplay(this.iterationCount + 1));
    }
 
-   public assignNextTask(): OperatorFunction<Canvas, CanvasAndPlotModel>
+   public assignNextTask(): OperatorFunction<Canvas, PaintEngineTaskModel>
    {
       return (canvasSource: Observable<Canvas>) => {
          return zip(
             canvasSource,
             from(this.inputGenerator)
                .pipe(
-                  concatAll<Content>()
+                  flatMap<Content[], Content>( (items: Content[]) => {
+                     return from(items);
+                  }),
+                  tap((itemInner: any) => { console.log('Post flatmap:', itemInner); })
                )
-         )
-            .pipe(map((pair: [Canvas, Content]) => {
-                  const canvas: Canvas = pair[0];
-                  const sourceContent: Content = pair[1];
+         ).pipe(
+            tap( (itemOuter: any) => { console.log(itemOuter); }),
+            map((pair: [Canvas, Content]) => {
+               const canvas: Canvas = pair[0];
+               const sourceContent: Content = pair[1];
 
-                  console.log('Assigning a task for canvas received to ', canvas);
-                  const paintContext = canvas.getContext('2d');
-                  if (!paintContext) {
-                     throw new Error('Failed to allocated 2d canvas');
-                  }
-                  paintContext.clearRect(0, 0, canvas.width, canvas.height);
-                  paintContext.fillStyle = 'rgb(0,0,0)';
-                  paintContext.fillRect(0, 0, canvas.width, canvas.height);
+               console.log('Assigning a task for canvas received to ', canvas);
+               const paintContext = canvas.getContext('2d');
+               if (!paintContext) {
+                  throw new Error('Failed to allocated 2d canvas');
+               }
+               paintContext.clearRect(0, 0, canvas.width, canvas.height);
+               paintContext.fillStyle = 'rgb(0,0,0)';
+               paintContext.fillRect(0, 0, canvas.width, canvas.height);
 
-                  /*
-            const sourceIterResult = this.inputGenerator.next();
-            if (! sourceIterResult.done) {
-               console.log('Before await', sourceIterResult);
-               const sourceContent: Content = (
-                  this.inputGenerator.next()
-               ).value;
-               */
-                  console.log('Assigning await for canvas received to ', canvas);
-                  const outputFilePath =
-                     this.contentAdapter.convertToImagePath(sourceContent, this.dimensionToken);
-                  const seedPhrase =
-                     this.contentAdapter.convertToModelSeed(sourceContent);
-                  const novelStrategy =
-                     this.contentAdapter.isNovelStrategy(sourceContent);
-                  const pointMapBatches = this.pointMapBatches;
+               /*
+         const sourceIterResult = this.inputGenerator.next();
+         if (! sourceIterResult.done) {
+            console.log('Before await', sourceIterResult);
+            const sourceContent: Content = (
+               this.inputGenerator.next()
+            ).value;
+            */
+               console.log('Assigning await for canvas received to ', canvas);
+               const outputFilePath =
+                  this.contentAdapter.convertToImagePath(sourceContent, this.dimensionToken);
+               const seedPhrase =
+                  this.contentAdapter.convertToModelSeed(sourceContent);
+               const novelStrategy =
+                  this.contentAdapter.isNovelStrategy(sourceContent);
+               const pointMapBatches = this.pointMapBatches;
 
-                  const genModel = new RandomArtModel(seedPhrase, novelStrategy);
+               const genModel = new RandomArtModel(seedPhrase[0], seedPhrase[1], novelStrategy);
 
-                  return {
-                     canvas,
-                     genModel,
-                     paintContext,
-                     outputFilePath,
-                     pointMapBatches
-                  };
-               })
-            );
+               return {
+                  prefixBits: Uint8Array.from(seedPhrase[0]),
+                  suffixBits: Uint8Array.from(seedPhrase[1]),
+                  canvas: canvas,
+                  paintContext: paintContext,
+                  pointMapBatches,
+                  outputFilePath,
+                  generation: 15,
+                  genModel: genModel,
+                  novel: novelStrategy
+               };
+            })
+         );
       };
    }
 }

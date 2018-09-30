@@ -61,7 +61,7 @@ export class MerkleTreeDescription {
          : Math.pow(2, this.rootSubtreeDepth - 1);
 
       this.leafBlockCapacity = this.leafCapacity / blockRatio;
-      this.leafBlocksInUse = Math.ceil( this.leavesInUse / blockRatio;
+      this.leafBlocksInUse = Math.ceil( this.leavesInUse / blockRatio );
 
       let nextSubtreeIndex = 1;
       let layerIndex = this.rootSubtreeDepth;

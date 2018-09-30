@@ -1,5 +1,4 @@
-// @ts-ignore
-import {Canvas} from 'typings/canvas/canvas';
+import {Canvas} from 'canvas';
 
 export interface WriteToFileContext
 {

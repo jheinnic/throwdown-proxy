@@ -1,6 +1,9 @@
 class OperationNotCompletedException implements Error
 {
-   public message: string;
+   constructor(
+      public message: string,
+      public name: string)
+   {
 
-   public name: string;
+   }
 }

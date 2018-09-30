@@ -11,11 +11,6 @@ import {CanvasPlotter, CanvasProvider, CanvasWriter, RandomArtGenerator, TaskLoa
 
 import {MerkleLocatorFactory} from '../../infrastructure/merkle/merkle-locator-factory.class';
 import {
-   BitStrategyKind, EllipticModelGenConfig, EllipticPublicKeyAsyncReadAhead, EllipticPublicKeyModel,
-   EllipticPublicKeyModelAdapter, EllipticPublicKeyModelGenerator, EllipticPublicKeySource,
-   PrefixSelectStyle
-} from './extensions/elliptic-model-adapter.class';
-import {
    BlockMappedDigestLocator, DigestIdentityService, IDigestIdentityService, IMerkleCalculator,
    IMerkleLocatorFactory, ITopoOrderBuilder, MerkleCalculator, MerkleDigestLocator, MerkleTreeDescription,
    NamedElement
@@ -32,6 +27,16 @@ import {Deployment} from '../../apps/config';
 import {ImageDimensions, ITaskContentAdapter} from './interfaces';
 import LRU = require('lru-cache');
 import ErrnoException = NodeJS.ErrnoException;
+import {EllipticModelGenConfig} from './extensions/config/elliptic-model-gen-config.value';
+import {BitStrategyKind} from './extensions/config/bit-strategy-kind.enum';
+import {PrefixSelectStyle} from './extensions/config/prefix-select-style.enum';
+import {EllipticPublicKeySource} from './extensions/elliptic-public-key-model-factory.class';
+import {PublicKeyReadAheadProcess} from './extensions/public-key-read-ahead-process.class';
+import {EllipticPublicKeyModel} from './extensions/elliptic-public-key-model.class';
+import {EllipticPublicKeyModelGenerator} from './extensions/elliptic-public-key-model-generator';
+import {EllipticPublicKeyModelAdapter} from './extensions/elliptic-model-adapter.class';
+import {Canvas, MyCanvasRenderingContext2D} from 'canvas';
+import {Subject} from 'rxjs';
 
 const container: Container = new Container();
 container.load(
@@ -78,8 +83,12 @@ const isaacGenerator: IPseudoRandomSource =
    isaacGeneratorFactory.seedGenerator(
       crypto.pseudoRandomBytes(8192)
    );
-const privateKeySource =
+const privateKeySource64 =
+   isaacGenerator.pseudoRandomBuffers(8);
+const privateKeySource256 =
    isaacGenerator.pseudoRandomBuffers(32);
+const privateKeySource512 =
+   isaacGenerator.pseudoRandomBuffers(64);
 
 const ecInst: elliptic.ec = new elliptic.ec('ed25519');
 // console.log(privateKeySource.next().value);
@@ -101,10 +110,10 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
          prefixSelect: PrefixSelectStyle.USE_X,
          xRunsForward: true,
          yRunsForward: true,
-         xFromBit: 0,
-         xToBit: 256,
-         yFromBit: 0,
-         yToBit: 256,
+         xFromBit: 64,
+         xToBit: 192,
+         yFromBit: 64,
+         yToBit: 192,
          useNewModel: false
       },
       {
@@ -113,10 +122,10 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
          prefixSelect: PrefixSelectStyle.USE_Y,
          xRunsForward: false,
          yRunsForward: false,
-         xFromBit: 0,
-         xToBit: 256,
-         yFromBit: 0,
-         yToBit: 256,
+         xFromBit: 64,
+         xToBit: 192,
+         yFromBit: 64,
+         yToBit: 192,
          useNewModel: true
       },
       {
@@ -127,8 +136,8 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
          yRunsForward: true,
          xFromBit: 16,
          xToBit: 143,
-         yFromBit: 50,
-         yToBit: 179,
+         yFromBit: 53,
+         yToBit: 188,
          useNewModel: true
       },
       {
@@ -149,22 +158,22 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
          prefixSelect: PrefixSelectStyle.USE_X,
          xRunsForward: true,
          yRunsForward: true,
-         xFromBit: 110,
+         xFromBit: 90,
          xToBit: 123,
          yFromBit: 2,
-         yToBit: 26,
+         yToBit: 36,
          useNewModel: true
       },
       {
-         nameExtension: 'raw_240bit_Ryx',
+         nameExtension: 'raw_208bit_Ryx',
          bitMode: BitStrategyKind.raw,
          prefixSelect: PrefixSelectStyle.USE_Y,
          xRunsForward: false,
          yRunsForward: false,
-         xFromBit: 10,
-         xToBit: 249,
-         yFromBit: 6,
-         yToBit: 245,
+         xFromBit: 27,
+         xToBit: 235,
+         yFromBit: 23,
+         yToBit: 231,
          useNewModel: false
       }
    ],
@@ -311,8 +320,19 @@ async function launchGenerateKeys(): Promise<void>
             `Overwriting single private ${filesExist[0]} or public ${filesExist[1]} key for index ${nextFileElement.element.index}`);
       }
 
-      const privateBits = privateKeySource.next().value;
-      const keyPair = ellipticModelGenConfig.ecInst.keyFromPrivate(privateBits);
+      // const privateBits = privateKeySource.next().value;
+      const keyPairOptions = {
+         entropy: privateKeySource512.next().value,
+         nonce: privateKeySource256.next().value,
+         pers: privateKeySource64.next().value,
+         persEnc: 'binary'
+      }
+      // const privateBits = ellipticModelGenConfig.ecInst.keyFromPrivate(privateBits);
+      const keyPair = ellipticModelGenConfig.ecInst.genKeyPair(keyPairOptions);
+      const privKey = keyPair.getPrivate();
+      // const privateBits = keyPair.getPrivate("binary");
+      const privateBits =
+         keyPair.getPrivate().toBuffer();
       const pubKey = keyPair.getPublic();
       // const xBuf: Buffer = pubKey.x.toBuffer();
       // const yBuf: Buffer = pubKey.y.toBuffer();
@@ -366,10 +386,10 @@ function launchPaintContent()
 {
    console.log(`Run 'paint'`);
    const readAheadChannel: Chan<EllipticPublicKeySource> =
-      chan(buffers.fixed(ellipticModelGenConfig.readAheadSize);
+      chan(buffers.fixed(ellipticModelGenConfig.readAheadSize));
 
-   const myContentReadAhead: EllipticPublicKeyAsyncReadAhead =
-      new EllipticPublicKeyAsyncReadAhead(ellipticModelGenConfig, deploymentCfg, readAheadChannel);
+   const myContentReadAhead: PublicKeyReadAheadProcess =
+      new PublicKeyReadAheadProcess(ellipticModelGenConfig, deploymentCfg, readAheadChannel);
    const myContentGenerator: Iterable<Promise<EllipticPublicKeyModel[]>> =
       new EllipticPublicKeyModelGenerator(ellipticModelGenConfig, readAheadChannel);
    // const myContentIterator: Iterator<Promise<EllipticPublicKeyModel[]>> =
@@ -385,12 +405,14 @@ function launchPaintContent()
 // 896, 896, 65500, 'square'
 // 120, 120, 50000, 'square'
 
-   const myCanvasProvider = new CanvasProvider();
+   const myCanvasSubject = new Subject<[Canvas, MyCanvasRenderingContext2D]>();
+   const myCanvasProvider = new CanvasProvider(readAheadChannel, myCanvasSubject);
    const myCanvasPlotter = new CanvasPlotter();
    const myCanvasWriter = new CanvasWriter(ellipticModelGenConfig.outputRoot);
    const facade =
       new RandomArtGenerator(myCanvasProvider, myTaskLoader, myCanvasPlotter, myCanvasWriter);
 
+   myCanvasProvider.createNextCanvas(480, 480);
    facade.launchCanvas();
 }
 

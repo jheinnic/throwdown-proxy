@@ -2,7 +2,7 @@ import {Canvas} from 'canvas';
 import {Observable, OperatorFunction} from 'rxjs';
 
 import {PointMap} from '../components';
-import {CanvasAndPlotModel} from '.';
+import {PaintEngineTaskModel} from '.';
 
 export interface ITaskLoader
 {
@@ -12,5 +12,5 @@ export interface ITaskLoader
    readonly fitOrFill: 'square' | 'fit' | 'fill';
    readonly pointMapBatches: Observable<Observable<PointMap>>
 
-   assignNextTask(): OperatorFunction<Canvas, CanvasAndPlotModel>
+   assignNextTask(): OperatorFunction<Canvas, PaintEngineTaskModel>
 }

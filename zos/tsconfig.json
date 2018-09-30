@@ -71,6 +71,6 @@
     "node_modules/**/*",
     "orig/**/*",
     "src/toys/**/*.ts",
-    "src/infrastructure/lib/SHA256Compress.ts"
+    "./src/infrastructure/lib/SHA256Compress.ts"
   ]
 }

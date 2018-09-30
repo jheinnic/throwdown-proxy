@@ -8,6 +8,7 @@ type MerkleTypeNames =
    | 'MerkleLocatorFactory'
    | 'BlockTopologyWalk'
    | 'DigestStorageStrategy'
+   | 'DigestIdentityService'
    | 'PreImageStorageStrategy'
    | 'MerkleTreeDescription';
 
@@ -18,14 +19,14 @@ export const MERKLE_TYPES: SymbolEnum<MerkleTypeNames> = {
    MerkleLocatorFactory: Symbol.for('MerkleLocatorFactory'),
    DigestStorageStrategy: Symbol.for('DigestStorageStrategy'),
    PreImageStorageStrategy: Symbol.for('PreImageStorageStrategy'),
-   DigestIdentitySevice: Symbol.for('DigestIdentityService'),
+   DigestIdentityService: Symbol.for('DigestIdentityService'),
    BlockTopologyWalk: Symbol.for('BlockTopologyWalk'),
-   MerkleTreeSyncTask: Symbol.for('MerkleTreeSyncTask'),
-   MerkleTreeSwapTask: Symbol.for('MerkleTreeSwapTask'),
-   MerkleTreeInsertTask: Symbol.for('MerkleTreeInsertTask'),
-   MerkleTreeUpdateTask: Symbol.for('MerkleTreeUpdateTask'),
-   MerkleTreeProofTask: Symbol.for('MerkleTreeProofTask'),
-   MerkleTree: Symbol.for('MerkleTree'),
+   // MerkleTreeSyncTask: Symbol.for('MerkleTreeSyncTask'),
+   // MerkleTreeSwapTask: Symbol.for('MerkleTreeSwapTask'),
+   // MerkleTreeInsertTask: Symbol.for('MerkleTreeInsertTask'),
+   // MerkleTreeUpdateTask: Symbol.for('MerkleTreeUpdateTask'),
+   // MerkleTreeProofTask: Symbol.for('MerkleTreeProofTask'),
+   // MerkleTree: Symbol.for('MerkleTree'),
    MerkleTreeDescription: Symbol.for('MerkleTreeDescription')
 };
 

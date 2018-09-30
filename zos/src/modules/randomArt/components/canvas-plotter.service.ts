@@ -8,8 +8,10 @@ export class CanvasPlotter
 {
    paintThenEmit(): OperatorFunction<CanvasAndPlotModel, WriteToFileContext>
    {
-      return concatMap((nextTask: CanvasAndPlotModel) =>
-         nextTask.pointMapBatches.pipe(
+      return concatMap((nextTask: CanvasAndPlotModel) => {
+         console.log(`Concat map working at ${nextTask}`);
+         return nextTask.pointMapBatches.pipe(
+            tap(console.log),
             reduce((acc: number, nextPointMap: PointMap): number => {
                nextPointMap.render(nextTask.genModel, nextTask.paintContext);
                return acc + 1;
@@ -22,7 +24,7 @@ export class CanvasPlotter
                outputFilePath: nextTask.outputFilePath
             })
          )
-      );
+      });
       // reduce((acc: number, value: number) => {
       //       console.log(`Adding ${value} to ${acc}`);
       //       return acc + value;

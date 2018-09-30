@@ -22,6 +22,12 @@
     lodash "^4.17.5"
     reflect-metadata "^0.1.10"
 
+"@reactivex/ix-ts@^2.3.5":
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/@reactivex/ix-ts/-/ix-ts-2.3.5.tgz#902caaf5a872b086ff0a80c96cd1573fc1c02a13"
+  dependencies:
+    tslib "^1.8.0"
+
 "@thi.ng/bitstream@^0.4.15":
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/@thi.ng/bitstream/-/bitstream-0.4.15.tgz#6228a8fe54bcb00583aa2fc69ad53572f94e7a09"
@@ -1347,9 +1353,9 @@ elegant-spinner@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
 
-elliptic@^6.2.3:
-  version "6.4.0"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
+elliptic@6.4.1, elliptic@^6.4.0:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.1.tgz#c2d0b7776911b86722c632c3c06c60f2f819939a"
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -1359,9 +1365,9 @@ elliptic@^6.2.3:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-elliptic@^6.4.0:
-  version "6.4.1"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.1.tgz#c2d0b7776911b86722c632c3c06c60f2f819939a"
+elliptic@^6.2.3:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -2198,6 +2204,12 @@ iterators@~0.1.0:
   resolved "https://registry.yarnpkg.com/iterators/-/iterators-0.1.0.tgz#d03f666ca4e6130138565997cacea54164203156"
   dependencies:
     ap "~0.1.0"
+
+ix@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/ix/-/ix-2.3.5.tgz#8f1f221d420e248833009601ca49d4fae3d794c9"
+  dependencies:
+    tslib "^1.8.0"
 
 javascript-natural-sort@0.7.1:
   version "0.7.1"
@@ -3099,6 +3111,10 @@ psl@^1.1.24:
   version "1.1.29"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.1.29.tgz#60f580d360170bb722a797cc704411e6da850c67"
 
+pull-stream@^3.6.9:
+  version "3.6.9"
+  resolved "https://registry.yarnpkg.com/pull-stream/-/pull-stream-3.6.9.tgz#c774724cd63bc0984c3695f74c819aa02e977320"
+
 pump@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/pump/-/pump-3.0.0.tgz#b4a2116815bde2f4e1ea602354e8c75565107a64"
@@ -3840,7 +3856,7 @@ ts-lib@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/ts-lib/-/ts-lib-0.0.5.tgz#7f319885478de67f575a3b890a3f30fc6159352a"
 
-tslib@^1.9.0:
+tslib@^1.8.0, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
