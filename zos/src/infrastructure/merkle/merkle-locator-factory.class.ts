@@ -1,12 +1,14 @@
 import {inject, injectable, tagged} from 'inversify';
 import * as LRU from 'lru-cache';
+
 import {
    BlockMappedDigestLocator, BlockMappedLayerLocator, MerkleDigestLocator,
    MerkleLayerLocator, MerkleTreeDescription
-} from './locator/index';
-import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from './di/index';
-import {IMerkleLocatorFactory} from './interface/index';
-import '../reflection/index';
+} from './locator';
+import {MERKLE_CACHE_TYPES, MERKLE_TAG_KEYS, MERKLE_TYPES} from './di';
+import {IMerkleLocatorFactory} from './interface';
+
+import '../reflection';
 
 @injectable()
 export class MerkleLocatorFactory implements IMerkleLocatorFactory
@@ -38,7 +40,7 @@ export class MerkleLocatorFactory implements IMerkleLocatorFactory
       let levelLeafCache = new Array<MerkleLayerLocator>(treeDescription.tierCount);
       for (let [ii, size] = [0, 1]; ii < treeDescription.treeDepth; ii++, size *= 2) {
          if (treeDescription.blockMappedRootLayers[storeLevel] < ii) {
-           this.layerCache[ii] = new MerkleLayerLocator(ii, size);
+            this.layerCache[ii] = new MerkleLayerLocator(ii, size);
 
             if(treeDescription.blockMappedLeafLayers[storeLevel] === ii) {
                levelLeafCache[storeLevel++] = this.layerCache[ii];

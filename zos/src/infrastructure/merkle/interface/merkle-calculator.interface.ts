@@ -4,8 +4,9 @@ import {
    MerkleProofLocator
 } from '../locator/index';
 import {Director} from '../../lib/index';
-import {IDfsOrderBuilder} from './dfs-order-builder.interface';
-import {IBfsOrderBuilder} from './bfs-order-builder.interface';
+import {IDfsOrderBuilder} from '../traversal/dfs-order-builder.interface';
+import {IBfsOrderBuilder} from '../traversal/bfs-order-builder.interface';
+import {ITopoOrderBuilder} from '../traversal';
 
 export interface IMerkleCalculator {
    readonly tierCount: number;
@@ -20,13 +21,17 @@ export interface IMerkleCalculator {
 
    getDigestsOnLayer(fromLayer: MerkleLayerLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>;
 
-   getChildDigests(fromParent: BlockMappedDigestLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
+   getChildDigests(fromParent: MerkleDigestLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
 
-   getSubtreesOnBlockMappedLayer(fromLevel: BlockMappedLayerLocator, leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>;
+   getRelatedDigestsOnLayer(fromParent: MerkleDigestLocator, onLayer: MerkleLayerLocator, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
 
    getDigestPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<MerkleDigestLocator>
 
+   getSubtreesOnBlockMappedLayer(fromLevel: BlockMappedLayerLocator, leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>;
+
    getChildBlockMappedRoots(fromParent: BlockMappedDigestLocator, leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>
+
+   getRelatedBlockMappedRootsOnLevel(fromParent: BlockMappedDigestLocator, onLevel: BlockMappedLayerLocator, leftToRight?: boolean): IterableIterator<BlockMappedDigestLocator>
 
    getBlockMappedPathToRoot(leafBlock: MerkleDigestLocator): IterableIterator<BlockMappedDigestLocator>
 
@@ -34,9 +39,11 @@ export interface IMerkleCalculator {
 
    getDigestsInBlockSubtree(subtreeBlock: BlockMappedDigestLocator, topDown?: boolean, leftToRight?: boolean): IterableIterator<MerkleDigestLocator>
 
-   getTopoBlockOrder(director: Director<IBfsOrderBuilder>): Iterable<BlockMappedDigestLocator>;
+   getTopoDigestOrder(director: Director<ITopoOrderBuilder>): Iterable<MerkleDigestLocator>;
 
-   // getBfsBlockOrder(topToBottom?: boolean, leftToRight?: boolean): Iterable<BlockMappedDigestLocator>;
+   getTopoBlockOrder(director: Director<ITopoOrderBuilder>): Iterable<BlockMappedDigestLocator>;
+
+   getBfsBlockOrder(director: Director<IBfsOrderBuilder>): Iterable<BlockMappedDigestLocator>;
 
    getDfsBlockOrder(director: Director<IDfsOrderBuilder>): Iterable<BlockMappedDigestLocator>;
 
@@ -46,17 +53,21 @@ export interface IMerkleCalculator {
 
    findParentLayer(fromLayer: MerkleLayerLocator): MerkleLayerLocator|undefined;
 
-   findBlockMappedLayerByLevel(level: number): BlockMappedLayerLocator;
+   findChildLayer(fromLayer: MerkleLayerLocator): Optional<MerkleLayerLocator>;
 
-   findLeafBlockMappedLayer(): BlockMappedLayerLocator;
+   findBlockLayerByLevel(level: number): BlockMappedLayerLocator;
 
-   findParentBlockMappedLayer(fromLayer: BlockMappedLayerLocator): Optional<MerkleLayerLocator>;
+   findLeafBlockLayer(): BlockMappedLayerLocator;
+
+   findParentBlockLayer(fromLayer: BlockMappedLayerLocator): Optional<BlockMappedLayerLocator>;
+
+   findChildBlockLevel(fromLayer: BlockMappedLayerLocator): Optional<BlockMappedLayerLocator>;
 
    /**
     * Given a Merkle Tree layer index, return the layer where the roots of the logical subtrees used
     * to map its digests to storage blocks are located.
     */
-   findNearestBlockMappedLayer(fromLayer: MerkleLayerLocator): BlockMappedLayerLocator;
+   findNearestBlockLayer(fromLayer: MerkleLayerLocator): BlockMappedLayerLocator;
 
    findDigestByRecordAddress(recordAddress: number): MerkleDigestLocator;
 

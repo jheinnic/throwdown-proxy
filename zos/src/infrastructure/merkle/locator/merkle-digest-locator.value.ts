@@ -6,7 +6,7 @@ import Optional from 'typescript-optional';
 
 export class MerkleDigestLocator
 {
-
+   public readonly leafLayerDepth: number;
 
    /**
     * A zero-based index for locating a node within its layer.  The indices for each layer range
@@ -24,6 +24,7 @@ export class MerkleDigestLocator
       if (index >= layer.size) {
          throw new Error('Node index cannot exceed layer size, ' + layer.size);
       }
+      this.leafLayerDepth = this.treeDepth - 1;
    }
 
   /**
@@ -75,7 +76,7 @@ export class MerkleDigestLocator
          return MerkleNodeType.ROOT;
       }
 
-      if (this.depth < this.treeDepth) {
+      if (this.depth < this.leafLayerDepth) {
          return MerkleNodeType.INTERNAL;
       }
 
@@ -101,13 +102,13 @@ export class MerkleDigestLocator
    }
 
    public get leftMostPosition(): number {
-      return (Math.pow(2, this.treeDepth - 1) - 1)
-         + (this.index * Math.pow(2, this.treeDepth - this.depth - 1))
+      return (Math.pow(2, this.leafLayerDepth) - 1)
+         + (this.index * Math.pow(2, this.leafLayerDepth - this.depth))
    }
 
    public get rightMostPosition(): number {
-      return (Math.pow(2, this.treeDepth - 1) - 1)
-         + ((this.index + 1) * Math.pow(2, this.treeDepth - this.depth - 1))
+      return (Math.pow(2, this.leafLayerDepth) - 1)
+         + ((this.index + 1) * Math.pow(2, this.leafLayerDepth - this.depth))
          - 1;
    }
 

@@ -9,6 +9,8 @@ import '../../infrastructure/reflection';
 export class Deployment
 {
    @configProp('localAccess')
+   @ValidateNested()
+   @Type(() => LocalAccess)
    public readonly localAccess: LocalAccess = new LocalAccess();
 
    @configProp('vaultAccess')
@@ -19,7 +21,7 @@ export class Deployment
    @configProp('dataSetPaths')
    @ValidateNested()
    @Type(() => DataSetPaths)
-   public readonly vaultPaths: DataSetPaths = new DataSetPaths();
+   public readonly dataSetPaths: DataSetPaths = new DataSetPaths();
 
    @configProp('keySource')
    @ValidateNested()

@@ -67,31 +67,19 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
          return Target;
       }
 
-      // console.log(`All Param Metadata: ${util.inspect(allParamMeta, true, 10, true)}`);
-      // const allTargets = allParamMeta!.map((paramMeta: BindToBuilder<S>) => {
-      //    return DecoratorFactory.getTargetName(paramMeta);
-      // });
-      // console.log(`All Param-mapped Targets: ${util.inspect(allTargets, true, 10, true)}`);
-      let counter = 0;
-      let oneParamMeta: BindToBuilder<S> | undefined =
-         MetadataInspector.getParameterMetadata<BindToBuilder<S>>(key, Target, '', counter);
-      while (!!oneParamMeta) {
-         // console.log(`Metadata for param ${counter++} is ${util.inspect(oneParamMeta, true, 10, true)}`);
-         oneParamMeta =
-            MetadataInspector.getParameterMetadata<BindToBuilder<S>>(key, Target, '', counter);
+      const propKeys: Set<string & keyof S> = new Set<string & keyof S>();
+      for (const nextMeta of allParamMeta!) {
+         propKeys.add(nextMeta.name);
       }
 
-      const propKeys: Set<string & keyof S> = allParamMeta!.reduce(
-         (allProps: Set<string & keyof S>, nextMeta: BindToBuilder<S>) => {
-            return allProps.add(nextMeta.name);
-         }, new Set<string & keyof S>());
-
-      const builder: IBuilder<InternalState, InternalBuilder> = new Builder<InternalState, InternalBuilder>();
+      const builder: IBuilder<InternalState, InternalBuilder> =
+         new Builder<InternalState, InternalBuilder>();
       for (let nextProp of propKeys) {
-         builder.chain(nextProp, (...args: any[]) => (context: InternalState) => {
-            const nextInst: InternalState = {};
-            nextInst[nextProp] = <any> args;
-            return Object.assign(nextInst, context);
+         // We cannot enforce compile time type checks as we define this, but we define the interface
+         // based on decorators that link to members of an interface that the generated class will
+         // implement, and TypeScript can enforce that use interface at compile time.
+         builder.cascade(nextProp, (...args: any[]) => (context: InternalState) => {
+            context[nextProp] = <any> args;
          });
       }
       const ctor: Ctor<InternalState, InternalBuilder> = builder.value;
@@ -118,6 +106,9 @@ function fluentlyBuildable<S extends FluentBuilder>(key: MetadataKey<BindToBuild
 
          clone(director: Director<S>): FluentTarget
          {
+            // Will need to think this if the behavior of the builder is ever in any way
+            // contextual on the previously inheritted and newly minted current state, since
+            // it does not currently load the builder with a representation of previous state.
             const overrides: any = FluentTarget.create(director);
             for (let prop of Object.getOwnPropertyNames(overrides)) {
                if (overrides[prop] === undefined) {

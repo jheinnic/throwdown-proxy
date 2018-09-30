@@ -10,12 +10,15 @@ import {
    IMerkleCalculator, IMerkleLocatorFactory, IDfsOrderBuilder, DfsOrderOptions, BfsOrderOptions,
    IBfsOrderBuilder
 } from './interface';
-import {TopologicalOrder} from './topological-order.class';
-import {DepthFirstOrder} from './depth-first-order.class';
+import {
+   DepthFirstOrder, BreadthFirstOrder, ITopoOrderBuilder, TopoOrderOptions
+} from './traversal';
 import {Director} from '../lib';
 import {MERKLE_TYPES} from './di';
 import '../reflection';
 import * as util from 'util';
+import {MerkleTopologicalOrder} from './traversal/merkle-topological-order.class';
+import {BlockTopologicalOrder} from './traversal/block-topological-order.class';
 
 /**
  * The MerkleCalculator provides a suite of methods that are useful when iterating over or traversing
@@ -301,6 +304,23 @@ export class MerkleCalculator implements IMerkleCalculator
          this.locatorFactory.findLayerByDepth(this.treeDescription.treeDepth - 1), leftToRight);
    }
 
+   public* getRelatedDigestsOnLayer(fromRoot: MerkleDigestLocator, onLayer: MerkleLayerLocator, leftToRight: boolean = true) {
+      if (onLayer.depth <= fromRoot.depth) {
+         throw new Error(`Root layer, ${fromRoot.depth}, must be above iteration layer, ${onLayer.depth}`);
+      }
+      const distanceFactor = Math.pow(2, onLayer.depth - fromRoot.depth);
+      const leftRelatedIndex = fromRoot.index * distanceFactor;
+      const rightRelatedIndex = leftRelatedIndex + distanceFactor - 1;
+      let currentIndex = leftToRight ? leftRelatedIndex : rightRelatedIndex;
+      let stopIndex = leftToRight ? rightRelatedIndex + 1 : leftRelatedIndex - 1;
+      let stepSize = leftToRight ? 1 : -1;
+
+      while (currentIndex !== stopIndex) {
+         yield this.locatorFactory.findDigestByLayerAndIndex(onLayer, currentIndex);
+         currentIndex += stepSize;
+      }
+   }
+
    public* getBlockMappedLayers(topDown: boolean = true): IterableIterator<BlockMappedLayerLocator>
    {
       if (topDown) {
@@ -315,16 +335,29 @@ export class MerkleCalculator implements IMerkleCalculator
       }
    }
 
-   public getTopoBlockOrder(director: Director<IBfsOrderBuilder>): Iterable<BlockMappedDigestLocator>
+   public getTopoDigestOrder(director: Director<ITopoOrderBuilder>): Iterable<MerkleDigestLocator>
+   {
+      const options = TopoOrderOptions.create(director);
+      return new MerkleTopologicalOrder(this, this.treeDescription, options);
+   }
+
+   public getTopoBlockOrder(director: Director<ITopoOrderBuilder>): Iterable<BlockMappedDigestLocator>
+   {
+      const options = TopoOrderOptions.create(director);
+      return new BlockTopologicalOrder(this, this.treeDescription, options);
+   }
+
+   public getBfsBlockOrder(director: Director<IBfsOrderBuilder>): Iterable<BlockMappedDigestLocator>
    {
       const options = BfsOrderOptions.create(director);
-      return new TopologicalOrder(this, this.treeDescription, options);
+      console.log(util.inspect(options, true, 5, true));
+      return new BreadthFirstOrder(this, options);
    }
 
    public getDfsBlockOrder(director: Director<IDfsOrderBuilder>): Iterable<BlockMappedDigestLocator>
    {
       const options = DfsOrderOptions.create(director);
-      console.log(util.inspect(options, true, 5, true);
+      console.log(util.inspect(options, true, 5, true));
       return new DepthFirstOrder(this, this.treeDescription, options);
    }
 
@@ -338,7 +371,7 @@ export class MerkleCalculator implements IMerkleCalculator
       }
    }
 
-   public* getChildBlockMappedRoots(parent: BlockMappedDigestLocator, leftToRight?: boolean = true): IterableIterator<BlockMappedDigestLocator>
+   public* getChildBlockMappedRoots(parent: BlockMappedDigestLocator, leftToRight: boolean = true): IterableIterator<BlockMappedDigestLocator>
    {
       if (parent.blockLevel >= (this.treeDescription.tierCount - 1))
       {
@@ -356,8 +389,34 @@ export class MerkleCalculator implements IMerkleCalculator
       const stepSize = leftToRight ? 1 : -1;
 
       for (let ii = firstChildOffset; ii !== stopOffset; ii += stepSize ) {
-         console.log('Yielding offset ' + ii + ' for ' + parentLevel);
+         // TODO: Watch this for accuracy.
+	       // console.log('Yielding offset ' + ii + ' for ' + parentLevel);
          yield this.locatorFactory.findBlockMappedDigestByOffset(ii);
+      }
+   }
+
+   public* getRelatedBlockMappedRootsOnLevel(
+      fromRoot: BlockMappedDigestLocator,
+      onLayer: BlockMappedLayerLocator,
+      leftToRight: boolean = true): IterableIterator<BlockMappedDigestLocator>
+   {
+      if (onLayer.level <= fromRoot.blockLevel) {
+         throw new Error(`Root level, ${fromRoot.blockLevel}, must be above iteration layer, ${onLayer.level}`);
+      }
+      const layerSpan = onLayer.level - fromRoot.blockLevel;
+      let distanceFactor = (fromRoot.blockOffset === 0) ? this.rootSubtreeReach : this.subtreeReach;
+      for (let ii=1; ii<layerSpan; ii++) {
+         distanceFactor = distanceFactor * this.subtreeReach
+      }
+      const leftRelatedIndex = fromRoot.index * distanceFactor;
+      const rightRelatedIndex = leftRelatedIndex + distanceFactor - 1;
+      let currentIndex = leftToRight ? leftRelatedIndex : rightRelatedIndex;
+      let stopIndex = leftToRight ? rightRelatedIndex + 1 : leftRelatedIndex - 1;
+      let stepSize = leftToRight ? 1 : -1;
+
+      while (currentIndex !== stopIndex) {
+         yield this.locatorFactory.findBlockMappedDigestByLayerAndIndex(onLayer, currentIndex);
+         currentIndex += stepSize;
       }
    }
 
@@ -505,8 +564,17 @@ export class MerkleCalculator implements IMerkleCalculator
       return this.locatorFactory.findLayerByDepth(fromLayer.depth - 1);
    }
 
+   public findChildLayer(fromLayer: MerkleLayerLocator): Optional<MerkleLayerLocator>
+   {
+      if (fromLayer.depth >= (this.treeDepth - 1)) {
+         return Optional.empty();
+      }
 
-   public findBlockMappedLayerByLevel(level: number): BlockMappedLayerLocator
+      return Optional.of(
+         this.locatorFactory.findLayerByDepth(fromLayer.depth + 1));
+   }
+
+   public findBlockLayerByLevel(level: number): BlockMappedLayerLocator
    {
       if ((level < 0) || (level >= this.treeDescription.tierCount))
       {
@@ -518,14 +586,14 @@ export class MerkleCalculator implements IMerkleCalculator
       return this.locatorFactory.findBlockMappedLayerByLevel(level);
    }
 
-   public findLeafBlockMappedLayer(): BlockMappedLayerLocator
+   public findLeafBlockLayer(): BlockMappedLayerLocator
    {
       return this.locatorFactory.findBlockMappedLayerByLevel(
          this.treeDescription.tierCount - 1
       );
    }
 
-   public findParentBlockMappedLayer(fromLayer: BlockMappedLayerLocator): Optional<BlockMappedLayerLocator>
+   public findParentBlockLayer(fromLayer: BlockMappedLayerLocator): Optional<BlockMappedLayerLocator>
    {
       if (fromLayer.depth === 0) {
          return Optional.empty();
@@ -536,7 +604,17 @@ export class MerkleCalculator implements IMerkleCalculator
       );
    }
 
-   public findNearestBlockMappedLayer(mapToStorage: MerkleLayerLocator): BlockMappedLayerLocator
+   public findChildBlockLevel(fromLayer: BlockMappedLayerLocator): Optional<BlockMappedLayerLocator>
+   {
+      if (fromLayer.depth >= (this.treeDepth - 1)) {
+         return Optional.empty();
+      }
+
+      return Optional.of(
+         this.locatorFactory.findBlockMappedLayerByLevel(fromLayer.level + 1));
+   }
+
+   public findNearestBlockLayer(mapToStorage: MerkleLayerLocator): BlockMappedLayerLocator
    {
       let levelIndex = bs(this.blockMappedRootLayers, mapToStorage.depth, compareSorted);
       if (levelIndex < 0) {

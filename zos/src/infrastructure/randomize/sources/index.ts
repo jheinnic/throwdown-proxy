@@ -5,3 +5,4 @@ export * from './isaac-csprng.class';
 export * from './isaac-pseudo-random-source-factory.service';
 export * from './isaac-pseudo-random-source.class';
 
+import '../../reflection';

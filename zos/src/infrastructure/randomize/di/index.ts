@@ -1,2 +1,4 @@
-export * from './modules'
-export * from './types'
+export * from './modules';
+export * from './types';
+
+import '../../reflection';

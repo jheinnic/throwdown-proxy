@@ -1,10 +1,10 @@
 import {inject, injectable} from 'inversify';
+
+import {APP_CONFIG_TYPES} from '../../di';
 import {WORKER_COMMAND_INPUT_TYPES} from '../di/types';
 import {InitWorkspaceCommand} from '../init-workspace-command.value';
-import {MERKLE_TYPES} from '../../../infrastructure/merkle/di';
-import {IMerkleCalculator} from '../../../infrastructure/merkle/interface';
-import {APP_CONFIG_TYPES} from '../../di';
 import {Deployment, EventSpecification, SetupPolicy} from '../../config';
+import {MERKLE_TYPES, IMerkleCalculator} from '../../../infrastructure/merkle';
 
 @injectable()
 export class InitWorkspaceCommandHandler {

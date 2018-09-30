@@ -1,4 +1,4 @@
-import {TopologicalOrder} from '../topological-order.class';
+import {TopologicalOrder} from '../traversal/topological-order.class';
 import {interfaces} from 'inversify';
 import Factory = interfaces.Factory;
 import FactoryCreator = interfaces.FactoryCreator;

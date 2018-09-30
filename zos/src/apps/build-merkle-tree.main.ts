@@ -34,16 +34,12 @@ container.load(
 const configLoader: ConfigLoader = container.get(CONFIG_TYPES.ConfigLoader);
 console.log(configLoader);
 
-// const gameSpec: EventSpecification =
-//    configLoader.getConfig(EventSpecification, "eth.lotto.eventSpec");
 const deployment: Deployment =
    configLoader.getConfig(Deployment);
-// const setupPolicy: SetupPolicy =
-//    configLoader.getConfig(SetupPolicy);
 
 // const treeDescriptor: MerkleTreeDescription = new MerkleTreeDescription(256, 256, 8192, 1900005);
 const treeDescriptor: MerkleTreeDescription =
-   new MerkleTreeDescription(256, 256, 8192, 1280 * 32);
+   new MerkleTreeDescription(512, 256, 8192, 1280 * 32);
 
 const digestCache: LRU.Cache<number, MerkleDigestLocator> =
    new LRU<number, MerkleDigestLocator>(Math.pow(2, 6));
@@ -55,6 +51,7 @@ const merkleCalculator: IMerkleCalculator =
 
 const identityCache: LRU.Cache<MerkleDigestLocator, string> =
    new LRU<MerkleDigestLocator, string>(Math.pow(2, 9));
+// @ts-ignore
 const digestIdentity: IDigestIdentityService =
    new DigestIdentityService(merkleCalculator, identityCache);
 
@@ -87,11 +84,11 @@ fs.stat(deployment.localAccess.rootPath, (err: any, stats: Stats) => {
 
 const ticketKeyPairPath = path.join(
    deployment.localAccess.rootPath,
-   deployment.vaultPaths.ticketKeyPairs
+   deployment.dataSetPaths.ticketKeyPairs
 );
 const ticketArtworkPath = path.join(
    deployment.localAccess.rootPath,
-   deployment.vaultPaths.ticketArtwork
+   deployment.dataSetPaths.ticketArtwork
 );
 // const privateKeyFile = randomAccessFile(path.join(
 //    ticketKeyPairPath, 'privateKeys.dat'));
