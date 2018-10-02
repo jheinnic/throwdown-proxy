@@ -1,7 +1,7 @@
 import {
-   registerDecorator, ValidationOptions, ValidatorConstraint,
-   ValidatorConstraintInterface
+   registerDecorator, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
+import {CustomValidationOptions} from './custom-validation-options.interface';
 
 @ValidatorConstraint({async: false})
 export class IsDevelopmentOnlyValidator implements ValidatorConstraintInterface
@@ -13,7 +13,7 @@ export class IsDevelopmentOnlyValidator implements ValidatorConstraintInterface
    }
 }
 
-export function IsDevelopmentOnly(validationOptions?: ValidationOptions)
+export function IsDevelopmentOnly(validationOptions?: CustomValidationOptions)
 {
    return function (object: Object, propertyName: string) {
       registerDecorator({

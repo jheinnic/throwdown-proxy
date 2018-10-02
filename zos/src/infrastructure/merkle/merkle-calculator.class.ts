@@ -107,9 +107,9 @@ import {BlockTopologicalOrder} from './traversal/block-topological-order.class';
  *    corresponding location of its initial hash digest relative to the start of the Merkle Tree.  Because
  *    the entire Merkle Tree is not necessarily ever stored all in memory at once, this value is not very
  *    useful for indexed access, but it is often used when forming or updating the membership proof for
- *    an element since its sequence of 0's and 1's will chart out the series of left and and right
+ *    an pathTo since its sequence of 0's and 1's will chart out the series of left and and right
  *    traversal steps required to reach targeted digest
- *    -- The Address of a pre-image element and the Offset of its Digest would be the same value, but since
+ *    -- The Address of a pre-image pathTo and the Offset of its Digest would be the same value, but since
  *       the digests of a Merkle Tree are never really stored in sequential order, we instead use
  *       the term "Address" to defined "that which we cannot have".
  * -- Offset is used to identify an indexed random access into physical storage and is 0-based from the
@@ -805,15 +805,15 @@ function labelSome(arg: BlockMappedSubtreeLocator[])
       .join(', ');
 }
 
-function labelOne(element: BlockMappedSubtreeLocator)
+function labelOne(pathTo: BlockMappedSubtreeLocator)
 {
-   if (!element) {
+   if (!pathTo) {
       return '#Undefined#';
-   } else if (!element.merkleSubtree) {
-      return `#CORRUPTED ${JSON.stringify(element)}#`;
+   } else if (!pathTo.merkleSubtree) {
+      return `#CORRUPTED ${JSON.stringify(pathTo)}#`;
    }
 
-   return `(${element.level}::${element.offset}<${element.merkleSubtree.leftLeafPosition} to ${element.merkleSubtree.rightLeafPosition}>)`;
+   return `(${pathTo.level}::${pathTo.offset}<${pathTo.merkleSubtree.leftLeafPosition} to ${pathTo.merkleSubtree.rightLeafPosition}>)`;
 }
 */
 

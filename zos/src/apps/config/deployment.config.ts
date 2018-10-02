@@ -1,7 +1,7 @@
 import {Type} from 'class-transformer';
 import {ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
+import {configClass, configProp} from '../../infrastructure/config';
 import {VaultAccess, KeySource, LocalAccess, DataSetPaths} from '.';
 import '../../infrastructure/reflection';
 
@@ -23,7 +23,7 @@ export class Deployment
    @Type(() => DataSetPaths)
    public readonly dataSetPaths: DataSetPaths = new DataSetPaths();
 
-   @configProp('keySource')
+  @configProp('keySource')
    @ValidateNested()
    @Type(() => KeySource)
    public readonly keySource: KeySource = new KeySource();

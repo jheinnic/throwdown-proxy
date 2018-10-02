@@ -1,17 +1,17 @@
-import {
-   BlockMappedDigestLocator, MerkleDigestLocator, NamedElement
-} from '../../../../infrastructure/merkle';
+import {NamedElement} from '../../../../infrastructure/merkle';
 import {ec} from 'elliptic';
-import {NamedVariant} from '../elliptic-model-adapter.class';
+import {configClass} from '../../../../infrastructure/config';
+import {NamedVariant} from './model-seed-policy.config';
 
-export interface EllipticModelGenConfig
+@configClass()
+export class EllipticModelGenConfig
 {
-   dirTree: IterableIterator<NamedElement<BlockMappedDigestLocator>>;
-   pathIterOne: IterableIterator<NamedElement<MerkleDigestLocator>>;
-   pathIterTwo: IterableIterator<NamedElement<MerkleDigestLocator>>;
+   // dirTree: IterableIterator<NamedElement<BlockMappedDigestLocator>>;
+   // pathIterOne: IterableIterator<NamedElement<MerkleDigestLocator>>;
+   // pathIterTwo: IterableIterator<NamedElement<MerkleDigestLocator>>;
    readAheadSize: number;
    outputRoot: string;
-   firstGeneration?: number;
+   generation: number;
    variants: NamedVariant[];
    ecInst: ec;
 }

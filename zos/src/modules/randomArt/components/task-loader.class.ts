@@ -1,11 +1,4 @@
-import {Canvas} from 'canvas';
-import {from, Observable, OperatorFunction, zip} from 'rxjs';
-import {bufferCount, count, flatMap, map, shareReplay, take, tap, windowCount} from 'rxjs/operators';
-
-import {
-   ImageDimensions, ITaskContentAdapter, ITaskLoader, PaintEngineTaskModel
-} from '../interfaces';
-import {PointMap, RandomArtModel} from '.';
+import {PointMap, RandomArtModel} from './index';
 
 /**
  * Bridge design pattern singleton that combines an adapter on the domain-specific task model,
@@ -116,6 +109,12 @@ export class TaskLoader<Content> implements ITaskLoader
       // shareReplay(this.iterationCount + 1));
    }
 
+
+   public loadTaskSource() {
+
+   }
+
+   /*
    public assignNextTask(): OperatorFunction<Canvas, PaintEngineTaskModel>
    {
       return (canvasSource: Observable<Canvas>) => {
@@ -143,6 +142,7 @@ export class TaskLoader<Content> implements ITaskLoader
                paintContext.fillStyle = 'rgb(0,0,0)';
                paintContext.fillRect(0, 0, canvas.width, canvas.height);
 
+               */
                /*
          const sourceIterResult = this.inputGenerator.next();
          if (! sourceIterResult.done) {

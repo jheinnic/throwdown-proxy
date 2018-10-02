@@ -1,12 +1,14 @@
 import {IsIn, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
+
+import {configClass, configProp} from '../../infrastructure/config';
 import {ShufflePolicy} from './shuffle-policy.config';
 import {ProofSeed} from './proof-seed.config';
 import {BlockLayout} from './block-layout.config';
 import {TierNoncePolicy} from './tier-nonce-policy.config';
 import {SerialNoncePolicy} from './serial-nonce-policy.config';
+import {EntropyAlgorithms} from './entropy-algorithms.config';
+import '../../infrastructure/reflection';
 
 @configClass("eth.lotto.setupPolicy")
 export class SetupPolicy {
@@ -42,4 +44,9 @@ export class SetupPolicy {
    @ValidateNested()
    @Type(() => ProofSeed)
    public readonly proofSeed: ProofSeed = new ProofSeed();
+
+   @configProp('entropyDefaults')
+   @ValidateNested()
+   @Type(() => EntropyAlgorithms)
+   public readonly entropyDefaults: EntropyAlgorithms = new EntropyAlgorithms();
 }

@@ -1,9 +1,10 @@
 import {SymbolEnum} from '../../infrastructure/lib';
 
-export const APP_CONFIG_TYPES: SymbolEnum<'Deployment' | 'EventSpecification' | 'SetupPolicy' > = {
+export const APP_CONFIG_TYPES: SymbolEnum<'Deployment' | 'EventSpecification' | 'SetupPolicy' | 'PlayAssets'> = {
    Deployment: Symbol.for('Deployment'),
    EventSpecification: Symbol.for('EventSpecification'),
-   SetupPolicy: Symbol.for('SetupPolicy')
+   SetupPolicy: Symbol.for('SetupPolicy'),
+   PlayAssets: Symbol.for('PlayAssets')
 };
 
 type ApplicationServiceTypes = 'MerkleTaskScanner' | 'PathMapCache';

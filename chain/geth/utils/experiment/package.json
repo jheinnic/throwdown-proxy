@@ -1,0 +1,21 @@
+{
+  "name": "create-key",
+  "version": "1.0.0",
+  "description": "Utility for creating accounts and extracting their secret keys",
+  "main": "main.js",
+  "author": "John Heinnickel <jheinnic@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "co": "^4.6.0",
+    "commander": "^2.15.1",
+    "esprima": "^4.0.1",
+    "keccak": "^1.4.0",
+    "keythereum": "^1.0.4",
+    "medium": "^1.0.2",
+    "promisify": "^0.0.3",
+    "read": "^1.0.7",
+    "rxjs": "^6.3.3",
+    "scrypt": "^6.0.3",
+    "transducers-js": "^0.4.174"
+  }
+}

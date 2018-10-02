@@ -1,6 +1,7 @@
 import {IsInt, IsPositive, Max, Min} from 'class-validator';
-import {configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
+
+import {configProp} from '../../infrastructure/config';
+import '../../infrastructure/reflection';
 
 export class BlockLayoutElement {
    @configProp("fieldSize")

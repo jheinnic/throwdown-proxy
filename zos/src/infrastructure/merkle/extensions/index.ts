@@ -1,3 +1,3 @@
-export * from './digest-identity.interface';
-export * from './digest-identity.service';
-export * from './named-element.value';
+export * from './canonical-path-naming.interface';
+export * from './canonical-path-naming.service';
+export * from './named-path.value';

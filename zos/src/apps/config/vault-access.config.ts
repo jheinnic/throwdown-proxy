@@ -1,6 +1,7 @@
 import {IsUrl, Matches, MinLength} from 'class-validator';
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
+
+import {configClass, configProp} from '../../infrastructure/config';
+import '../../infrastructure/reflection';
 
 @configClass("eth.lotto.deployment.vaultAccess")
 export class VaultAccess {

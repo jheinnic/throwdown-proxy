@@ -1,8 +1,7 @@
 import {OperatorFunction} from 'rxjs';
 import {concatMap, mapTo, reduce, tap} from 'rxjs/operators';
 
-import {CanvasAndPlotModel, WriteToFileContext} from '../interfaces';
-import {PointMap} from '.';
+import {PointMap} from './index';
 
 export class CanvasPlotter
 {

@@ -1,4 +1,5 @@
 import {IsOptional, Min} from 'class-validator';
+
 import {configClass, configProp} from '../../infrastructure/config';
 import '../../infrastructure/reflection';
 
@@ -14,8 +15,13 @@ export class HmacDrbgOptions
    @Min(0)
    nonceBitCount: number = 0;
 
-   @configProp('additionalEntropyWords')
+   @configProp('additionalEntropyWordCount')
    @IsOptional()
    @Min(0)
-   additionalEntropyWords: number = 0;
+   additionalEntropyWordCount: number = 0;
+
+   @configProp('additionalEntropyWordBits')
+   @IsOptional()
+   @Min(0)
+   additionalEntropyWordBits: number = 0;
 }

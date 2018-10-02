@@ -1,4 +1,5 @@
 import {Matches} from 'class-validator';
+
 import {configClass, configProp} from '../../infrastructure/config';
 import '../../infrastructure/reflection';
 

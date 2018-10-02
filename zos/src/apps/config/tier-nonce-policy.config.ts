@@ -1,6 +1,7 @@
 import {IsInt, IsPositive} from 'class-validator';
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
+
+import {configClass, configProp} from '../../infrastructure/config';
+import '../../infrastructure/reflection';
 
 @configClass("eth.lotto.setupPolicy.tierNoncePolicy") // "eth.lotto.eventSpec")
 export class TierNoncePolicy {

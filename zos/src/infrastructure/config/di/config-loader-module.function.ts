@@ -1,5 +1,6 @@
 import {interfaces} from 'inversify';
-import {ConfigLoader} from '../service/index';
+
+import {ConfigLoader} from '../config-loader.service';
 import {CONFIG_TYPES} from './types';
 
 export function configLoaderModule(bind: interfaces.Bind)
@@ -8,12 +9,3 @@ export function configLoaderModule(bind: interfaces.Bind)
       .to(ConfigLoader)
       .inSingletonScope();
 }
-
-/*
-export class ConfigLoaderModuleProviderFactory implements ContainerModuleProviderFactory<undefined> {
-   public getModuleProvider(_: undefined): ContainerModuleProvider
-   {
-      return new SimpleModuleProvider(configLoaderModule);
-   }
-}
-*/

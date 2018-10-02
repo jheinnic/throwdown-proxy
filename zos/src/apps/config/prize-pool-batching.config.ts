@@ -1,10 +1,11 @@
 import {IsInt, IsPositive} from 'class-validator';
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
 
-@configClass("eth.lotto.eventSpec.prizePool.batching")
+import {configClass, configProp} from '../../infrastructure/config';
+import '../../infrastructure/reflection';
+
+@configClass('eth.lotto.eventSpec.prizePool.batching')
 export class PrizePoolBatching {
-   @configProp("reseedAfter")
+   @configProp('reseedAfter')
    @IsPositive()
    @IsInt()
    public readonly reseedAfter: number = 4000;

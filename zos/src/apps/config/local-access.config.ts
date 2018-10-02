@@ -1,8 +1,8 @@
 import {IsOptional} from 'class-validator';
 
+import {configClass, configProp} from '../../infrastructure/config';
 import {IsDevelopmentOnly} from '../../infrastructure/validation/is-development-only.validator';
-import {configClass, configProp} from '../../infrastructure/config/decorator/index';
-import '../../infrastructure/reflection/index';
+import '../../infrastructure/reflection';
 
 @configClass("eth.lotto.deployment.localAccess")
 export class LocalAccess {

@@ -1,25 +1,25 @@
 import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {HasUniquePrizeTierIds} from '../../infrastructure/validation/has-unique-prize-ids.validator';
 import {configClass, configProp} from '../../infrastructure/config/index';
+import {HasUniquePrizeTierIds} from '../../infrastructure/validation/has-unique-prize-ids.validator';
 import {PrizePoolBatching} from './prize-pool-batching.config';
 import {PrizeTier} from './prize-tier.config';
-import '../../infrastructure/reflection/index';
+import '../../infrastructure/reflection';
 
-@configClass("eth.lotto.eventSpec.prizePool") // "eth.lotto.eventSpec")
+@configClass('eth.lotto.eventSpec.prizePool') // 'eth.lotto.eventSpec')
 export class PrizePool {
-   @configProp("batching")
+   @configProp('batching')
    @ValidateNested()
    @Type(() => PrizePoolBatching)
    public readonly batching: PrizePoolBatching = new PrizePoolBatching();
 
-   // @configProp("secondChanceCount")
+   // @configProp('secondChanceCount')
    // @IsPositive()
    // @IsInt()
    // public readonly secondChanceCount: number = 0;
 
-   @configProp("prizeTiers")
+   @configProp('prizeTiers')
    @HasUniquePrizeTierIds()
    @ValidateNested({each: true})
    @Type(() => PrizeTier)

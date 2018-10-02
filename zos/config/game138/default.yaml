@@ -20,16 +20,8 @@ eth:
         shuffleTickets: minting/tickets/shuffle
         ticketArtwork: minting/tickets/artwork
         ticketRandomWitness: event/reveals/random
-      entropy:
-        devFake:
-          hexSeedBits: abcdef0123456789
-        hmacDrbg:
-          entropyBitCount: 64
-          nonceBitCount: 32
-          additionalEntropyWords: 2
-      keySource:
-        mnemonic: number ticket outer asthma wine define arctic butter tower settle answer
-          weird
+     keySource:
+        mnemonic: number ticket outer asthma wine define arctic butter tower settle answer weird
         key: xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3
         path: m/44'/60'/9'/138/2'
     setupPolicy:
@@ -62,7 +54,7 @@ eth:
         concurrentRuns: 3
         wordBits: 64
         entropySeedBits: 8192
-        algorithmKey: hmac-drbg
+        algorithmKey: hmacDrbg
       tierNoncePolicy:
         batchEntropyBits: 8192
         batchedSetSize: 1536
@@ -74,6 +66,24 @@ eth:
         generatedBits: 29
         entryCount: 380001
         batchIds: 5
+      mintTicketsPolicy:
+        entropy:
+          algorithm: devFake
+          devFake:
+            hexSeedBits: 987654321abcdef0
+        curve: ed25519
+      entropyDefaults:
+        devFake:
+          hexSeedBits: abcdef0123456789
+        hmacDrbg:
+          entropyBitCount: 64
+          nonceBitCount: 32
+          additionalEntropyWordCount: 2
+          additionalEntropyWordBits: 16
+        isaac:
+          seedBits: 8192
+        nodeCrypto:
+        randomOrg:
     eventSpec:
       sponsorId: 9
       gameId: 138
@@ -135,4 +145,82 @@ eth:
           prizeUnits: 0
           instanceCount: 190000
           batched: true
-
+    playAssets:
+      ticketStyle: randomArt
+      randomArt:
+        painting:
+          variant: firstTest
+          generation: 1
+        renderingPolicies:
+          - name: firstTest
+            versions:
+              imageFieldPolicy: preview
+              modelSeedPolicy: 8from7_xy_midFwd
+              generation: 1
+        imageFieldPolicies:
+          - name: preview
+            pixelWidth: 80
+            pixelHeight: 80
+            scale: 1.0
+            fitOrFill: square
+        modelSeedPolicies:
+          - variantName: 8from7_xy_midFwd
+            bitMode: get8From7
+            prefixSelect: USE_X
+            xRunsForward: true
+            yRunsForward: true
+            xFromBit: 32
+            xToBit: 224
+            yFromBit: 32
+            yToBit: 224
+            useNewModel: false
+          - nameExtension: 8from7_yx_midRvrs
+            bitMode: get8From7
+            prefixSelect: USE_Y
+            xRunsForward: false
+            yRunsForward: false
+            xFromBit: 64
+            xToBit: 192
+            yFromBit: 64
+            yToBit: 192
+            useNewModel: true
+          - nameExtension: 64toA_yRx_128bit
+            bitMode: base64ToAscii
+            prefixSelect: USE_Y
+            xRunsForward: false
+            yRunsForward: true
+            xFromBit: 16
+            xToBit: 143
+            yFromBit: 53
+            yToBit: 188
+            useNewModel: true
+          - nameExtension: mod160_xRy_72bit
+            bitMode: mod160
+            prefixSelect: USE_X
+            xRunsForward: true
+            yRunsForward: false
+            xFromBit: 11
+            xToBit: 84
+            yFromBit: 129
+            yToBit: 201
+            useNewModel: false
+          - nameExtension: raw_24bit_xy
+            bitMode: raw
+            prefixSelect: USE_X
+            xRunsForward: true
+            yRunsForward: true
+            xFromBit: 90
+            xToBit: 123
+            yFromBit: 2
+            yToBit: 36
+            useNewModel: true
+          - nameExtension: raw_208bit_Ryx
+            bitMode: raw
+            prefixSelect: USE_Y
+            xRunsForward: false
+            yRunsForward: false
+            xFromBit: 27
+            xToBit: 235
+            yFromBit: 23
+            yToBit: 231
+            useNewModel: false

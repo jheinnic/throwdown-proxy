@@ -20,7 +20,7 @@ export const bootstrapSchema: convict.Schema<BootstrapConfiguration> = {
       doc: 'The root directory for active configuration project\'s files.',
       format: function check(val: string) {
          if (!/^[^/\0]+$/.test(val)) {
-            throw new Error('path element wih no null characters');
+            throw new Error('path pathTo wih no null characters');
          }
       },
       default: 'lotto'

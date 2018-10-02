@@ -1,3 +1,5 @@
 export interface IRandomArtGenerator {
-   launchCanvas(): void;
+   start(workerCount: number): void;
+
+   stop(): void;
 }

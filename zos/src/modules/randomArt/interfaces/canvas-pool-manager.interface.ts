@@ -1,6 +1,9 @@
 import {Canvas} from 'canvas';
 
-export interface ICanvasProvider
+export interface ICanvasPoolManager
 {
-   createNextCanvas(pixelWidth: number, pixelHeight: number): Canvas;
+   // createNextCanvas(pixelWidth: number, pixelHeight: number): Canvas;
+   createNew(): Canvas;
+
+
 }

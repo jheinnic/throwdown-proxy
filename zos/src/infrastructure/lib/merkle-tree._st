@@ -1,11 +1,11 @@
 import {bufferToHex, setLengthRight, sha3, toBuffer} from 'ethereumjs-util';
 
 export type CombineHashes = (left: Buffer, right: Buffer) => Buffer
-export type MapToHash = (element: any) => Buffer
+export type MapToHash = (pathTo: any) => Buffer
 
 const defaultCombineFunction: CombineHashes = sha3;
-const defaultMapToHashFunction: MapToHash = (element: any) => {
-   return element as Buffer;
+const defaultMapToHashFunction: MapToHash = (pathTo: any) => {
+   return pathTo as Buffer;
 }
 
 function sha3(left: Buffer, right: Buffer)
@@ -66,7 +66,7 @@ export class MerkleTree<Element = Buffer>
    {
       return elements.reduce((layer, el, idx, arr) => {
          if (idx % 2 === 0) {
-            // Hash the current element with its pair element
+            // Hash the current pathTo with its pair pathTo
             layer.push(this.combinedHash(el, arr[idx + 1]));
          }
 
@@ -145,7 +145,7 @@ export class MerkleTree<Element = Buffer>
    {
       let hash: Buffer;
 
-      // Convert element to 32 byte hash if it is not one already
+      // Convert pathTo to 32 byte hash if it is not one already
       if (el instanceof Element) {
          hash = this.hashFromElement(el);
       } else {

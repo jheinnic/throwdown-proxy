@@ -1,30 +1,28 @@
-import {AsyncSubject, defer, Observable, of, Subscription, timer} from 'rxjs';
-import {delayWhen, repeatWhen, share, takeUntil, tap} from 'rxjs/operators';
+import {AsyncIterable, Iterable} from '@reactivex/ix-ts';
 import {Injectable} from '@angular/core';
+import {Chan} from 'medium';
 import {Canvas} from 'canvas';
 
-import {ICanvasProvider, ITaskLoader, IRandomArtGenerator} from '../interfaces';
-import {CanvasPlotter, CanvasWriter} from '.';
+import {ITaskLoader, IRandomArtGenerator, ICanvasPoolManager} from '../interfaces/index';
+import {CanvasPlotter, CanvasWriter} from './index';
 import '../../../infrastructure/reflection';
 
 @Injectable()
 export class RandomArtGenerator implements IRandomArtGenerator
 {
-   private readonly stopSignal: AsyncSubject<any>;
+   private readonly stopSignal: Chan<void>;
 
-   private readonly stopObservable: Observable<void>;
+   private readonly stopObservable: Iterable<void>;
 
-   private readonly canvasSource: Observable<Canvas>;
+   private readonly canvasSource: AsyncIterable<Canvas>;
 
    constructor(
-      private readonly canvasProvider: ICanvasProvider,
+      private readonly canvasProvider: ICanvasPoolManager,
       private readonly taskLoader: ITaskLoader,
       private readonly painter: CanvasPlotter,
-      private readonly canvasWriter: CanvasWriter)
+      private readonly canvasWriter: CanvasWriter,
+      private readonly stopSignal: Chan<void>)
    {
-      // this.startSignal = new ReplaySubject<void>(1);
-      this.stopSignal = new AsyncSubject<any>();
-
       // this.startObservable = this.startSignal.share();
       this.stopObservable = this.stopSignal.pipe(
          share());

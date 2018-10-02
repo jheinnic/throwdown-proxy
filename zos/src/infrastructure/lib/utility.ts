@@ -1,9 +1,11 @@
+import {Keys} from 'simplytyped';
+
 export interface Director<B>
 {
    (builder: B): void;
 }
 
-export type BagOfMapsTo<S, T> = { // } N extends keyof S = keyof S> = {
+export type MapTo<S, T> = { // } N extends keyof S = keyof S> = {
    [K in keyof S]: (value: S[K]) => T
 }
 
@@ -32,6 +34,8 @@ export interface PropertyBag
 {
    [K: string]: Exclude<object, () => void>
 }
+
+export type IfExtends<T, B> = T extends B ? T : never;
 
 export type MutablePartial<T> = { -readonly [P in keyof T]+?: T[P] };  // Remove readonly and add ?
 export type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };  // Remove readonly and ?
@@ -71,31 +75,37 @@ export type ValuePropertyNames<T> = { [K in keyof T]: T[K] extends Function ? ne
 export type ValueProperties<T> = Pick<T, ValuePropertyNames<T>>;
 
 export type GetterPropertyNames<T> = {
-   [K in keyof T]: T[K] extends Getter ? K : never
+   [K in FunctionPropertyNames<T>]: T[K] extends Getter ? K : never
 }[FunctionPropertyNames<T>]
 export type GetterProperties<T> = Pick<T, GetterPropertyNames<T>>
 
 export type SetterPropertyNames<T> = {
-   [K in keyof T]: T[K] extends Setter ? K : never
+   [K in FunctionPropertyNames<T>]: T[K] extends Setter ? K : never
 }[FunctionPropertyNames<T>]
 export type SetterProperties<T> = Pick<T, SetterPropertyNames<T>>
 
 export type NoFunc<T> = TypeName<T> extends 'function' ? never : T;
+export type OnlyNoFunc<T> = {
+   [K in Keys<T>]: NoFunc<T[K]>
+};
+export type IsNoFunc<T> = T extends OnlyNoFunc<T> ? T : never;
+
 export type Readable<T> = {
    [K in GetterPropertyNames<T> | ValuePropertyNames<T>]: T[K]
-}
+};
 export type OnlyReadable<T> = {
-   [K in keyof T]: T[K] extends Function ? T[K] extends Getter ? T[K] : never : T[K];
-}
+   [K in keyof T]: T[K] extends Function ? (T[K] extends Getter ? T[K] : never) : T[K];
+};
+export type IfReadable<T> = IfExtends<T, OnlyReadable<T>>;
 
-export type OptionsBagInputPropertyNames<T> = ValuePropertyNames<T> | SetterPropertyNames<T>
-export type OptionsBagOutputPropertyNames<T> = ValuePropertyNames<T> | GetterPropertyNames<T>
+// export type OptionsBagInputPropertyNames<T> = ValuePropertyNames<T> | SetterPropertyNames<T>
+// export type OptionsBagOutputPropertyNames<T> = ValuePropertyNames<T> | GetterPropertyNames<T>
 export type OptionsBagPropertyNames<T> =
    ValuePropertyNames<T>
    | GetterPropertyNames<T>
    | SetterPropertyNames<T>;
-
-// export type OptionsBag<T> = Pick<T, OptionsBagPropertyNames<T>>
-export type OptionsBag<T> = {
+export type OptionsBag<T> = Pick<T, OptionsBagPropertyNames<T>>
+export type OnlyOptionsBag<T> = {
    [K in keyof T]: K extends OptionsBagPropertyNames<T> ? T[K] : never
 }
+export type IfOptionsBag<T> = IfExtends<T, OnlyOptionsBag<T>>;

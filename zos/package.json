@@ -3,7 +3,6 @@
     "@angular/core": "^6.1.8",
     "@loopback/dist-util": "^0.3.7",
     "@loopback/metadata": "^0.9.9",
-    "@reactivex/ix-ts": "^2.3.5",
     "@thi.ng/bitstream": "^0.4.15",
     "ajv": "^6.5.3",
     "babel-polyfill": "^6.26.0",
@@ -76,11 +75,13 @@
     "@types/elliptic": "^6.4.0",
     "@types/ethereumjs-util": "^5.2.0",
     "@types/lru-cache": "^4.1.1",
+    "@types/ndarray": "^1.0.6",
     "@types/node": "8.10.28",
     "@types/node-vault": "^0.5.3",
     "@types/sjcl": "^1.0.28",
     "@types/sprintf-js": "^1.1.0",
     "dotenv": "^6.0.0",
+    "simplytyped": "^1.5.2",
     "typescript": "^2.7.2",
     "typings": "^2.1.1"
   }

@@ -22,12 +22,6 @@
     lodash "^4.17.5"
     reflect-metadata "^0.1.10"
 
-"@reactivex/ix-ts@^2.3.5":
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/@reactivex/ix-ts/-/ix-ts-2.3.5.tgz#902caaf5a872b086ff0a80c96cd1573fc1c02a13"
-  dependencies:
-    tslib "^1.8.0"
-
 "@thi.ng/bitstream@^0.4.15":
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/@thi.ng/bitstream/-/bitstream-0.4.15.tgz#6228a8fe54bcb00583aa2fc69ad53572f94e7a09"
@@ -105,6 +99,10 @@
 "@types/mustache@*":
   version "0.8.31"
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-0.8.31.tgz#7c86cbf74f7733f9e3bdc28817623927eb386616"
+
+"@types/ndarray@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@types/ndarray/-/ndarray-1.0.6.tgz#47d716dce58b51bf26496f042df2d22a3a860fb7"
 
 "@types/node-vault@^0.5.3":
   version "0.5.3"
@@ -3481,6 +3479,10 @@ simple-sha1@^2.1.0:
   resolved "https://registry.yarnpkg.com/simple-sha1/-/simple-sha1-2.1.1.tgz#93f3b7f2e8dfdc056c32793e5d47b58d311b140d"
   dependencies:
     rusha "^0.8.1"
+
+simplytyped@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/simplytyped/-/simplytyped-1.5.2.tgz#c96af8e1663c46efa27540afffffda941d041237"
 
 siphash24@^1.0.1:
   version "1.1.1"

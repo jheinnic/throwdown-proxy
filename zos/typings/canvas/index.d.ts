@@ -29,12 +29,12 @@ declare module 'canvas'
    export class Canvas extends HTMLCanvasElement
    {
       /**
-       * Gets or sets the height of a canvas element on a document.
+       * Gets or sets the height of a canvas pathTo on a document.
        */
       height: number;
 
       /**
-       * Gets or sets the width of a canvas element on a document.
+       * Gets or sets the width of a canvas pathTo on a document.
        */
       width: number;
 

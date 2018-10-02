@@ -1,3 +1,5 @@
+import {StringKeys} from 'simplytyped';
+
 export enum BitStrategyKind
 {
    raw = 'raw',
@@ -6,3 +8,5 @@ export enum BitStrategyKind
    mod160 = 'mod160',
    get8From7 = 'get8From7'
 }
+
+export type BitStrategyType = StringKeys<BitStrategyKind>

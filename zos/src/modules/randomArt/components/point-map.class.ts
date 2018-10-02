@@ -1,11 +1,9 @@
-import {from, Observable} from 'rxjs';
+import {Iterable} from 'ix';
+import {generate, IterableX} from 'ix/iterable';
+import {map} from 'ix/iterable/pipe/map';
+import {flatMap} from 'ix/iterable/pipe/flatmap';
 import {RandomArtModel} from './random-art-model.class';
 import BN from 'bn.js';
-import {flatMap, map} from 'rxjs/operators';
-
-// export type FitOrFillType = 'fit' | 'fill' | 'square';
-
-// export type FillStyle = string | CanvasGradient | CanvasPattern;
 
 export class PointMap
 {
@@ -70,37 +68,49 @@ export class PointMap
   public static computeAffinePixelPoints(
     pointCount: number,
     minValue: number,
-    maxValue: number): Observable<number>
+    maxValue: number): Iterable<number>
   {
     const one = new BN(1);
-    const initial = new BN(0.5);
     const translate = new BN(minValue);
     const pRange = new BN(maxValue - minValue);
     const numPts = new BN(pointCount);
+    // const initial = new BN(0.5);
     // const scale = pRange.dividedBy(numPts);
 
-    const pointsArrayTwo = [];
-    for (let ii = initial; ii.lt(numPts); ii = ii.add(one)) {
-      pointsArrayTwo.push(
-        // parseFloat(
-          translate.add(
-            pRange.mul(ii)
-              .div(numPts)
-          ).toNumber());
-    }
+    // const pointsArrayTwo = [];
+    // for (let ii = initial; ii.lt(numPts); ii = ii.add(one)) {
+    //   pointsArrayTwo.push(
+    //     parseFloat(
+          // translate.add(
+          //   pRange.mul(ii)
+          //     .div(numPts)
+          // ).toNumber());
+    // }
+     // return from(pointsArrayTwo);
 
-    return from(pointsArrayTwo);
+     return generate(
+        new BN(minValue),
+        (x: BN) => x.lt(numPts),
+        (x: BN) => x.add(one),
+        (x: BN) => translate.add(
+           pRange.mul(x).div(numPts)
+        ).toNumber());
   }
 
   public static derivePointMaps(
-    widthPoints: Observable<number>,
-    heightPoints: Observable<number>): Observable<PointMap>
+    widthPoints: IterableX<number>,
+    heightPoints: IterableX<number>): Iterable<PointMap>
   {
     return widthPoints.pipe(
-       flatMap<number, PointMap>((xVal: number, xIdx: number) => {
+       map<number, [number, number]>(
+          (xVal: number, xIdx: number) => [xVal, xIdx]
+       ),
+       flatMap<[number, number], PointMap>((xPair: [number, number] ) => {
           return heightPoints.pipe(
              map<number, PointMap>((yVal: number, yIdx: number) => {
                 // console.log(xIdx, yIdx, ' => ', xVal, yVal);
+                const xVal = xPair[0];
+                const xIdx = xPair[1];
                 return new PointMap(xIdx, yIdx, xVal, yVal);
              })
           );

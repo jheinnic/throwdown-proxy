@@ -3,7 +3,7 @@ import {
    BlockMappedDigestLocator, MerkleDigestLocator, MerkleTreeDescription
 } from '../infrastructure/merkle/locator';
 import {
-   DepthFirstVisitMode, DigestIdentityService, IDigestIdentityService, IMerkleCalculator, IMerkleLocatorFactory,
+   DepthFirstVisitMode, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory,
    MerkleCalculator
 } from '../infrastructure/merkle';
 import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure/randomize/interface';
@@ -52,8 +52,8 @@ const merkleCalculator: IMerkleCalculator =
 const identityCache: LRU.Cache<MerkleDigestLocator, string> =
    new LRU<MerkleDigestLocator, string>(Math.pow(2, 9));
 // @ts-ignore
-const digestIdentity: IDigestIdentityService =
-   new DigestIdentityService(merkleCalculator, identityCache);
+const digestIdentity: ICanonicalPathNaming =
+   new CanonicalPathNaming(merkleCalculator, identityCache);
 
 const isaacGeneratorFactory: IPseudoRandomSourceFactory<Buffer> =
    new IsaacPseudoRandomSourceFactory();

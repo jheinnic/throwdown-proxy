@@ -1,8 +1,8 @@
 import {
-   registerDecorator, ValidationOptions, ValidatorConstraint,
-   ValidatorConstraintInterface
+   registerDecorator, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
 import {PrizeTier} from '../../apps/config';
+import {CustomValidationOptions} from './custom-validation-options.interface';
 
 @ValidatorConstraint({async: false})
 export class HasUniquePrizeTierIdsValidator implements ValidatorConstraintInterface
@@ -15,6 +15,7 @@ export class HasUniquePrizeTierIdsValidator implements ValidatorConstraintInterf
          if (idsSeen.has(prizeTier.tierId)) {
             return false;
          }
+         idsSeen.add(prizeTier.tierId);
       }
 
       return true;
@@ -22,7 +23,7 @@ export class HasUniquePrizeTierIdsValidator implements ValidatorConstraintInterf
 
 }
 
-export function HasUniquePrizeTierIds(validationOptions?: ValidationOptions)
+export function HasUniquePrizeTierIds(validationOptions?: CustomValidationOptions)
 {
    return function (object: Object, propertyName: string) {
       registerDecorator({
