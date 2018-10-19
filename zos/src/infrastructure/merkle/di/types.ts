@@ -10,7 +10,8 @@ type MerkleTypeNames =
    | 'DigestStorageStrategy'
    | 'DigestIdentityService'
    | 'PreImageStorageStrategy'
-   | 'MerkleTreeDescription';
+   | 'MerkleTreeDescription'
+   | 'CanonicalNamingService';
 
 export const MERKLE_TYPES: SymbolEnum<MerkleTypeNames> = {
    LRUCache: Symbol.for('LRUCache'),
@@ -27,7 +28,8 @@ export const MERKLE_TYPES: SymbolEnum<MerkleTypeNames> = {
    // MerkleTreeUpdateTask: Symbol.for('MerkleTreeUpdateTask'),
    // MerkleTreeProofTask: Symbol.for('MerkleTreeProofTask'),
    // MerkleTree: Symbol.for('MerkleTree'),
-   MerkleTreeDescription: Symbol.for('MerkleTreeDescription')
+   MerkleTreeDescription: Symbol.for('MerkleTreeDescription'),
+   CanonicalNamingService: Symbol.for('CanonicalNamingService')
 };
 
 export type MerkleInstallerNames = 'MerkleTreeModuleInstaller';

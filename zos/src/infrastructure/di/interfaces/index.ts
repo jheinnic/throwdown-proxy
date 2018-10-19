@@ -18,4 +18,6 @@
 // //    (id: ServiceIdentifier<T>, constructor: T) => T|void
 // // export type DIClassDecoratorFactory<T extends {new(...args:any[]):{}}> =
 // //    (id: ServiceIdentifier<T>, constructor: T) => DIClassDecorator<T>
+
+export * from './concrete-factory.interface';
 export {IModuleRegistry} from './module-registry.interface';

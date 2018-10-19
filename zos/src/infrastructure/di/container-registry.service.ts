@@ -49,9 +49,9 @@ export class ContainerRegistry implements IContainerRegistry
             }));
    }
 
-   public registerApplication(applicationIdentifier: interfaces.ServiceIdentifier<interfaces.ContainerModuleCallBack>): void
+   public registerApplication(applicationLoader: interfaces.ServiceIdentifier<interfaces.ContainerModuleCallBack>): void
    {
-      const callback: interfaces.ContainerModuleCallBack = this.installerContainer.get(applicationIdentifier);
+      const callback: interfaces.ContainerModuleCallBack = this.installerContainer.get(applicationLoader);
       if (!!callback) {
          throw new Error('Unable to load application callback from installation container');
       }

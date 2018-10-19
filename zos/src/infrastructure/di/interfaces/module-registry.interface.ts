@@ -1,6 +1,6 @@
 import {interfaces} from 'inversify';
 import ServiceIdentifier = interfaces.ServiceIdentifier;
-import {AbstractDIModule} from '../abstract-di-module.class';
+import {AbstractDIModule} from '../v1/abstract-di-module.class';
 
 export interface IModuleRegistry {
    loadModule<T extends AbstractDIModule>(moduleLabel: ServiceIdentifier<T>): void;

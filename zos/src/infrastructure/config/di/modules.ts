@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../lib/index';
+import {SymbolEnum} from '../../lib';
 
 type ConfigLoaderModuleTypes = 'ConfigLoaderModule';
 

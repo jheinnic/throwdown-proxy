@@ -1,6 +1,6 @@
 import {injectable, interfaces} from 'inversify';
 import {CONFIG_TYPES} from '../../config/di';
-import {ConfigLoader} from '../../config/service';
+import {ConfigLoader} from '../../config/service/index';
 
 export function configLoaderModule(bind: interfaces.Bind)
 {

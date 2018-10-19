@@ -1,39 +1,130 @@
-import {AsyncIterable, Iterable} from '@reactivex/ix-ts';
-import {Injectable} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {Injectable, Input} from '@angular/core';
 import {Chan} from 'medium';
-import {Canvas} from 'canvas';
+import {Chanel} from 'chanel';
+import {Canvas, MyCanvasRenderingContext2D} from 'canvas';
+import {co} from 'co';
+import {IEnable} from '@jchptf/api';
 
-import {ITaskLoader, IRandomArtGenerator, ICanvasPoolManager} from '../interfaces/index';
-import {CanvasPlotter, CanvasWriter} from './index';
+import {IRandomArtGenerator} from '../interfaces';
+import {
+   CanvasAvailableMessage, InputTaskMessage, LifecycleStopMessage, PaintEngineTaskMessage,
+   WriteOutputTaskMessage
+} from '../messages';
 import '../../../infrastructure/reflection';
+import {Queue} from 'co-priority-queue';
+import {limiter} from '@jchptf/co-limit';
+import {interfaces} from 'inversify';
+import Factory = interfaces.Factory;
 
 @Injectable()
+@IEnable
 export class RandomArtGenerator implements IRandomArtGenerator
 {
-   private readonly stopSignal: Chan<void>;
+   private stopRequested: boolean = false;
 
-   private readonly stopObservable: Iterable<void>;
+   // private readonly canvasSource: AsyncIterable<Canvas>;
+   private canvasMetadata: Map<Canvas, CanvasMetadata> = new Map<Canvas, CanvasMetadata>();
 
-   private readonly canvasSource: AsyncIterable<Canvas>;
+   private deferredByImagePolicy: Map<string, Queue<DeferredQueues>> =
+      new Map<string, Queue<InputTaskMessage>>();
+
+   private deferredTasksByRenderPolicy: Map<string, Queue<InputTaskMessage>> =
+      new Map<string, Queue<InputTaskMessage>>();
+
+   private startStopMonitor: () => Promise<void>;
+
+   private startCanvasMonitor: () => Promise<void>;
+
+   private startNewTaskMonitor: () => Promise<void>;
 
    constructor(
-      private readonly canvasProvider: ICanvasPoolManager,
-      private readonly taskLoader: ITaskLoader,
-      private readonly painter: CanvasPlotter,
-      private readonly canvasWriter: CanvasWriter,
-      private readonly stopSignal: Chan<void>)
+      private readonly taskLoader: Queue<InputTaskMessage>,
+      private readonly taskQueueFactory: Factory<Queue<InputTaskMessage>>,
+      private readonly paintingChannel: Chanel<PaintEngineTaskMessage>,
+      private readonly outputChannel: Chanel<WriteOutputTaskMessage>,
+      private readonly canvasReturn: Queue<CanvasAvailableMessage>,
+      private readonly stopSignal: Queue<LifecycleStopMessage>)
    {
-      // this.startObservable = this.startSignal.share();
-      this.stopObservable = this.stopSignal.pipe(
-         share());
+      const launchLimiter = limiter(3);
 
-      this.canvasSource = defer(
-         () => of(
-            this.canvasProvider.createNextCanvas(
-               this.taskLoader.pixelWidth, this.taskLoader.pixelHeight
-            )
-         )
-      );
+      // @ts-ignore
+      this.startStopMonitor    = launchLimiter(this.monitorForStopSignal.bind(this), 10);
+
+      // @ts-ignore
+      this.startCanvasMonitor = launchLimiter(this.monitorCanvasQueue.bind(this), 10);
+      // @ts-ignore
+      this.startNewTaskMonitor = launchLimiter(this.monitorNewTaskQueue.bind(this), 10);
+   }
+
+   start() {
+      // co(this.monitorForStopSignal.bind(this));
+      this.startStopMonitor();
+      this.startCanvasMonitor();
+      this.startNewTaskMonitor();
+   }
+
+   private* monitorForStopSignal(): IterableIterator<unknown>
+   {
+      while(! this.stopRequested) {
+         const stop: LifecycleStopMessage = yield this.stopSignal.next();
+         if (!!stop) {
+            this.stopRequested = true;
+         }
+      }
+   }
+
+   private* monitorCanvasQueue(): IterableIterator<unknown>
+   {
+      while(! this.stopRequested) {
+         const available: Canvas = yield this.canvasReturn.next();
+      }
+   }
+
+   private* monitorTaskQueue(): IterableIterator<unknown>
+   {
+      while(! this.stopRequested) {
+         const available: CanvasAvailableMessage = yield this.canvasReturn.next();
+         const canvas: Canvas = available.canvas;
+         const metadata: CanvasMetadata = this.canvasMetadata.get(canvas);
+         if (!! metadata.supports) {
+            // Supports references are kept in descending priority order.
+            const match = metadata.supports.find((value) => {
+               if (this.pendingTasks.has(value.name)) {
+                  const pendingTaskQueue: InputTaskMessage[] =
+                     this.pendingTasks.get(value.name);
+                  if (pendingTaskQueue.length > 0) {
+                     // TODO: Pop input Queue
+                     // TODO: Launch Paint coroutine
+                     // TODO: Push paint Queue
+                     return true;
+                  }
+               }
+
+               return false;
+            })
+         }
+      }
+   }
+
+   private* manageRandomArtTask(): IterableIterator<unknown>
+   {
+
+   }
+
+   private* loadRandomArtModelTask(): IterableIterator<unknown>
+   {
+
+   }
+
+   private* paintRandomArtImageTask(): IterableIterator<unknown>
+   {
+
+   }
+
+   private* writeRandomArtOutputTask(): IterableIterator<unknown>
+   {
+
    }
 
    public launchCanvas()
@@ -81,3 +172,26 @@ export class RandomArtGenerator implements IRandomArtGenerator
    }
 }
 
+enum CanvasSupportRole {
+   FULL = 'full',
+   PREVIEW = 'preview',
+   THUMBNAIL = 'thumbnail'
+}
+
+interface ImagePolicySupport {
+   readonly name: string;
+   readonly role: CanvasSupportRole;
+}
+
+class CanvasMetadata {
+   constructor(
+      public readonly canvas: Canvas,
+      public readonly context: MyCanvasRenderingContext2D,
+      public readonly supports: ImagePolicySupport)
+   { }
+}
+
+interface DeferredQueues {
+   pendingTasks: Queue<InputTaskMessage>;
+   canvasWorkers: Queue<CanvasAvailableMessage>;
+}

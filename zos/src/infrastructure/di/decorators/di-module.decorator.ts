@@ -1,7 +1,7 @@
 import {injectable, interfaces} from 'inversify';
 import ServiceIdentifier = interfaces.ServiceIdentifier;
 
-import {ModuleRegistry} from '../module-registry.service';
+import {ModuleRegistry} from '../v1/module-registry.service';
 import {ClassDecorator, Constructor} from '../../reflection/index';
 import '../../reflection/index';
 import {DI_META} from './di-meta.symbols';

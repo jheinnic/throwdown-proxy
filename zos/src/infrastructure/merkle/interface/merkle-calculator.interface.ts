@@ -7,6 +7,7 @@ import {Director} from '../../lib/index';
 import {IDfsOrderBuilder} from '../traversal/dfs-order-builder.interface';
 import {IBfsOrderBuilder} from '../traversal/bfs-order-builder.interface';
 import {ITopoOrderBuilder} from '../traversal';
+import {BlockTopologicalOrder} from '../traversal/block-topological-order.class';
 
 export interface IMerkleCalculator {
    readonly tierCount: number;
@@ -41,7 +42,7 @@ export interface IMerkleCalculator {
 
    getTopoDigestOrder(director: Director<ITopoOrderBuilder>): Iterable<MerkleDigestLocator>;
 
-   getTopoBlockOrder(director: Director<ITopoOrderBuilder>): Iterable<BlockMappedDigestLocator>;
+   getTopoBlockOrder(director: Director<ITopoOrderBuilder>): BlockTopologicalOrder;
 
    getBfsBlockOrder(director: Director<IBfsOrderBuilder>): Iterable<BlockMappedDigestLocator>;
 

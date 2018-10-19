@@ -9,11 +9,11 @@ export type MapTo<S, T> = { // } N extends keyof S = keyof S> = {
    [K in keyof S]: (value: S[K]) => T
 }
 
-export type BagOf<T, S = any, N extends keyof any = keyof S> = {
+export type BagOf<T, N extends keyof any = keyof S, S = any> = {
    [K in N]: T
 }
 
-export type SymbolEnum<N extends keyof any = keyof any> = Record<N, symbol>;
+export type SymbolEnum<N extends keyof any = keyof any> = BagOf<symbol, N>;
 
 export type MixableConstructor<T = object> = new (...args: any[]) => T;
 
@@ -109,3 +109,14 @@ export type OnlyOptionsBag<T> = {
    [K in keyof T]: K extends OptionsBagPropertyNames<T> ? T[K] : never
 }
 export type IfOptionsBag<T> = IfExtends<T, OnlyOptionsBag<T>>;
+
+export type KeysThatAre<T, C> = {
+   [K in Keys<T>]: T[K] extends C ? K : never
+}[Keys<T>];
+export type KeysThatAreNot<T, C> = {
+   [K in Keys<T>]: T[K] extends C ? never : K
+}[Keys<T>];
+export type StrictKeysThatAre<T, C> = Exclude<KeysThatAre<T, C>, KeysThatAreNot<T, C>>;
+
+export type OnlyIfAllKeysAre<T, C> = Keys<T> extends StrictKeysThatAre<T, C> ? T : never;
+

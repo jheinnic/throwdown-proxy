@@ -1,8 +1,8 @@
-import {SymbolEnum} from '../../lib/index';
+import {IBagOf} from '@jchptf/api';
 
-type ConfigTypeNames = "ConfigLoader" | "RootConfigPath"
+type ConfigTypeNames = "ConfigLoader"; // | "RootConfigPath"
 
-export const CONFIG_TYPES: SymbolEnum<ConfigTypeNames> = {
-   ConfigLoader: Symbol.for("ConfigLoader"),
-   RootConfigPath: Symbol.for("RootConfigPath")
+export const CONFIG_TYPES: IBagOf<symbol, ConfigTypeNames> = {
+   ConfigLoader: Symbol.for("ConfigLoader")
+   // RootConfigPath: Symbol.for("RootConfigPath")
 };

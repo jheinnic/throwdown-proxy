@@ -1,11 +1,11 @@
+import {IConfig} from 'config';
 import {injectable} from 'inversify';
 import {ClassType, transformAndValidateSync} from 'class-transformer-validator';
 import {
    ClassDecoratorFactory, MetadataAccessor, MetadataInspector, PropertyDecoratorFactory
 } from '@loopback/metadata';
-import {IConfig} from 'config';
 
-import {Wild} from '../lib/index';
+import {Wild} from '../lib';
 import '../reflection/index';
 
 // export type Uses<T, D> = {[K in keyof T]: T[K] extends D ? T[K] : (T[K] extends T ? never : Uses<T[K],D>) }[keyof T];
@@ -26,8 +26,9 @@ import '../reflection/index';
 // }
 
 @injectable()
-export class ConfigLoader {
+export class ConfigLoader implements IConfigLoader {
    private readonly config: IConfig;
+   private readonly mapToDefaults: Map<ClassType<any>, any>;
 
    constructor() {
       require('dotenv').config();
@@ -38,6 +39,7 @@ export class ConfigLoader {
    ** NODE_ENV=${process.env['NODE_ENV']}`);
 
       this.config = require('config');
+      this.mapToDefaults = new Map<ClassType<any>, any>();
    }
 
    getConfig<T extends {}>(configClass: ClassType<T>, rootPath?: string): T
@@ -60,9 +62,14 @@ export class ConfigLoader {
          }
       }
 
-      const baseline = new configClass();
+      let baseline: T = this.mapToDefaults.get(configClass);
+      if (! baseline) {
+         baseline = new configClass();
+         this.mapToDefaults.set(configClass, baseline);
+      }
+
       return transformAndValidateSync(
-         configClass, Object.assign(baseline, resolvedConfig), {
+         configClass, Object.assign({}, baseline, resolvedConfig), {
             validator: {
                forbidUnknownValues: true,
                skipMissingProperties: false

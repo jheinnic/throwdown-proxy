@@ -1,3 +1,6 @@
+import {Director} from '../../lib';
+import {IBfsOrderBuilder} from '../interface';
+
 export interface IMerkleTreeModuleOptionsBuilder {
-   withTraversals(): IMerkleTreeModuleOptionsBuilder
+   withTraversals(director: Director<IBfsOrderBuilder>): IMerkleTreeModuleOptionsBuilder
 }

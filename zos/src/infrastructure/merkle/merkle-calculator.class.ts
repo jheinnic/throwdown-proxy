@@ -341,7 +341,7 @@ export class MerkleCalculator implements IMerkleCalculator
       return new MerkleTopologicalOrder(this, this.treeDescription, options);
    }
 
-   public getTopoBlockOrder(director: Director<ITopoOrderBuilder>): Iterable<BlockMappedDigestLocator>
+   public getTopoBlockOrder(director: Director<ITopoOrderBuilder>): BlockTopologicalOrder
    {
       const options = TopoOrderOptions.create(director);
       return new BlockTopologicalOrder(this, this.treeDescription, options);
