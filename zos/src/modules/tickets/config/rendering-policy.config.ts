@@ -1,9 +1,7 @@
-import {MaxLength, MinLength, ValidateNested} from 'class-validator';
-import {Type} from 'class-transformer';
+import {MaxLength, MinLength} from 'class-validator';
 
-import {configClass, configProp} from '../../../../infrastructure/config/index';
-import {RenderingPolicyVersion} from './rendering-policy-version.config';
-import '../../../../infrastructure/reflection/index';
+import '@jchptf/reflection';
+import {configClass, configProp} from '@jchptf/config';
 
 @configClass()
 export class RenderingPolicy
@@ -13,10 +11,13 @@ export class RenderingPolicy
    @MaxLength(128)
    public readonly name: string = '';
 
-   @configProp('versions')
-   @ValidateNested()
-   // TODO
-   // @ArrayKeysAreIndexed((version RenderingPolicyVersion) => (version.generation - 1) )
-   @Type(() => RenderingPolicyVersion)
-   public readonly versions: ReadonlyArray<RenderingPolicyVersion> = [];
+   @configProp('imageFieldPolicy')
+   @MinLength(3)
+   @MaxLength(128)
+   public readonly imageFieldPolicyName: string = '';
+
+   @configProp('modelSeedPolicy')
+   @MinLength(3)
+   @MaxLength(128)
+   public readonly modelSeedPolicyName: string = '';
 }

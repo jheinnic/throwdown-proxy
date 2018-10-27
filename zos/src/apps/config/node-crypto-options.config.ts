@@ -1,4 +1,4 @@
-import {configClass} from '../../infrastructure/config';
+import {configClass} from '@jchptf/config';
 import '../../infrastructure/reflection';
 
 @configClass()

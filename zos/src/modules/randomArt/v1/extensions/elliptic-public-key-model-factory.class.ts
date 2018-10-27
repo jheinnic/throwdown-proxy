@@ -1,37 +1,28 @@
 import {BitInputStream} from '@thi.ng/bitstream';
+import {ec} from 'elliptic';
 import {EllipticPublicKeyModel} from './elliptic-public-key-model.class';
-import {EllipticModelGenConfig} from './config/elliptic-model-gen-config.value';
 import {NamedVariant} from './config/named-variant.value';
 import {BitStrategyKind} from './config/bit-strategy-kind.enum';
 import {PrefixSelectStyle} from './config/prefix-select-style.enum';
 
-export class EllipticPublicKeySource
+
+export class EllipticPublicKeyModelFactory
 {
    constructor(
       public readonly sourcePath: string,
-      public readonly generationCounter: number,
       public readonly xBuffer: Buffer,
       public readonly yBuffer: Buffer)
    { }
 
    static fromBuffer(
-      buffer: Buffer, sourcePath: string, generationCounter: number, genConfig: EllipticModelGenConfig): EllipticPublicKeySource
+      buffer: Buffer, sourcePath: string, ecInst: ec): EllipticPublicKeySource
    {
       // console.log(`Elliptic KeySource from ${buffer.toString(`hex`)}`);
-      let keyPair = genConfig.ecInst.keyFromPublic(buffer, '16');
+      let keyPair = ecInst.keyFromPublic(buffer, '16');
       let pubKey = keyPair.getPublic();
       let xBuffer = pubKey.x.toBuffer();
       let yBuffer = pubKey.y.toBuffer();
-      // if (xBuffer.length != 32) {
-         // @ts-ignore
-         // console.error(`Truncated xBuffer: ${xBuffer.hexSlice()}, ${yBuffer.hexSlice()} at ${sourcePath} from ${buffer.length}, ${buffer.hexSlice(0)}`);
-      // }
-      // if (yBuffer.length != 32) {
-      //    @ts-ignore
-         // console.error(`Truncated xBuffer: ${yBuffer.hexSlice()}, ${yBuffer.hexSlice()} at ${sourcePath} from ${buffer.length}, ${buffer.hexSlice(0)}`);
-      // }
-      return new EllipticPublicKeySource(
-         sourcePath, generationCounter, xBuffer, yBuffer);
+      return new EllipticPublicKeySource(sourcePath, xBuffer, yBuffer);
    }
 
    applyVariant(variant: NamedVariant): EllipticPublicKeyModel
@@ -161,8 +152,7 @@ export class EllipticPublicKeySource
          variant.nameExtension,
          prefix,
          suffix,
-         true,
-         this.generationCounter
+         true
       );
    }
 }

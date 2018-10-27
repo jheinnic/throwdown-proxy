@@ -1,7 +1,7 @@
 import {IsInt, IsPositive, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {PrizePool} from './prize-pool.config';
 import '../../infrastructure/reflection';
 

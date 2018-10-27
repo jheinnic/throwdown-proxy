@@ -1,9 +1,9 @@
 import {Allow, MaxLength, Min, MinLength} from 'class-validator';
 
-import {configClass, configProp} from '../../../../infrastructure/config/index';
+import '@jchptf/reflection';
+import {configClass, configProp} from '@jchptf/config';
 import {BitStrategyKind} from './bit-strategy-kind.enum';
 import {PrefixSelectStyle} from './prefix-select-style.enum';
-import '../../../../infrastructure/reflection/index';
 
 @configClass()
 export class ModelSeedPolicy

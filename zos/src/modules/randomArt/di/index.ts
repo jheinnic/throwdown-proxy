@@ -1,0 +1,1 @@
+export * from './deferrable-message-queue-factory.interface';

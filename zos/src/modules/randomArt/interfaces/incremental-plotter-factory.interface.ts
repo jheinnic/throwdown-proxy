@@ -1,4 +1,11 @@
-import {ConcreteFactory} from '../../../infrastructure/di';
-import {Plotter, PlottingObserver} from '.';
+import {IterableX} from 'ix/iterable';
 
-export type PlotterFactory = ConcreteFactory<Plotter, [PlottingObserver]>
+import {IncrementalPlotter, IncrementalPlotObserver, MappedPoint} from '.';
+import {ConcreteFactoryService} from '@jchptf/di-app-registry';
+import {Canvas} from 'canvas';
+
+export interface IncrementalPlotterFactory extends ConcreteFactoryService<'create', IncrementalPlotter, [IncrementalPlotObserver]> {
+   createMapIter(callback: IncrementalPlotObserver): IterableX<MappedPoint>;
+
+   isCompatible(canvas: Canvas): boolean;
+}

@@ -4,7 +4,7 @@ import {Canvas} from 'canvas';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import {WriteToFileContext} from '../interfaces/index';
+import {WriteOutputTaskMessage} from '../messages';
 
 export class CanvasWriter
 {
@@ -68,10 +68,10 @@ export class CanvasWriter
       return filePath;
    }
 
-   public writeOutputFile(): OperatorFunction<WriteToFileContext, Promise<Canvas>>
+   public writeOutputFile(): OperatorFunction<WriteOutputTaskMessage, Promise<Canvas>>
    {
-      return map((taskContext: WriteToFileContext): Promise<Canvas> => {
-         const filePath = this.ensurePath(taskContext.outputFilePath);
+      return map((taskContext: WriteOutputTaskMessage): Promise<Canvas> => {
+         const filePath = this.ensurePath(taskContext.relativeOutputPath);
          console.log(`Entered stream writer for ${filePath}`);
 
          try {

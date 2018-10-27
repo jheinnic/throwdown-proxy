@@ -2,7 +2,7 @@ import {Container, ContainerModule} from 'inversify';
 import {Command} from 'commander';
 import * as util from 'util';
 
-import {CONFIG_TYPES, configLoaderModule, ConfigLoader} from '../infrastructure/config';
+import {CONFIG_TYPES, configLoaderModule, ConfigLoader} from '@jchptf/config';
 import {configContainerModule} from './di';
 import {EventSpecification} from './config';
 

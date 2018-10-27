@@ -1,13 +1,16 @@
 import {Container, ContainerModule} from 'inversify';
-import {Command} from 'commander';
+import {Canvas, MyCanvasRenderingContext2D} from 'canvas';
 import {buffers, chan, Chan} from 'medium';
+import LRU = require('lru-cache');
+import {Command} from 'commander';
 import elliptic from 'elliptic';
 import * as fs from 'fs';
 import * as util from 'util';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import {Subject} from 'rxjs';
 
-import {CanvasPlotter, CanvasProvider, CanvasWriter, RandomArtGenerator, TaskLoader} from './v1/components';
+import {CanvasPlotter, CanvasWriter, RandomArtGenerator, TaskLoader} from './components';
 
 import {MerkleLocatorFactory} from '../../infrastructure/merkle/merkle-locator-factory.class';
 import {
@@ -22,21 +25,12 @@ import {
 } from '../../infrastructure/randomize';
 
 import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '../../infrastructure/config';
-import {Deployment} from '../../apps/config';
+import {Deployment, PlayAssets, RandomArtPlayAssets, SetupPolicy} from '../../apps/config';
 
-import {ImageDimensions, ITaskContentAdapter} from './v1/interfaces';
-import LRU = require('lru-cache');
-import ErrnoException = NodeJS.ErrnoException;
-import {EllipticModelGenConfig} from './v1/extensions/config/elliptic-model-gen-config.value';
-import {BitStrategyKind} from './v1/extensions/config/bit-strategy-kind.enum';
-import {PrefixSelectStyle} from './v1/extensions/config/prefix-select-style.enum';
-import {EllipticPublicKeySource} from './v1/extensions/elliptic-public-key-model-factory.class';
-import {PublicKeyReadAheadProcess} from './v1/extensions/public-key-read-ahead-process.class';
-import {EllipticPublicKeyModel} from './v1/extensions/elliptic-public-key-model.class';
-import {EllipticPublicKeyModelGenerator} from './v1/extensions/elliptic-public-key-model-generator';
-import {EllipticPublicKeyModelAdapter} from './v1/extensions/elliptic-model-adapter.class';
-import {Canvas, MyCanvasRenderingContext2D} from 'canvas';
-import {Subject} from 'rxjs';
+import {ITaskContentAdapter} from './interfaces';
+import {CanvasDimensions} from './messages';
+import {IterableX} from 'ix/iterable';
+import {mapAsync} from 'ix/iterable/mapasync';
 
 const container: Container = new Container();
 container.load(
@@ -52,13 +46,19 @@ const configLoader: ConfigLoader = container.get(CONFIG_TYPES.ConfigLoader);
 
 const deploymentCfg: Deployment =
    configLoader.getConfig(Deployment, 'eth.lotto.deployment');
+const setupPolicyCfg: SetupPolicy =
+   configLoader.getConfig(SetupPolicy, 'eth.lotto.setupPolicy');
+const playAssetCfg: PlayAssets =
+   configLoader.getConfig(PlayAssets, 'eth.lotto.playAssets');
+const randomArtAssetsCfg: RandomArtPlayAssets =
+   configLoader.getConfig(RandomArtPlayAssets, 'eth.lotto.playAssets.randomArt');
 console.log('Deployment Config: ', util.inspect(deploymentCfg, true, 5, true));
-const imageDimensions: ImageDimensions = {
+const imageDimensions: CanvasDimensions[] = [{
    pixelWidth: 480,
    pixelHeight: 480,
-   fitOrFill: 'square',
-   sampleResolution: true
-};
+   scaleFactor: 1.0,
+   fitOrFill: 'square'
+}];
 
 // const treeDescriptor: MerkleTreeDescription = new MerkleTreeDescription(256, 256, 8192, 1900005);
 const treeDescriptor: MerkleTreeDescription =
@@ -74,8 +74,22 @@ const merkleCalculator: IMerkleCalculator =
 
 const identityCache: LRU.Cache<string, string> =
    LRU<string, string>(Math.pow(2, 8));
-const digestIdentity: ICanonicalPathNaming =
-   new CanonicalPathNaming(merkleCalculator, identityCache);
+const ticketKeysNamespaceRoot =
+   path.join(
+      deploymentCfg.localAccess.rootPath,
+      deploymentCfg.dataSetPaths.ticketKeyPairs
+   );
+const ticketArtNamespaceRoot =
+   path.join(
+      deploymentCfg.localAccess.rootPath,
+      deploymentCfg.dataSetPaths.ticketArtwork
+   );
+const publicKeyPaths: ICanonicalPathNaming =
+   new CanonicalPathNaming(merkleCalculator, identityCache, ticketKeysNamespaceRoot, 'public', 'key');
+const privateKeyPaths: ICanonicalPathNaming =
+   new CanonicalPathNaming(merkleCalculator, identityCache, ticketKeysNamespaceRoot, 'private', 'key');
+const ticketArtPaths: ICanonicalPathNaming =
+   new CanonicalPathNaming(merkleCalculator, identityCache, ticketArtNamespaceRoot, 'firstTest-1', 'png');
 
 const isaacGeneratorFactory: IPseudoRandomSourceFactory<Buffer> =
    new IsaacPseudoRandomSourceFactory();
@@ -90,12 +104,15 @@ const privateKeySource256 =
 const privateKeySource512 =
    isaacGenerator.pseudoRandomBuffers(64);
 
+// TODO: Link this to SetupPolicy!!!
 const ecInst: elliptic.ec = new elliptic.ec('ed25519');
+
 // console.log(privateKeySource.next().value);
 // console.log(ecInst.keyFromPrivate(
 //    privateKeySource.next().value // .toString('hex')
 // ));
 
+/*
 const ellipticModelGenConfig: EllipticModelGenConfig = {
    outputRoot: '/Users/jheinnic/Git/throwdown-proxy/zos/myLotto/events/game138',
    dirTree: digestIdentity.findAllBlocksPathNamesDepthFirst(),
@@ -195,86 +212,103 @@ function toPublicKeyFile(namedElement: NamedPath<any>): string
       deploymentCfg.dataSetPaths.ticketKeyPairs,
       namedElement.name + '_public.key');
 }
+*/
 
 // const DIR_ACCESS = fs.constants.R_OK | fs.constants.W_OK | fs.constants.X_OK;
 const DIR_MODE = 0o700;
 
-function mkdirWithCallback(dirPath: string): Promise<string>
+const pstat = util.promisify(fs.stat);
+const pmkdir = util.promisify(fs.mkdir);
+const pchmod = util.promisify(fs.chmod);
+
+async function ensureDirectory(dirPath: string): Promise<string>
 {
    // console.log(`About to mkdir for ${dirPath}`);
-   return new Promise<string>((resolve, reject) => {
-      fs.stat(dirPath, (err, stat) => {
-         if (!!err) {
-            if (err.code === 'ENOENT') {
-               fs.mkdir(dirPath, 0o700, (err: ErrnoException) => {
-                  if (!err) {
-                     console.log(`Successfully created ${dirPath}`);
-                     resolve(dirPath);
-                  } else {
-                     console.error(`Failed to create ${dirPath}: ${err}`);
-                     reject(err);
-                  }
-               });
-            } else {
-               console.error(`Could not stat ${dirPath}: ${err}`);
-               reject(err);
-            }
-         } else if (stat.uid !== process.getuid()) {
-            const err = new Error(`${dirPath} is owned by ${stat.uid}, not ${process.getuid()}`);
+   try {
+      const stat = await pstat(dirPath);
+
+      if (stat.uid !== process.getuid()) {
+         const err = new Error(`${dirPath} is owned by ${stat.uid}, not ${process.getuid()}`);
+         console.error(err);
+         throw err;
+      } else if (!stat.isDirectory()) {
+         const err = new Error(`${dirPath} is not a directory`);
+         console.error(err);
+         throw err;
+      } else if (stat.mode !== DIR_MODE) {
+         try {
+            pchmod(dirPath, DIR_MODE);
+            console.warn(
+               `Updated permission bits on ${dirPath} from ${stat.mode.toString(8)} to ${DIR_MODE}`);
+         } catch(err2) {
+            const err = new Error(`Could not set permission bits on ${dirPath} from ${stat.mode.toString(
+               8)} to ${DIR_MODE}`);
             console.error(err);
-            reject(err);
-         } else if (!stat.isDirectory()) {
-            const err = new Error(`${dirPath} is not a directory`);
-            console.error(err);
-            reject(err);
-         } else if (stat.mode !== DIR_MODE) {
-            fs.chmod(dirPath, DIR_MODE, (err: ErrnoException) => {
-               if (!!err) {
-                  console.error(`Could not set permission bits on ${dirPath} from ${stat.mode.toString(
-                     8)} to ${DIR_MODE}`);
-                  reject(err);
-               } else {
-                  console.warn(
-                     `Updated permission bits on ${dirPath} from ${stat.mode.toString(8)} to ${DIR_MODE}`);
-                  resolve(dirPath);
-               }
-            });
-         } else {
-            console.log(`${dirPath} is owned by this process, is a directory, and has mode ${DIR_MODE}`);
-            resolve(dirPath);
+            throw err;
          }
-      });
-   });
+      } else {
+         console.log(`${dirPath} is owned by this process, is a directory, and has mode ${DIR_MODE}`);
+      }
+   } catch(err) {
+      if ((!!err) && (err.code === 'ENOENT'))
+      {
+         try {
+            pmkdir(dirPath, 0o0700);
+            console.log(`Successfully created ${dirPath}`);
+         } catch (err2) {
+            const err3 = new Error(`Failed to create ${dirPath}: ${err2}`);
+            console.error(err3);
+            throw err3;
+         }
+      } else {
+         const err2 = (`Could not stat ${dirPath}: ${err}`);
+         console.error(err2);
+         throw err2;
+      }
+   }
 }
+
 
 async function launchAllocateStores(): Promise<void>
 {
    console.log(
       `Run 'allocate' ${deploymentCfg} ${deploymentCfg.dataSetPaths} ${deploymentCfg.dataSetPaths.ticketKeyPairs}`);
-   for (const nextDirElement of ellipticModelGenConfig.dirTree) {
-      const keyFilePath: string = path.join(
-         ellipticModelGenConfig.outputRoot,
-         deploymentCfg.dataSetPaths.ticketKeyPairs,
-         nextDirElement.name);
-      const artworkFilePath: string = path.join(
-         ellipticModelGenConfig.outputRoot,
-         deploymentCfg.dataSetPaths.ticketArtwork,
-         nextDirElement.name);
-      const dirsExist = await Promise.all([
-         mkdirWithCallback(keyFilePath),
-         mkdirWithCallback(artworkFilePath)
-      ]);
 
-      if ((
-         dirsExist[0] !== keyFilePath
-      ) || (
-         dirsExist[1] !== artworkFilePath
-      ))
-      {
+   let nextDirElement: string
+   let asyncKeyDirIter = mapAsync(
+      publicKeyPaths.findAllBlocksPathNamesDepthFirst().map( (item) => item.name),
+      ensureDirectory
+   );
+   try {
+      for await (nextDirElement of asyncKeyDirIter) {
+         console.log(`Created ${nextDirElement}`);
+      }
+      // if (ensureDirectory(nextDirElement.name) !== nextDirElement.name) {
+      //    console.error(
+      //       `Failed to create key store directory ${nextDirElement.name} for index ${nextDirElement.pathTo.index}`);
+      // }
+   } catch(err) {
+      console.error('Failed to create key directories', err);
+   }
+
+   /*
+   for await (nextDirElement of mapAsync(
+      ticketArtPaths.findAllBlocksPathNamesDepthFirst().map( (item) => item.name),
+      ensureDirectory
+   );
+   for await (nextDirElement of asyncArtDirIter) {
+      if (ensureDirectory(nextDirElement) !== nextDirElement) {
          console.error(
-            `Failed to create key store directory, art store directory, or both for index ${nextDirElement.pathTo.index}`);
+            `Failed to create key store directory ${nextDirElement.name} for index ${nextDirElement.pathTo.index}`);
       }
    }
+   for await (nextDirElement of ticketArtPaths.findAllBlocksPathNamesDepthFirst()) {
+      if (mkdirWithCallback(nextDirElement.name) !== nextDirElement.name) {
+         console.error(
+            `Failed to create ticket art directory ${nextDirElement.name} for index ${nextDirElement.pathTo.index}`);
+      }
+   }
+   */
 
    return
 }
@@ -384,6 +418,10 @@ const maxBatchSize = 33000;
 function launchPaintContent()
 {
    console.log(`Run 'paint'`);
+   function setCanvasTypes(imageSizes: ImageDimensions[]) {
+      function usesCanvasSizeType()
+
+   }
    const readAheadChannel: Chan<EllipticPublicKeySource> =
       chan(buffers.fixed(ellipticModelGenConfig.readAheadSize));
 
@@ -422,7 +460,7 @@ function launchTopoVisit()
    });
    const topoIter = topoOrder[Symbol.iterator]();
    let nextTopo = topoIter.next();
-   while (nextTopo.done === false) {
+   while (! nextTopo.done) {
       const value: BlockMappedDigestLocator = nextTopo.value;
       console.log(
          `${value.blockLevel}, ${value.index}|${value.blockOffset} => [${value.leftMostPosition}, ${value.rightMostPosition}] @ ${value.rootDepth}|${value.position}`);

@@ -1,10 +1,4 @@
-// declare namespace CanvasNames
-declare module 'chan'
-{
-   import 'chan';
-
-   function chan<T>(bufferSize?: number): Chan<T>;
-
+declare namespace Chan {
    interface Callback<V = any> {
       (err: any, value: V): void;
    }
@@ -13,11 +7,26 @@ declare module 'chan'
       (cb: Callback<V>): void
    }
 
-   interface Chan<T> {
-      (value: T): Thunk<T>;
+   export interface Chan<V = any> {
+      (cb: Callback<V>): void;
+      (value: V): Thunk<V>;
+      (cbOrValue: Callback<V>|V): void|Thunk<V>;
 
       close(): void;
+   }
+
+   interface ChanStatic {
+      <T>(buffer?: number): Chan<T>;
 
       select<T = any>(...args: Chan<T>[]): Thunk<Chan<T>>;
    }
+}
+
+declare module 'chan'
+{
+   import 'chan';
+
+   const chan: Chan.ChanStatic;
+
+   export = chan;
 }

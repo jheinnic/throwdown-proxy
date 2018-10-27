@@ -1,5 +1,5 @@
-export * from './di';
-export * from './interface';
-export * from './sources';
+export * from './di/index';
+export * from './interface/index';
+export * from './sources/index';
 
 import '../reflection';

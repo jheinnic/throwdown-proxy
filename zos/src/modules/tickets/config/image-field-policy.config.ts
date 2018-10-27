@@ -1,8 +1,9 @@
-import {IsIn, IsInt, IsPositive, MaxLength, Min, MinLength} from 'class-validator';
+import {IsIn, IsInt, IsPositive, MaxLength, Min, MinLength, ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '../../../../infrastructure/config/index';
-import {IsLegalFitFillSquare} from '../../messages/is-legal-fit-fill-square.validator';
-import '../../../../infrastructure/reflection/index';
+import {configClass, configProp} from '../../../infrastructure/config/index';
+import {IsLegalFitFillSquare} from './is-legal-fit-fill-square.validator';
+import '../../../infrastructure/reflection/index';
+import {PixelDimensions} from './pixel-dimensions.config';
 
 @configClass()
 export class ImageFieldPolicy {
@@ -11,21 +12,26 @@ export class ImageFieldPolicy {
    @MaxLength(128)
    public readonly name: string = '';
 
-   @configProp('pixelWidth')
-   @IsPositive()
-   @IsInt()
-   public readonly pixelWidth: number = 0;
+   @configProp('fullSize')
+   @ValidateNested()
+   public readonly fullSize: PixelDimensions = new PixelDimensions();
 
-   @configProp('pixelWidth')
-   @IsPositive()
-   @IsInt()
-   public readonly pixelHeight: number = 0;
+   @configProp('thumbnail')
+   @ValidateNested()
+   // TODO: IsProportional Constraint
+   public readonly thumbnail: PixelDimensions = new PixelDimensions();
 
    @configProp('unitScale')
    @Min(1.0)
    public readonly unitScale: number = 0;
 
-   @IsLegalFitFillSquare<ImageFieldPolicy>('pixelHeight', 'pixelWidth')
+   @configProp('previewPixel')
+   // TODO: IsDivisorOf
+   @IsPositive()
+   @IsInt()
+   public readonly previewPixel: number = 0;
+
+   @IsLegalFitFillSquare<ImageFieldPolicy>('fullSize.pixelHeight', 'fullSize.pixelWidth')
    @IsIn(['square', 'fit', 'fill', undefined])
    @configProp('fitOrFill')
    public readonly fitOrFill: 'square' | 'fit' | 'fill' = 'square';

@@ -1,6 +1,6 @@
 import {Matches} from 'class-validator';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import '../../infrastructure/reflection';
 
 @configClass('eth.lotto.deployment.dataSetPaths')
@@ -38,9 +38,13 @@ export class DataSetPaths
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)
    public readonly ticketRandomWitness: string = '';
 
-   @configProp('ticketKeyPairs')
+   @configProp('ticketPublicKeys')
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)
-   public readonly ticketKeyPairs: string = '';
+   public readonly ticketPublicKeys: string = '';
+
+   @configProp('ticketPrivateKeys')
+   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
+   public readonly ticketPrivateKeys: string = '';
 
    @configProp('ticketArtwork')
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)

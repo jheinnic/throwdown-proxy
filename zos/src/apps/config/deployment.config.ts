@@ -1,7 +1,7 @@
 import {Type} from 'class-transformer';
 import {ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {VaultAccess, KeySource, LocalAccess, DataSetPaths} from '.';
 import '../../infrastructure/reflection';
 

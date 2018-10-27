@@ -1,7 +1,7 @@
 import {IsOptional, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {IsDevelopmentOnly} from '../../infrastructure/validation';
 import {DevFakeOptions} from './dev-fake-options.config';
 import {HmacDrbgOptions} from './hmac-drbg-options.config';

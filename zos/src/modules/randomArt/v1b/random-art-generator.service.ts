@@ -6,9 +6,9 @@ import {Injectable} from '@angular/core';
 import {Chan} from 'medium';
 import {Canvas} from 'canvas';
 
-import {IRandomArtGenerator} from '../interfaces';
-import {InputTaskMessage, WriteOutputTaskMessage} from '../messages';
-import '../../../infrastructure/reflection';
+import {IRandomArtGenerator} from '../interfaces/index';
+import {InputTaskMessage, WriteOutputTaskMessage} from '../messages/index';
+import '../../../infrastructure/reflection/index';
 import {ArtworkLocator} from '../../tickets/interface';
 
 @Injectable()

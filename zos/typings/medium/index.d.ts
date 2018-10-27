@@ -2,7 +2,7 @@ declare module 'medium'
 {
   import 'medium';
 
-  export interface Chan<T = any> {}
+  export interface Chan<T = any> extends Promise<T|CLOSED> {}
 
   export interface ChanBuffer {}
 
@@ -32,7 +32,7 @@ declare module 'medium'
   export function take<T = any>(ch: Chan<T>): Promise<T | CLOSED>;
 
   /** Immediately invokes (and returns) given async function. */
-  export function go( func: (...args: any[]) => void): Promise<void>;
+  export function go<T>( func: (...args: any[]) => Promise<T>): Promise<T>;
 
   /** Creates a promise that will resolve successfully after ms milliseconds. */
   export function sleep(ms: number): Promise<void>
@@ -69,6 +69,7 @@ declare module 'medium'
    * All non-winning actions will be canceled so that their data does not go missing.
   export function any(...ports) -> Promise -> [theResolvedValue, theSourceChannelOrPromise]
    */
+  export function any<T1 = any, P1 = T1>(...port: Alt<T1, P1>[]): Promise<[T1, Chan<T1|P1>|Promise<T1>]>;
   export function any<T1 = any, T2 = any, P1 = T1, P2 = T2>(port1: Alt<T1, P1>, port2: Alt<T2, P2>): Promise<[T1|T2, Chan<T1|T2|P1|P2>|Promise<T1|T2>]>;
   export function any<T1 = any, T2 = any, T3 = any, P1 = T1, P2 = T2, P3 = T3>(port1: Alt<T1, P1>, port2: Alt<T2, P2>, port3: Alt<T3, P3>): Promise<[T1|T2|T3, Chan<T1|T2|T3|P1|P2|P3>|Promise<T1|T2|T3>]>;
   export function any<T1 = any, T2 = any, T3 = any, T4 = any, P1 = T1, P2 = T2, P3 = T3, P4 = T4>(port1: Alt<T1, P1>, port2: Alt<T2, P2>, port3: Alt<T3, P3>, port4: Alt<T4, P4>): Promise<[T1|T2|T3|T4, Chan<T1|T2|T3|T4|P1|P2|P3|P4>|Promise<T1|T2|T3|T4>]>;

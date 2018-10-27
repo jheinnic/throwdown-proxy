@@ -98,9 +98,9 @@ const ecInst: elliptic.ec = new elliptic.ec('ed25519');
 
 const ellipticModelGenConfig: EllipticModelGenConfig = {
    outputRoot: '/Users/jheinnic/Git/throwdown-proxy/zos/myLotto/events/game138',
-   dirTree: digestIdentity.findAllBlocksPathNamesDepthFirst(),
-   pathIterOne: digestIdentity.findLeafDigestPathNames(),
-   pathIterTwo: digestIdentity.findLeafDigestPathNames(),
+   // dirTree: digestIdentity.findAllBlocksPathNamesDepthFirst(),
+   // pathIterOne: digestIdentity.findLeafDigestPathNames(),
+   // pathIterTwo: digestIdentity.findLeafDigestPathNames(),
    readAheadSize: 32,
    ecInst: ecInst,
    variants: [

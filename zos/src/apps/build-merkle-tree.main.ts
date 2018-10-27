@@ -1,27 +1,21 @@
 import LRU from 'lru-cache';
+import {randomAccessFile} from 'random-access-file';
+// @ts-ignore
+import {ec as EC} from 'elliptic';
 import {
-   BlockMappedDigestLocator, MerkleDigestLocator, MerkleTreeDescription
-} from '../infrastructure/merkle/locator';
-import {
+   BlockMappedDigestLocator, MerkleDigestLocator, MerkleTreeDescription,
    DepthFirstVisitMode, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory,
-   MerkleCalculator
-} from '../infrastructure/merkle';
+   MerkleCalculator, IDfsOrderBuilder, MerkleLocatorFactory
+} from '@jchptf/merkle';
 import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure/randomize/interface';
 import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources';
-// @ts-ignore
-import {ec} from 'elliptic';
 import * as crypto from 'crypto';
 import {Container, ContainerModule} from 'inversify';
-import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '../infrastructure/config';
+import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '@jchptf/config';
 import {configContainerModule} from './di';
 import {Deployment} from './config';
-// @ts-ignore
-import {randomAccessFile} from 'random-access-file';
 import * as path from 'path';
 import * as fs from 'fs';
-import {Stats} from 'fs';
-import {IDfsOrderBuilder} from '../infrastructure/merkle/interface';
-import {MerkleLocatorFactory} from '../infrastructure/merkle/merkle-locator-factory.class';
 
 const container: Container = new Container();
 container.load(
@@ -61,19 +55,17 @@ const isaacGenerator: IPseudoRandomSource =
    isaacGeneratorFactory.seedGenerator(
       crypto.randomBytes(8192)
    );
-const privateKeySource =
-   isaacGenerator.pseudoRandomBuffers(32);
-// const EC = ec;
-// const ecInst = new EC('ed25519');
+const privateKeySource: IterableIterator<Buffer> = isaacGenerator.pseudoRandomBuffers(32);
+const ecInst = new EC('ed25519');
 console.log(privateKeySource.next().value);
-// console.log(ecInst.keyFromPrivate(
-//    privateKeySource.next().value.hexSlice(0), 'hex'
-// ));
+console.log(ecInst.keyFromPrivate(
+   privateKeySource.next().value.hexSlice(0), 'hex'
+));
 
-fs.stat(deployment.localAccess.rootPath, (err: any, stats: Stats) => {
+fs.stat(deployment.localAccess.rootPath, (err: any, stats: fs.Stats) => {
    if (!!err) {
       console.error(err);
-   } else if (stats.isDirectory() === false) {
+   } else if (! stats.isDirectory()) {
       console.error(`No directory at ${deployment.localAccess.rootPath}!`);
       fs.mkdirSync(deployment.localAccess.rootPath, 700);
       console.log('Corrected...');
@@ -82,28 +74,32 @@ fs.stat(deployment.localAccess.rootPath, (err: any, stats: Stats) => {
    }
 });
 
-const ticketKeyPairPath = path.join(
+const ticketPrivateKeysDirPath = path.join(
    deployment.localAccess.rootPath,
-   deployment.dataSetPaths.ticketKeyPairs
+   deployment.dataSetPaths.ticketPrivateKeys
 );
-const ticketArtworkPath = path.join(
+const ticketPublicKeysDirPath = path.join(
+   deployment.localAccess.rootPath,
+   deployment.dataSetPaths.ticketPublicKeys
+);
+const ticketArtworkDirPath = path.join(
    deployment.localAccess.rootPath,
    deployment.dataSetPaths.ticketArtwork
 );
-// const privateKeyFile = randomAccessFile(path.join(
-//    ticketKeyPairPath, 'privateKeys.dat'));
-// const publicKeyFile = randomAccessFile(path.join(
-//    ticketKeyPairPath, 'publicKeys.dat'));
+const privateKeyFile = randomAccessFile(path.join(
+   ticketPrivateKeysDirPath, 'privateKeys.dat'));
+const publicKeyFile = randomAccessFile(path.join(
+   ticketPublicKeysDirPath, 'publicKeys.dat'));
 
-console.log(ticketKeyPairPath, ticketArtworkPath);
+console.log(privateKeyFile, publicKeyFile, ticketArtworkDirPath);
 
 const pathTokens: string[] = [];
 let currentDirectory: string;
-function formatDirectory(nextBlock: BlockMappedDigestLocator): string
+function formatDirectory(rootDir: string, nextBlock: BlockMappedDigestLocator): string
 {
    const level = nextBlock.blockLevel;
    pathTokens.splice(level, pathTokens.length, `${nextBlock.blockLevel}-${nextBlock.blockOffset}`);
-   currentDirectory = path.join(ticketKeyPairPath, ...pathTokens);
+   currentDirectory = path.join(rootDir, ...pathTokens);
 
    return currentDirectory;
 }
@@ -123,7 +119,11 @@ for (let nextElement of merkleCalculator.getDfsBlockOrder(
 )) {
    console.log('Inside Loop');
    // if (nextElement.nodeType !== MerkleNodeType.LEAF) {
-      const nextDirPath = formatDirectory(nextElement);
+      let nextDirPath = formatDirectory(ticketPrivateKeysDirPath, nextElement);
+      console.log('DirBuild: ', nextDirPath);
+      nextDirPath = formatDirectory(ticketPublicKeysDirPath, nextElement);
+      console.log('DirBuild: ', nextDirPath);
+      nextDirPath = formatDirectory(ticketArtworkDirPath, nextElement);
       console.log('DirBuild: ', nextDirPath);
       // fs.mkdir(nextDirPath, (onResult) => {
       //    console.log(onResult);

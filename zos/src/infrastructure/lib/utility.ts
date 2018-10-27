@@ -1,42 +1,19 @@
-import {Keys} from 'simplytyped';
+/*
+import {AnyFunc, Keys} from 'simplytyped';
+import {IMapTo} from '@jchptf/api';
 
-export interface Director<B>
-{
-   (builder: B): void;
-}
+export type SymbolEnum<N extends keyof S = keyof S, S extends any = any> = IMapTo<symbol, S, N>;
 
-export type MapTo<S, T> = { // } N extends keyof S = keyof S> = {
-   [K in keyof S]: (value: S[K]) => T
-}
+export type MixableConstructor<T extends any = object> = new (...args: any[]) => T;
 
-export type BagOf<T, N extends keyof any = keyof S, S = any> = {
-   [K in N]: T
-}
-
-export type SymbolEnum<N extends keyof any = keyof any> = BagOf<symbol, N>;
-
-export type MixableConstructor<T = object> = new (...args: any[]) => T;
-
-export interface Wild {
-   [x: string]: any
-}
-
-export type Mutable<T> = {
-   -readonly [P in keyof T]: T[P];
-}
-
-export interface SelfCall<S extends SelfCall<S> = SelfCall<S>>
-{
-   [K: string]: (value: any) => S;
-}
-
-export interface PropertyBag
-{
-   [K: string]: Exclude<object, () => void>
+export type Fluently<T> = {
+   [K in keyof T]: T[K] extends AnyFunc ? (...args: Parameters<T[K]>) => Fluently<T> : T[K]
 }
 
 export type IfExtends<T, B> = T extends B ? T : never;
+export type IfNotExtends<T, B> = T extends B ? never : T;
 
+export type Mutable<T> = { -readonly [P in keyof T]: T[P]; }
 export type MutablePartial<T> = { -readonly [P in keyof T]+?: T[P] };  // Remove readonly and add ?
 export type MutableRequired<T> = { -readonly [P in keyof T]-?: T[P] };  // Remove readonly and ?
 export type ReadonlyPartial<T> = { +readonly [P in keyof T]+?: T[P] };  // Add readonly and ?
@@ -119,4 +96,4 @@ export type KeysThatAreNot<T, C> = {
 export type StrictKeysThatAre<T, C> = Exclude<KeysThatAre<T, C>, KeysThatAreNot<T, C>>;
 
 export type OnlyIfAllKeysAre<T, C> = Keys<T> extends StrictKeysThatAre<T, C> ? T : never;
-
+*/

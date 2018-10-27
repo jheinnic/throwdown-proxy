@@ -1,4 +1,4 @@
-import {IMerkleCalculator} from '../../../infrastructure/merkle';
+import {IMerkleCalculator} from '../../infrastructure/merkle/index';
 import {Chan} from 'medium';
 import {IterableX as Iterable} from 'ix/iterable';
 

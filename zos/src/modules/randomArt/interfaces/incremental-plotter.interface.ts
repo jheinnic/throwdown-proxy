@@ -1,3 +1,3 @@
-import {PlottingProgress} from './plotting-progress.interface';
+import {IncrementalPlotProgress} from './incremental-plot-progress.interface';
 
-export type Plotter = IterableIterator<PlottingProgress>
+export type IncrementalPlotter = IterableIterator<IncrementalPlotProgress>

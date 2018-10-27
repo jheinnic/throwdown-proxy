@@ -1,8 +1,7 @@
-export * from './canvas-plotter.service';
-export * from './canvas-provider.service';
+export * from './canvas-calculator.service';
 export * from './canvas-writer.class';
-export * from './point-map.class';
-export * from './random-art-generator.service';
+export * from './plotting-partial-observer.class';
+export * from './point-mapping.class';
+// export * from './v2/random-art-generator.service';
 export * from './random-art-model.class';
-export * from './task-context.class';
-export * from './task-loader.class';
+export {new_new_picture, compute_pixel, eval, new_picture, old_picture, partial_eval, word_to_seed} from './genjs5';

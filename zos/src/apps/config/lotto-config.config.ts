@@ -1,11 +1,12 @@
 import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {EventSpecification} from './event-specification.config';
 import {SetupPolicy} from './setup-policy.config';
 import {Deployment} from './deployment.config';
 import '../../infrastructure/reflection';
+import {PlayAssets} from './play-assets.config';
 
 @configClass("eth.lotto")
 export class LottoConfig
@@ -26,7 +27,7 @@ export class LottoConfig
    public readonly eventSpec: EventSpecification = new EventSpecification();
 
    @configProp("playAssets")
-   @ValidationNested()
+   @ValidateNested()
    @Type(() => PlayAssets)
    public readonly playAssets: PlayAssets = new PlayAssets();
 }

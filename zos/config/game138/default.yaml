@@ -16,11 +16,12 @@ eth:
         prizeSerialNonce: minting/prizes/serial
         placementKeyPairs: minting/prizes/keyPair
         shufflePrizes: minting/prizes/shuffle
-        ticketKeyPairs: minting/tickets/keyPair
+        ticketPrivateKeys: minting/tickets/keyPair
+        ticketPublicKeys: minting/tickets/keyPair
         shuffleTickets: minting/tickets/shuffle
         ticketArtwork: minting/tickets/artwork
         ticketRandomWitness: event/reveals/random
-     keySource:
+      keySource:
         mnemonic: number ticket outer asthma wine define arctic butter tower settle answer weird
         key: xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3
         path: m/44'/60'/9'/138/2'
@@ -66,12 +67,14 @@ eth:
         generatedBits: 29
         entryCount: 380001
         batchIds: 5
-      mintTicketsPolicy:
+      ticketMintingPolicy:
         entropy:
           algorithm: devFake
           devFake:
             hexSeedBits: 987654321abcdef0
         curve: ed25519
+        seedGeneration: 0
+        paintGeneration: 0
       entropyDefaults:
         devFake:
           hexSeedBits: abcdef0123456789
@@ -148,23 +151,22 @@ eth:
     playAssets:
       ticketStyle: randomArt
       randomArt:
-        painting:
-          variant: firstTest
-          generation: 1
         renderingPolicies:
-          - name: firstTest
-            versions:
-              imageFieldPolicy: preview
-              modelSeedPolicy: 8from7_xy_midFwd
-              generation: 1
+          - name: firstDefault
+            imageFieldPolicy: smallSquare
+            modelSeedPolicy: 8from7_xy_midRvrs
         imageFieldPolicies:
-          - name: preview
-            pixelWidth: 80
-            pixelHeight: 80
-            scale: 1.0
+          - name: smallSquare
+            fullSize:
+              pixelWidth: 480
+              pixelHeight: 480
+            thumbnail:
+              pixelWidth: 80
+              pixelHeight: 80
+            unitScale: 1.0
             fitOrFill: square
         modelSeedPolicies:
-          - variantName: 8from7_xy_midFwd
+          - name: 8from7_xy_midFwd
             bitMode: get8From7
             prefixSelect: USE_X
             xRunsForward: true
@@ -174,7 +176,7 @@ eth:
             yFromBit: 32
             yToBit: 224
             useNewModel: false
-          - nameExtension: 8from7_yx_midRvrs
+          - name: 8from7_yx_midRvrs
             bitMode: get8From7
             prefixSelect: USE_Y
             xRunsForward: false
@@ -184,7 +186,7 @@ eth:
             yFromBit: 64
             yToBit: 192
             useNewModel: true
-          - nameExtension: 64toA_yRx_128bit
+          - name: 64toA_yRx_128bit
             bitMode: base64ToAscii
             prefixSelect: USE_Y
             xRunsForward: false
@@ -194,7 +196,7 @@ eth:
             yFromBit: 53
             yToBit: 188
             useNewModel: true
-          - nameExtension: mod160_xRy_72bit
+          - name: mod160_xRy_72bit
             bitMode: mod160
             prefixSelect: USE_X
             xRunsForward: true
@@ -204,7 +206,7 @@ eth:
             yFromBit: 129
             yToBit: 201
             useNewModel: false
-          - nameExtension: raw_24bit_xy
+          - name: raw_24bit_xy
             bitMode: raw
             prefixSelect: USE_X
             xRunsForward: true
@@ -214,7 +216,7 @@ eth:
             yFromBit: 2
             yToBit: 36
             useNewModel: true
-          - nameExtension: raw_208bit_Ryx
+          - name: raw_208bit_Ryx
             bitMode: raw
             prefixSelect: USE_Y
             xRunsForward: false

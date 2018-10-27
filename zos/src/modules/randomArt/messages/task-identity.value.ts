@@ -1,7 +1,9 @@
 export interface TaskIdentity
 {
-   readonly pathName: string;
-   readonly policyName: string;
-   readonly policyVersion: number;
+   readonly ticketPathName: string;
+   readonly renderPolicyName: string;
+   readonly keyFingerprint?: string;
+   readonly assetsConfigVersion: string;
 }
+
 

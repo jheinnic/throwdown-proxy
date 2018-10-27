@@ -1,6 +1,6 @@
-import {Director} from './index';
+import {IDirector} from '@jchptf/api';
 import * as util from "util";
-import {factoryMethod, getBuildDecorators} from '../merkle/temp';
+import {getBuilderDecorators} from './get-builder-decorators.function';
 
 export interface BuildFoo
 {
@@ -9,9 +9,10 @@ export interface BuildFoo
    two(param: number): this;
 }
 
-const builderDecorators = getBuildDecorators<BuildFoo>('bind-param-to-builder-foo-key');
+const builderDecorators = getBuilderDecorators<BuildFoo>('bind-param-to-builder-foo-key');
 const bindFooParam = builderDecorators.bindInputParam;
 const fluentlyBuilt = builderDecorators.decorateBuildable;
+const factoryMethod = builderDecorators.factoryMethod;
 
 @fluentlyBuilt
 export class Dook
@@ -36,13 +37,13 @@ export class Dook
    { }
 
    @factoryMethod()
-   public static create(director: Director<BuildFoo>): Dook
+   public static create(director: IDirector<BuildFoo>): Dook
    {
       throw director;
    }
 
    @factoryMethod()
-   public clone(director: Director<BuildFoo>): Dook
+   public clone(director: IDirector<BuildFoo>): Dook
    {
       throw director;
    }

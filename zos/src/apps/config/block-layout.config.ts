@@ -1,7 +1,7 @@
 import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {BlockLayoutElement} from './block-layout-element.config';
 import '../../infrastructure/reflection';
 

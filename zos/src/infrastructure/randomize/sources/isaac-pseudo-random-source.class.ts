@@ -2,8 +2,8 @@ import {inject} from 'inversify';
 import {BitOutputStream} from '@thi.ng/bitstream';
 
 import {IsaacCSPRNG} from './isaac-csprng.class';
-import {IPseudoRandomSource} from '../interface';
-import {RANDOMIZE_TYPES} from '../di';
+import {IPseudoRandomSource} from '../interface/index';
+import {RANDOMIZE_TYPES} from '../di/index';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 

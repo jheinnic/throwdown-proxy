@@ -1,6 +1,6 @@
 import {IsPositive} from 'class-validator';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import '../../infrastructure/reflection';
 
 @configClass()

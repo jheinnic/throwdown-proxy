@@ -5,7 +5,6 @@ export class EllipticPublicKeyModel
       public readonly nameExtension: string,
       public readonly prefixBits: Uint8Array,
       public readonly suffixBits: Uint8Array,
-      public readonly novel: boolean,
-      public readonly generation: number = 50)
+      public readonly novel: boolean)
    { }
 }

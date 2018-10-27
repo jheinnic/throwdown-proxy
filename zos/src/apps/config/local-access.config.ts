@@ -1,6 +1,6 @@
 import {IsOptional} from 'class-validator';
 
-import {configClass, configProp} from '../../infrastructure/config';
+import {configClass, configProp} from '@jchptf/config';
 import {IsDevelopmentOnly} from '../../infrastructure/validation/is-development-only.validator';
 import '../../infrastructure/reflection';
 

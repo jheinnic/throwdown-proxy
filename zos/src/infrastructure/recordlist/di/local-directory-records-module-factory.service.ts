@@ -1,9 +1,8 @@
 import {ContainerModule, injectable, interfaces, taggedConstraint} from 'inversify';
 import {RECORD_LIST_TYPES} from './types';
-import {RECORD_LIST_TAGS} from './tags';
 import {LocalFileRecordStore} from '../local-file-record-store.class';
-import {COMMON_TAGS} from '../../di/index';
 import Request = interfaces.Request;
+import {COMMON_TAGS} from '../../outbound/di';
 
 @injectable()
 export class LocalDirectoryRecordsModuleFactory {
@@ -12,7 +11,7 @@ export class LocalDirectoryRecordsModuleFactory {
          function localDirectoryRecordsModule(bind: interfaces.Bind) {
             bind(RECORD_LIST_TYPES.LocalDirectory).toConstantValue(localDirectory)
                .whenAnyAncestorMatches((request: Request): boolean => {
-                   return request.parentContext.container.taggedConstraint(COMMON_TAGS.VariantFor)(variantKey)(request);
+                   return taggedConstraint(COMMON_TAGS.VariantFor)(variantKey)(request.parentRequest);
                });
             bind(RECORD_LIST_TYPES.RecordList).to(LocalFileRecordStore)
                .inSingletonScope()

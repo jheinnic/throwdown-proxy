@@ -2,9 +2,9 @@ import {inject, injectable} from 'inversify';
 import LRU from 'lru-cache';
 import * as path from 'path';
 
-import {IMerkleCalculator, MERKLE_TYPES, BlockMappedDigestLocator, MerkleLayerLocator} from '../infrastructure/merkle';
+import '@jchptf/reflection';
+import {IMerkleCalculator, MERKLE_TYPES, BlockMappedDigestLocator, MerkleLayerLocator} from '@jchptf/merkle';
 import {APPLICATION_SERVICE_TYPES} from './di';
-import '../infrastructure/reflection';
 
 export interface TaskDescriptor
 {

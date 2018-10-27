@@ -1,7 +1,6 @@
-import {NamedElement} from '../../../../infrastructure/merkle';
 import {ec} from 'elliptic';
-import {configClass} from '../../../../infrastructure/config';
-import {NamedVariant} from './model-seed-policy.config';
+import {configClass} from '@jchptf/config';
+import {ModelSeedPolicy} from './model-seed-policy.config';
 
 @configClass()
 export class EllipticModelGenConfig
@@ -12,6 +11,6 @@ export class EllipticModelGenConfig
    readAheadSize: number;
    outputRoot: string;
    generation: number;
-   variants: NamedVariant[];
+   variants: ModelSeedPolicy[];
    ecInst: ec;
 }
