@@ -1,9 +1,9 @@
 import {Type} from 'class-transformer';
 import {ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {VaultAccess, KeySource, LocalAccess, DataSetPaths} from '.';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 
 @configClass('eth.lotto.deployment')
 export class Deployment

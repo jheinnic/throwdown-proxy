@@ -35,9 +35,9 @@
     "@thi.ng/errors" "^0.1.3"
     tslib "^1.9.3"
 
-"@jchptf/builders@^0.0.3":
-  version "0.0.3"
-  resolved "http://localhost:4873/@jchptf%2fbuilders/-/builders-0.0.3.tgz#fc6a78a42a793a7f049c38e40418213a63b38b64"
+"@jchptf/builders@^0.0.4":
+  version "0.0.4"
+  resolved "http://localhost:4873/@jchptf%2fbuilders/-/builders-0.0.4.tgz#9c9453859e636dbbfbf8c8999ee2b3034a22448b"
   dependencies:
     "@jchptf/api" "^0.0.21"
     simplytyped "^1.5.2"
@@ -52,9 +52,9 @@
     co-priority-queue "^1.0.3"
     tslib "^1.9.3"
 
-"@jchptf/config@^0.0.4":
-  version "0.0.4"
-  resolved "http://localhost:4873/@jchptf%2fconfig/-/config-0.0.4.tgz#5d30674ecf82951232bb469af36e7cc326de30f4"
+"@jchptf/config@^0.0.5":
+  version "0.0.5"
+  resolved "http://localhost:4873/@jchptf%2fconfig/-/config-0.0.5.tgz#6cc72e73cb990023edf4be5e32a31fdd584dcf2f"
   dependencies:
     "@jchptf/api" "^0.0.18"
     class-transformer "^0.1.10"
@@ -63,11 +63,11 @@
     config "^2.0.1"
     tslib "^1.9.3"
 
-"@jchptf/coroutines@^0.0.4":
-  version "0.0.4"
-  resolved "http://localhost:4873/@jchptf%2fcoroutines/-/coroutines-0.0.4.tgz#82ebe203cb8bba73564c68b16f7014cc9e65cba4"
+"@jchptf/coroutines@^0.0.14":
+  version "0.0.14"
+  resolved "http://localhost:4873/@jchptf%2fcoroutines/-/coroutines-0.0.14.tgz#b84757f06c69cdadc1a608868f56ff39713dde0d"
   dependencies:
-    "@jchptf/di-app-registry" "^0.0.10"
+    "@jchptf/di-app-registry" "^0.0.15"
     chan "^0.6.1"
     chanel "^2.2.0"
     co "^4.6.0"
@@ -75,12 +75,12 @@
     inversify "^5.0.1"
     tslib "^1.9.3"
 
-"@jchptf/di-app-registry@^0.0.10":
-  version "0.0.10"
-  resolved "http://localhost:4873/@jchptf%2fdi-app-registry/-/di-app-registry-0.0.10.tgz#a621ce0548430e77b5c49d43d0eb182dd807537a"
+"@jchptf/di-app-registry@^0.0.15":
+  version "0.0.15"
+  resolved "http://localhost:4873/@jchptf%2fdi-app-registry/-/di-app-registry-0.0.15.tgz#e80d4e31b4d74149ae735e6877baabc11a4a9b5e"
   dependencies:
     "@jchptf/api" "^0.0.18"
-    "@jchptf/config" "^0.0.4"
+    "@jchptf/config" "^0.0.5"
     "@loopback/metadata" "^1.0.0"
     "@thi.ng/dcons" "^1.1.11"
     "@thi.ng/paths" "^1.6.3"
@@ -90,12 +90,12 @@
     reflect-metadata "^0.1.12"
     tslib "^1.9.3"
 
-"@jchptf/merkle@^0.0.4":
-  version "0.0.4"
-  resolved "http://localhost:4873/@jchptf%2fmerkle/-/merkle-0.0.4.tgz#8196faadeb7d9343df2f122852e90a779c8ba90a"
+"@jchptf/merkle@^0.0.6":
+  version "0.0.6"
+  resolved "http://localhost:4873/@jchptf%2fmerkle/-/merkle-0.0.6.tgz#8ed93ecbc37f78c09c268d6b57fcaf55dca741e6"
   dependencies:
     "@jchptf/api" "^0.0.21"
-    "@jchptf/builders" "^0.0.3"
+    "@jchptf/builders" "^0.0.4"
     "@jchptf/reflection" "^0.0.2"
     binary-search "^1.3.4"
     inversify "^5.0.1"
@@ -180,6 +180,10 @@
 "@thi.ng/equiv@^0.1.11":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@thi.ng/equiv/-/equiv-0.1.11.tgz#cb6c18f23656ee3798230ad617fdc48f1a7dfac1"
+
+"@thi.ng/errors@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@thi.ng/errors/-/errors-0.1.11.tgz#f4f1177a1d44f549d76f5e4a1126d6cf7b89f426"
 
 "@thi.ng/errors@^0.1.3", "@thi.ng/errors@^0.1.9":
   version "0.1.9"
@@ -334,6 +338,12 @@
 "@types/tough-cookie@*":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.3.tgz#7f226d67d654ec9070e755f46daebf014628e9d9"
+
+"@types/uuid@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
+  dependencies:
+    "@types/node" "*"
 
 abbrev@1:
   version "1.1.1"
@@ -1076,6 +1086,12 @@ co-limiter@^1.0.3:
     co "^4.1.0"
     co-priority-queue "^1.0.1"
 
+co-lodash@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/co-lodash/-/co-lodash-0.1.0.tgz#5ae2dda64e070d934078c067d7a5104d9abc5b6e"
+  dependencies:
+    lodash "*"
+
 co-priority-queue@^1.0.1, co-priority-queue@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/co-priority-queue/-/co-priority-queue-1.0.3.tgz#b9646e00e84439fb15563d61b68bee2ba5169b4f"
@@ -1113,6 +1129,17 @@ co-sqlite3@^0.1.3:
     bluebird "^2.10.1"
     sqlite3 "^3.1.0"
 
+co-stream@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/co-stream/-/co-stream-0.3.2.tgz#1c7a70567d25c963a6b30fafce8cff1ef123a101"
+  dependencies:
+    co "^4.0.0"
+    co-lodash "^0.1.0"
+    duplexer "^0.1.1"
+    pause-stream "0.0.11"
+    split "^1.0.0"
+    through "^2.3.6"
+
 co-wait@0.0.0, co-wait@^0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/co-wait/-/co-wait-0.0.0.tgz#c22372032218edbf6ed915e433546c21e445628b"
@@ -1123,7 +1150,7 @@ co-write@^1.0.0:
   dependencies:
     stream-write "^1.0.0"
 
-co@*, co@^4.1.0, co@^4.6.0:
+co@*, co@^4.0.0, co@^4.1.0, co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
 
@@ -1672,6 +1699,10 @@ drbg.js@^1.0.1:
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
+
+duplexer@^0.1.1:
+  version "0.1.1"
+  resolved "http://registry.npmjs.org/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
 
 duplexify@^3.5.0:
   version "3.6.0"
@@ -2825,6 +2856,10 @@ lodash.throttle@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
 
+lodash@*, lodash@^4.17.5:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
 lodash@3.x:
   version "3.10.1"
   resolved "http://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
@@ -2832,10 +2867,6 @@ lodash@3.x:
 lodash@4.17.10, lodash@^4.13.1, lodash@^4.17.4:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
-
-lodash@^4.17.5:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 log-update@^1.0.2:
   version "1.0.2"
@@ -3455,6 +3486,12 @@ path-is-inside@^1.0.1:
 path-key@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/path-key/-/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
+
+pause-stream@0.0.11:
+  version "0.0.11"
+  resolved "http://registry.npmjs.org/pause-stream/-/pause-stream-0.0.11.tgz#fe5a34b0cbce12b5aa6a2b403ee2e73b602f1445"
+  dependencies:
+    through "~2.3"
 
 pbkdf2@^3.0.3, pbkdf2@^3.0.9:
   version "3.0.16"
@@ -4089,6 +4126,12 @@ speedometer@^1.0.0, speedometer@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/speedometer/-/speedometer-1.1.0.tgz#a30b13abda45687a1a76977012c060f2ac8a7934"
 
+split@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
+  dependencies:
+    through "2"
+
 sprintf-js@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.1.1.tgz#36be78320afe5801f6cea3ee78b6e5aab940ea0c"
@@ -4306,6 +4349,10 @@ throttle@^1.0.3:
     readable-stream ">= 0.3.0"
     stream-parser ">= 0.0.2"
 
+through@2, through@^2.3.6, through@~2.3:
+  version "2.3.8"
+  resolved "http://registry.npmjs.org/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+
 thunky@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-0.1.0.tgz#bf30146824e2b6e67b0f2d7a4ac8beb26908684e"
@@ -4484,13 +4531,13 @@ typescript@^2.1.4:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
 
-typescript@^2.7.2:
-  version "2.7.2"
-  resolved "http://registry.npmjs.org/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
-
 typescript@^3.1.1:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.3.tgz#01b70247a6d3c2467f70c45795ef5ea18ce191d5"
+
+typescript@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.1.4.tgz#c74ef7b3c2da65beff548b903022cb8c3cd997ed"
 
 typings-core@^2.3.3:
   version "2.3.3"

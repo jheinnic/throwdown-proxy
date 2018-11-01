@@ -10,7 +10,7 @@ declare namespace Chan {
    export interface Chan<V = any> {
       (cb: Callback<V>): void;
       (value: V): Thunk<V>;
-      (cbOrValue: Callback<V>|V): void|Thunk<V>;
+      (cbOrValue: Callback<V>|V): void|Thunk<void>;
 
       close(): void;
    }

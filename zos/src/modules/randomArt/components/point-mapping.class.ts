@@ -1,17 +1,18 @@
 import {IterableX, range} from 'ix/iterable';
+import {startWith} from 'ix/iterable/pipe/startWith';
 import {flatMap} from 'ix/iterable/pipe/flatmap';
 import {memoize} from 'ix/iterable/pipe/memoize';
-import {take} from 'ix/iterable/pipe/take';
-import {skip} from 'ix/iterable/pipe/skip';
+import {buffer} from 'ix/iterable/pipe/buffer';
 import {tap} from 'ix/iterable/pipe/tap';
 import {map} from 'ix/iterable/pipe/map';
+import {Canvas} from 'canvas';
 import ndarray from 'ndarray';
 
 import {
-   IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, MappedPoint
+   IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, MappedPoint,
+   IncrementalPlotProgress
 } from '../interfaces';
 import {PlottingPartialObserver} from './plotting-partial-observer.class';
-import {Canvas} from 'canvas';
 
 export class PointMapping implements IncrementalPlotterFactory
 {
@@ -26,7 +27,6 @@ export class PointMapping implements IncrementalPlotterFactory
       private readonly sliceSize: number)
    {
       const ndDataArray = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
-      // console.log(dataArray);
 
       this.mappedPoints = range(0, xCount / pixelMulti)
          .pipe(
@@ -43,56 +43,29 @@ export class PointMapping implements IncrementalPlotterFactory
             ),
             memoize(xCount * yCount / pixelMulti / pixelMulti)
          );
-
-      // this.mappedPoints.forEach((projection) => {
-      //    console.log(projection);
-      // });
-      // tap(
-      //    { next: function() {
-      //       console.log('AB');
-      //    }}
-      // )
    }
 
-   public createMapIter(callback: IncrementalPlotObserver): IterableX<MappedPoint>
+   public create(callback: IncrementalPlotObserver): IncrementalPlotter
    {
       console.log('Calling create IncrementalPlotter');
-      const tapObserver = new PlottingPartialObserver(callback);
-      return this.mappedPoints.pipe(
-         tap(tapObserver)
-      );
-   }
+      var retVal: IncrementalPlotter =
+         this.mappedPoints.pipe(
+            tap(
+               new PlottingPartialObserver(callback)),
+            buffer(this.sliceSize),
+            startWith([] as MappedPoint[]),
+            map<MappedPoint[], IncrementalPlotProgress>(
+               (_value: MappedPoint[], ii: number) => (
+                  {
+                     plotter: retVal,
+                     done: ii,
+                     remaining: this.sliceCount - ii,
+                     total: this.sliceCount
+                  }
+               )
+            ));
 
-   public* create(callback: IncrementalPlotObserver): IncrementalPlotter
-   {
-      const pointIter = this.createMapIter(callback);
-      const termIndex = this.sliceCount;
-
-      for (let ii = 1; ii <= termIndex; ii++) {
-         const _work = [ ...pointIter.pipe(
-            skip(this.sliceSize * (ii - 1)),
-            take(this.sliceSize)
-         )];
-         // console.log(_work);
-         if (_work.length > 0) {
-            console.log({
-               done: ii,
-               remaining: termIndex - ii,
-               total: termIndex
-            });
-            yield {
-               done: ii,
-               remaining: termIndex - ii,
-               total: termIndex
-            };
-         }
-      }
-
-      // yield {
-      //    done: termIndex,
-      //    remaining: 0,
-      //    total: termIndex
-      // };
+      return retVal;
    }
 
    public isCompatible(_canvas: Canvas): boolean

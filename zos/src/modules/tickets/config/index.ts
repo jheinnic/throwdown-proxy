@@ -1,5 +1,5 @@
 export * from './bit-strategy-kind.enum';
-export * from './image-field-policy.config';
+export * from './image-style-policy.config';
 export * from './model-seed-policy.config';
 export * from './pixel-dimensions.config';
 export * from './prefix-select-style.enum';

@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../../infrastructure/lib';
+import {SymbolEnum} from '@jchptf/api';
 
 type RandomArtVariantTags =
    'InputTask' | 'CanvasAvailable' | 'LifecycleStop' |

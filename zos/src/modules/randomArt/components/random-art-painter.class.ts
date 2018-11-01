@@ -1,29 +1,34 @@
 import {injectable} from 'inversify';
-import {CanvasDimensions, InputTaskMessage, PaintEngineTaskMessage} from '../messages/index';
-import {IncrementalPlotterFactory} from '../interfaces/index';
 import {IConcurrentWorkFactory} from '@jchptf/coroutines';
-import {chan, Chan} from 'chan';
+import {CanvasDimensions, AssignCanvasRequest, PaintEngineTaskMessage} from '../messages';
+import {IncrementalPlotterFactory} from '../interfaces';
+import chan from 'chan';
 import {co} from 'co';
 import {Canvas} from 'canvas';
 import * as canvas from 'canvas';
 
 @injectable
 export class RandomArtPainter {
-   private canvasInputQueues: Chan<InputTaskMessage>[];
+   private inputTaskChannel: Chan.Chan<AssignCanvasRequest>;
+
+   private availableCanvasChannel: Chan.Chan<Canvas>;
 
    private plotGenerator: IncrementalPlotterFactory;
 
    private concurrentWorkFactory: IConcurrentWorkFactory;
 
    constructor(
+      inputTaskChannel: Chan.Chan<AssignCanvasRequest>,
+      availableCanvasChannel: Chan.Chan<Canvas>,
       plotGenerator: IncrementalPlotterFactory,
       concurrentWorkFactory: IConcurrentWorkFactory,
    ) {
+      this.inputTaskChannel = inputTaskChannel;
       this.plotGenerator = plotGenerator;
       this.concurrentWorkFactory = concurrentWorkFactory;
    }
 
-   public acceptWork(inputMessage: InputTaskMessage): Promise<any> {
+   public acceptWork(inputMessage: AssignCanvasRequest): Promise<any> {
       const inputQueues = this.canvasInputQueues;
       return co(function * () {
          const selected = yield chan.select(...inputQueues);
@@ -33,7 +38,7 @@ export class RandomArtPainter {
 
    public registerCanvas(availableCanvas: Canvas ) {
       if (this.plotGenerator.isCompatible(availableCanvas) {
-         const newChan: Chan<InputTaskMessage> = chan<InputTaskMessage>();
+         const newChan: Chan<AssignCanvasRequest> = chan<AssignCanvasRequest>();
          co(function* () {
 
          })

@@ -1,9 +1,10 @@
+import {Name, Path, UUID} from '../../../infrastructure/validation';
+
 export interface TaskIdentity
 {
-   readonly ticketPathName: string;
-   readonly renderPolicyName: string;
-   readonly keyFingerprint?: string;
-   readonly assetsConfigVersion: string;
+   readonly locatorPath: Path;
+   readonly renderPolicy: Name;
+   readonly configVersion: UUID;
 }
 
 

@@ -1,4 +1,4 @@
-import {CanvasDimensions, InputTaskMessage} from '../../messages/index';
+import {CanvasDimensions, AssignCanvasRequest} from '../../messages/index';
 import {IncrementalPlotterFactory} from '../../interfaces/index';
 import {Chan} from "chan";
 
@@ -8,7 +8,7 @@ class ImagePolicySupport<P extends string, R extends string> {
       public readonly role: R,
       public readonly dimensions: CanvasDimensions,
       readonly plotFactory: IncrementalPlotterFactory,
-      readonly inputQueue: Chan<InputTaskMessage>
+      readonly inputQueue: Chan<AssignCanvasRequest>
    ) { }
 
 

@@ -7,7 +7,7 @@ import {Chan} from 'medium';
 import {Canvas} from 'canvas';
 
 import {IRandomArtGenerator} from '../interfaces/index';
-import {InputTaskMessage, WriteOutputTaskMessage} from '../messages/index';
+import {AssignCanvasRequest, WriteOutputTaskMessage} from '../messages/index';
 import '../../../infrastructure/reflection/index';
 import {ArtworkLocator} from '../../tickets/interface';
 
@@ -18,7 +18,7 @@ export class RandomArtGenerator implements IRandomArtGenerator
 
    constructor(
       private readonly canvasProvider: AsyncIterable<Canvas>,
-      private readonly taskLoader: IterableIterator<InputTaskMessage>,
+      private readonly taskLoader: IterableIterator<AssignCanvasRequest>,
       private readonly canvasWriter: AsyncSink<WriteOutputTaskMessage>,
       private readonly stopSignal: Chan<void>)
    {

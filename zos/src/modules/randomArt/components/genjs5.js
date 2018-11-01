@@ -4686,7 +4686,7 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                     return __(oc$Pervasives$[1], ['pick_exp: empty list']);
                   });
                 const n$167 = _(oc$List$[0], [lst$160]);
-                console.log(Math.pow(1.0 - p$159, n$167));
+                // console.log(Math.pow(1.0 - p$159, n$167));
                 const q$168 = _(rnd_float$106, [0.0, 1.0 - Math.pow(1.0 - p$159, n$167)]);
                 return __(pck$161, [p$159, q$168, lst$160]);
               });
@@ -7712,7 +7712,7 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                   }), 1, n$111
                 ]);
                 const k$113 = _(oc$Util$[5], [-15, 15]);
-                console.log(p$112, k$113);
+                // console.log(p$112, k$113);
                 const h$114 = 0.1;
                 return __(
                   oc$Util$[9],
@@ -8020,6 +8020,34 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                 return _(cmpl$83, [rna$81])[0];
               });
 
+             var random_picture$90 =
+               _f(function (str$91) {
+                  var match$141 = _(oc$Util$[8], [ str$91 ]);
+                  var x$94 = $(0.0);
+                  var y$95 = $(0.0);
+                  var t$96 = $(-1.0);
+                  _(oc$Util$[36], [ match$141[0] ]);
+                  var scalars$97 = _(oc$Gene$[9], [ 10 ]);
+                  var foci$98 = _(oc$Gene$[8], [ _(oc$Util$[5], [ 5, 20 ]) ]);
+                  var palette$99 =
+                    $(_(oc$Util$[20], [ -1.0, -1.0, -1.0 ]),
+                      $(_(oc$Util$[20], [ 1.0, 0.0, 1.0 ]), _(oc$Gene$[10], [ _(oc$Util$[5], [ 2, 10 ]) ])));
+                  var env$100 = $(foci$98, scalars$97, palette$99);
+                  _(oc$Util$[36], [ match$141[1] ]);
+                  var n$101 = _(oc$Util$[5], [ 120, 200 ]);
+                  var ops$102 = _(oc$Op$[11], [ oc$Op$[3] ]);
+                  var seed$103 = $(_(oc$Gene$[5], [ x$94, y$95 ]), $(_(oc$Gene$[4], [ t$96 ]), 0));
+                  var g$104 =
+                    _(oc$Gene$[14], [ _(oc$Pervasives$[21], [ _(oc$Gene$[12], [ ops$102, seed$103, $(3, 0), n$101 ]), seed$103 ]) ]);
+                  var dna$105 = _(compile$80, [ g$104, env$100 ]);
+                  return _f(function (t$27$106, x$27$107, y$27$108) {
+                     x$94[0] = x$27$107;
+                     y$95[0] = y$27$108;
+                     t$96[0] = t$27$106;
+                     return dna$105;
+                  });
+               });
+
             const random_picture$90 =
               _f(function (str$91) {
                 const match$141 = _(oc$Util$[8], [str$91]);
@@ -8035,9 +8063,11 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                     _(oc$Util$[20], [-1.0, -1.0, -1.0]),
                     $(_(oc$Util$[20], [1.0, 0.0, 1.0]), _(oc$Gene$[10], [_(oc$Util$[5], [2, 10])])));
                 const env$100 = $(foci$98, scalars$97, palette$99);
+                /*
                 console.log('Foci:', util.inspect(foci$98, 20, 20, 20));
                 console.log('Scalars:', util.inspect(scalars$97, 20, 20, 20));
                 console.log('Palette:', util.inspect(palette$99, 20, 20, 20));
+                */
                 _(oc$Util$[36], [match$141[1]]);
                 const n$101 = _(oc$Util$[5], [120, 200]);
                 const ops$102 = _(oc$Op$[11], [oc$Op$[3]]);
@@ -8060,12 +8090,12 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
 
             const random_picture$2 =
               _f(function (na$91, na$92) {
-                const r$122 = new oc$$ms(na$92);
-                const r$132 = new oc$$ms(na$91);
+                const r$122 = new oc$$ms(na$91);
+                const r$132 = new oc$$ms(na$92);
                 const match$141 = [r$122, r$132];
                 // const match$141 = _(oc$Util$[8], [str$91]);
-                console.log('Family Prefix:', na$92, match$141[0]);
-                console.log('Given Suffix:', na$91, match$141[1]);
+                console.log('Given Prefix:', na$91); // , match$141[0]);
+                console.log('Family Suffix:', na$92); // , match$141[1]);
                 const x$94 = $(0.0);
                 const y$95 = $(0.0);
                 const t$96 = $(-1.0);
@@ -8076,11 +8106,13 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                   _(oc$Util$[20], [-1.0, -1.0, -1.0]),
                   $(_(oc$Util$[20], [1.0, 0.0, 1.0]), _(oc$Gene$[10], [_(oc$Util$[5], [2, 10])])));
                 const env$100 = $(foci$98, scalars$97, palette$99);
+                /*
                 console.log('Orig Foci (5-20):', util.inspect(foci$98, 25, 25, 25));
                 console.log('Orig Scalars:', util.inspect(scalars$97, 10, 10, 10));
                 console.log('Orig Palette (1,0,1; 2-10):', util.inspect(palette$99, 10, 10, 10));
+                */
                 _(oc$Util$[36], [match$141[1]]);
-                const n$101 = _(oc$Util$[5], [140, 200]);
+                const n$101 = _(oc$Util$[5], [120, 200]);
                 const ops$102 = _(oc$Op$[11], [oc$Op$[3]]);
                 const seed$103 = $(_(oc$Gene$[5], [x$94, y$95]), $(_(oc$Gene$[4], [t$96]), 0));
                 const g$104 = _(
@@ -8088,8 +8120,10 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                     _(oc$Pervasives$[21], [_(oc$Gene$[12], [ops$102, seed$103, $(3, 0), n$101]), seed$103])
                   ]);
                 const dna$105 = _(compile$80, [g$104, env$100]);
+                /*
                 console.log('Orig N (140-200):', n$101);
                 console.log('Orig Ops:', util.inspect(ops$102, 180, 180, 180));
+                */
                 // console.log('Seed:', util.inspect(seed$103, 200, 200, 200));
                 // console.log('G:', util.inspect(g$104, 200, 200, 200));
                 // console.log('DNA:', util.inspect(dna$105, 200, 200, 200));
@@ -8103,12 +8137,12 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
 
             const random_picture$3 =
               _f(function (na$91, na$92) {
-                const r$122 = new oc$$ms(na$92);
-                const r$132 = new oc$$ms(na$91);
+                const r$122 = new oc$$ms(na$91);
+                const r$132 = new oc$$ms(na$92);
                 const match$141 = [r$122, r$132];
                 // const match$141 = _(oc$Util$[8], [str$91]);
-                console.log('Family Prefix:', na$92, match$141[0]);
-                console.log('Given Suffix:', na$91, match$141[1]);
+                console.log('Given Prefix:', na$91, match$141[1]);
+                console.log('Family Suffix:', na$92, match$141[0]);
                 const x$94 = $(0.0);
                 const y$95 = $(0.0);
                 const t$96 = $(-1.0);
@@ -8119,9 +8153,11 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                   _(oc$Util$[20], [-1.0, -1.0, -1.0]),
                   $(_(oc$Util$[20], [1.0, 1.0, 1.0]), _(oc$Gene$[10], [_(oc$Util$[5], [2, 10])])));
                 const env$100 = $(foci$98, scalars$97, palette$99);
+                /*
                 console.log('Novel Foci (4-25):', util.inspect(foci$98, 25, 25, 25));
                 console.log('Novel Scalars:', util.inspect(scalars$97, 12, 12, 12));
                 console.log('Novel Palette (1,1,1; 2-10):', util.inspect(palette$99, 10, 10, 10));
+                */
                 _(oc$Util$[36], [match$141[1]]);
                 const n$101 = _(oc$Util$[5], [120, 180]);
                 const ops$102 = _(oc$Op$[11], [oc$Op$[3]]);
@@ -8131,8 +8167,10 @@ window.XMLHttpRequest = function() { return new ActiveXObject('Microsoft.XMLHTTP
                     _(oc$Pervasives$[21], [_(oc$Gene$[12], [ops$102, seed$103, $(3, 0), n$101]), seed$103])
                   ]);
                 const dna$105 = _(compile$80, [g$104, env$100]);
+                /*
                 console.log('Novel N (120-180):', n$101);
                 console.log('Novel Ops:', util.inspect(ops$102, 180, 180, 180));
+                */
                 // console.log('Seed:', util.inspect(seed$103, 200, 200, 200));
                 // console.log('G:', util.inspect(g$104, 200, 200, 200));
                 // console.log('DNA:', util.inspect(dna$105, 200, 200, 200));

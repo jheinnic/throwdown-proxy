@@ -1,5 +1,5 @@
-import {OperatorFunction} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {OperatorFunction} from 'ix/interfaces';
+import {map} from 'ix/iterable/pipe/map';
 import {Canvas} from 'canvas';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -42,9 +42,6 @@ export class CanvasWriter
 
    private ensurePath(filePath: string): string
    {
-      if (filePath.startsWith('/', 0)) {
-         throw Error('Derived file path, ' + filePath + ', may not be absolute');
-      }
       if (filePath.length <= 0) {
          throw Error('Derived file path may not be blank');
       }
@@ -54,14 +51,22 @@ export class CanvasWriter
       if (!filePath.endsWith('.png')) {
          filePath = filePath + '.png';
       }
-      if (fs.existsSync(filePath)) {
-         throw Error('Derived file path, ' + filePath + ', already exists');
+
+      if (! filePath.startsWith(this.outputDir)) {
+         if (filePath.startsWith('/', 0)) {
+            throw Error('Target file path, ' + filePath + ', may not be absolute');
+         }
+
+         filePath = path.join(this.outputDir, filePath);
       }
-      filePath = path.join(this.outputDir, filePath);
+
+      if (fs.existsSync(filePath)) {
+         throw Error('Target file path, ' + filePath + ', already exists');
+      }
 
       const dirPath = path.dirname(filePath);
       if (!dirPath.startsWith(this.outputDir)) {
-         throw Error('Derived file path, ' + filePath + ', may not traverse above root with ..');
+         throw Error('Target file path, ' + filePath + ', may not traverse above root with ..');
       }
       CanvasWriter.ensureDirectory(dirPath);
 

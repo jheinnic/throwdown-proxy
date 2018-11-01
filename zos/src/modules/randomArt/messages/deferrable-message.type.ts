@@ -1,6 +1,6 @@
 import {CanvasAvailableMessage} from './canvas-available-message.value';
-import {InputTaskMessage} from './input-task-message.value';
+import {AssignCanvasRequest} from './assign-canvas-request.value';
 import {MessageType} from './message-type.enum';
 
-export type DeferrableMessage = CanvasAvailableMessage | InputTaskMessage;
-export type DeferrableMessageType = MessageType.INPUT_TASK | MessageType.CANVAS_AVAILABLE;
+export type DeferrableMessage = CanvasAvailableMessage | AssignCanvasRequest;
+export type DeferrableMessageType = MessageType.ASSIGN_CANVAS_REQUEST | MessageType.RELEASE_CANVAS_REQUEST;

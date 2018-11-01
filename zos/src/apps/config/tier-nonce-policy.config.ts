@@ -1,7 +1,7 @@
 import {IsInt, IsPositive} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/config';
-import '../../infrastructure/reflection';
+import {configClass, configProp} from '@jchptf/di-app-registry';
+import '@jchptf/reflection';
 
 @configClass("eth.lotto.setupPolicy.tierNoncePolicy") // "eth.lotto.eventSpec")
 export class TierNoncePolicy {

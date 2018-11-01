@@ -1,9 +1,9 @@
 import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {BlockLayoutElement} from './block-layout-element.config';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 
 @configClass('eth.lotto.setupPolicy.blockLayout')
 export class BlockLayout {

@@ -1,7 +1,8 @@
 import {MaxLength, MinLength} from 'class-validator';
 
 import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
+import {Name} from '../../../infrastructure/validation/name.type';
 
 @configClass()
 export class RenderingPolicy
@@ -9,15 +10,15 @@ export class RenderingPolicy
    @configProp('name')
    @MinLength(3)
    @MaxLength(128)
-   public readonly name: string = '';
+   public readonly name: Name = '' as Name;
 
    @configProp('imageFieldPolicy')
    @MinLength(3)
    @MaxLength(128)
-   public readonly imageFieldPolicyName: string = '';
+   public readonly imageStylePolicyName: Name = '' as Name;
 
    @configProp('modelSeedPolicy')
    @MinLength(3)
    @MaxLength(128)
-   public readonly modelSeedPolicyName: string = '';
+   public readonly modelSeedPolicyName: Name = '' as Name;
 }

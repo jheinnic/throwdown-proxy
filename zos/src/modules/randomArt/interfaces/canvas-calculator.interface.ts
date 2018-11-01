@@ -1,8 +1,6 @@
 import {IncrementalPlotterFactory} from './incremental-plotter-factory.interface';
-import {ConcreteFactoryService} from '@jchptf/di-app-registry';
 
 export interface ICanvasCalculator
-   extends ConcreteFactoryService<'create', IncrementalPlotterFactory, [number, number, number, ('fit' | 'fill' | 'square')?, number?, number?]>
 {
    /**
     *

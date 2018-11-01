@@ -9,8 +9,12 @@ import Unbind = interfaces.Unbind;
 import Context = interfaces.Context;
 import LRU from 'lru-cache';
 
-import {Director} from '../../../infrastructure/lib';
+import {IDirector} from '@jchptf/api';
 import Factory = interfaces.Factory;
+import {
+   MerkleTreeDescription, IBfsOrderBuilder, BlockMappedDigestLocator,
+   IMerkleCalculator, MERKLE_TYPES, MerkleCalculator, MerkleDigestLocator, MerkleLocatorFactory
+} from '@jchptf/merkle';
 
 interface BuilderWrapper extends IMerkleTreeModuleOptionsBuilder, Instance<ContainerModuleCallBack> {
 }
@@ -22,11 +26,11 @@ export class RandomArtDiAdapterFactory
    }
 
    public extendCallback(
-      director: Director<interfaces.BindingWhenOnSyntax<any>>,
-      treeDescription: MerkleTreeDescription): (callback: ContainerModuleCallBack, director?: Director<IMerkleTreeModuleOptionsBuilder>) => ContainerModuleCallBack
+      director: IDirector<interfaces.BindingWhenOnSyntax<any>>,
+      treeDescription: MerkleTreeDescription): (callback: ContainerModuleCallBack, director?: IDirector<IMerkleTreeModuleOptionsBuilder>) => ContainerModuleCallBack
    {
       const builderEngine = new Builder<ContainerModuleCallBack, BuilderWrapper>();
-      builderEngine.chain("withTraversals", (director: Director<IBfsOrderBuilder>) => {
+      builderEngine.chain("withTraversals", (director: IDirector<IBfsOrderBuilder>) => {
          return (callback: ContainerModuleCallBack) => {
             return (bind: Bind, unbind: Unbind, isBound: IsBound,
                rebind: Rebind) => {

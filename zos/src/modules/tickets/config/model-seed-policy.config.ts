@@ -1,9 +1,10 @@
 import {Allow, MaxLength, Min, MinLength} from 'class-validator';
 
 import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {BitStrategyKind} from './bit-strategy-kind.enum';
 import {PrefixSelectStyle} from './prefix-select-style.enum';
+import {Name} from '../../../infrastructure/validation';
 
 @configClass()
 export class ModelSeedPolicy
@@ -11,7 +12,7 @@ export class ModelSeedPolicy
    @configProp('name')
    @MinLength(3)
    @MaxLength(128)
-   public readonly name: string = '';
+   public readonly name: Name = '' as Name;
 
    @configProp('bitMode')
    @Allow()

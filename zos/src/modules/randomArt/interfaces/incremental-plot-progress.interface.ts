@@ -1,5 +1,8 @@
+import {IncrementalPlotter} from './incremental-plotter.interface';
+
 export interface IncrementalPlotProgress {
-   done: number;
-   remaining: number;
-   total: number;
+   readonly plotter: IncrementalPlotter;
+   readonly done: number;
+   readonly remaining: number;
+   readonly total: number;
 }

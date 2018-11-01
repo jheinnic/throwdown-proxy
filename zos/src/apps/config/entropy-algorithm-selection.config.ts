@@ -2,13 +2,13 @@ import {IsIn, ValidateIf} from 'class-validator';
 import {Type} from 'class-transformer';
 
 import {IsDevelopmentOnly} from '../../infrastructure/validation';
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {DevFakeOptions} from './dev-fake-options.config';
 import {HmacDrbgOptions} from './hmac-drbg-options.config';
 import {IsaacOptions} from './isaac-options.config';
 import {NodeCryptoOptions} from './node-crypto-options.config';
 import {RandomOrgOptions} from './random-org-options.config';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 
 @configClass()
 export class EntropyAlgorithmSelection

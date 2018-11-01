@@ -1,7 +1,7 @@
 import {IsOptional, Min} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/config';
-import '../../infrastructure/reflection';
+import {configClass, configProp} from '@jchptf/di-app-registry';
+import '@jchptf/reflection';
 
 @configClass('eth.lotto.deployment.entropy.hmacDrbg')
 export class HmacDrbgOptions

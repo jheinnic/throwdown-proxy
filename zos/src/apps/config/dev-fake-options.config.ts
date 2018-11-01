@@ -1,8 +1,8 @@
 import {IsHexadecimal, IsOptional, MaxLength, MinLength} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {IsDevelopmentOnly} from '../../infrastructure/validation';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 
 @configClass('eth.lotto.deployment.entropy.devFake')
 export class DevFakeOptions {

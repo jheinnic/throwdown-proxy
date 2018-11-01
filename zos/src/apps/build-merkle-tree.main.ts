@@ -11,7 +11,7 @@ import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure
 import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources';
 import * as crypto from 'crypto';
 import {Container, ContainerModule} from 'inversify';
-import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '@jchptf/config';
+import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '@jchptf/di-app-registry';
 import {configContainerModule} from './di';
 import {Deployment} from './config';
 import * as path from 'path';

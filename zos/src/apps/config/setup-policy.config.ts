@@ -1,14 +1,14 @@
 import {IsIn, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {ShufflePolicy} from './shuffle-policy.config';
 import {ProofSeed} from './proof-seed.config';
 import {BlockLayout} from './block-layout.config';
 import {TierNoncePolicy} from './tier-nonce-policy.config';
 import {SerialNoncePolicy} from './serial-nonce-policy.config';
 import {EntropyAlgorithms} from './entropy-algorithms.config';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 import {TicketMintingPolicy} from './ticket-minting-policy.config';
 
 @configClass('eth.lotto.setupPolicy')

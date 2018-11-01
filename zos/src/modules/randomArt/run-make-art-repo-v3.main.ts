@@ -1,7 +1,6 @@
 import {Container, ContainerModule} from 'inversify';
 import {Command} from 'commander';
 import {buffers, chan, Chan} from 'medium';
-import {Queue} from 'co-priority-queue';
 import {take} from 'ix/iterable/pipe/take';
 import {mapAsync} from 'ix/iterable/mapasync';
 import {ec as EC} from 'elliptic';
@@ -18,7 +17,6 @@ import {
    IMerkleLocatorFactory, ITopoOrderBuilder, MerkleCalculator, MerkleDigestLocator, MerkleTreeDescription,
    NamedPath, MerkleLocatorFactory
 } from '@jchptf/merkle';
-import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '@jchptf/config';
 import {ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines';
 
 import {
@@ -40,8 +38,8 @@ import {Deployment} from '../../apps/config';
 import {mkdirWithCallback} from '../../infrastructure/recordlist/mkdir-with-callback.function';
 import {CanvasDimensions} from './messages';
 import {ITaskContentAdapter} from './interfaces';
-import {ArtworkLocator, ITicketPoolAssembly} from '../tickets/interface';
-import {TicketPoolAssembly} from '../tickets/ticket-pool-assembly.service';
+import {ArtworkLocator, ITicketPoolStagingArea} from '../tickets/interface';
+import {TicketPoolAssembly} from '../tickets/ticket-pool-staging-area.service';
 import {PointMapping, RandomArtGenerator, RandomArtModel} from './components';
 import {BitStrategyKind, PrefixSelectStyle} from '../tickets/config';
 import GenKeyPairOptions = ec.GenKeyPairOptions;
@@ -61,7 +59,7 @@ const imageDimensions: CanvasDimensions = {
    pixelWidth: 480,
    pixelHeight: 480,
    fitOrFill: 'square',
-   scaleFactor: 1.0
+   unitScale: 1.0
    // sampleResolution: true
 };
 
@@ -105,7 +103,7 @@ console.log(ecInst.genKeyPair({
    entropyEnc: 'binary'
 }));
 
-const ticketPoolAssembly: ITicketPoolAssembly =
+const ticketPoolAssembly: ITicketPoolStagingArea =
    new TicketPoolAssembly(merkleCalculator, digestIdentity, deploymentCfg);
 
 const ellipticModelGenConfig: EllipticModelGenConfig = {

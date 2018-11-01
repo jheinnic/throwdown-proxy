@@ -56,7 +56,7 @@ console.log('Deployment Config: ', util.inspect(deploymentCfg, true, 5, true));
 const imageDimensions: CanvasDimensions[] = [{
    pixelWidth: 480,
    pixelHeight: 480,
-   scaleFactor: 1.0,
+   unitScale: 1.0,
    fitOrFill: 'square'
 }];
 

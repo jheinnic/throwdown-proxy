@@ -8,10 +8,10 @@ import {limiter} from '@jchptf/co-limit';
 
 import {IncrementalPlotterFactory, IRandomArtGenerator} from '../../interfaces/index';
 import {
-   CanvasAvailableMessage, CanvasDimensions, DeferrableMessage, InputTaskMessage, LifecycleStopMessage,
+   CanvasAvailableMessage, CanvasDimensions, DeferrableMessage, AssignCanvasRequest, LifecycleStopMessage,
    PaintEngineTaskMessage, WriteOutputTaskMessage
 } from '../../messages/index';
-import {ImageFieldPolicy, RandomArtPlayAssets, RenderingPolicy} from '../../../tickets/config/index';
+import {ImageStylePolicy, RandomArtPlayAssets, RenderingPolicy} from '../../../tickets/config/index';
 import {QueueFactory} from '../../../infrastructure/coroutines/di';
 import '../../../../infrastructure/reflection/index';
 import {Chan} from 'chan';
@@ -37,7 +37,7 @@ export class RandomArtGenerator<P extends string, R extends string> implements I
    private startNewTaskMonitor: () => Promise<void>;
 
    constructor(
-      private readonly taskLoader: Chan<InputTaskMessage<P, R>>,
+      private readonly taskLoader: Chan<AssignCanvasRequest<P, R>>,
       private readonly canvasReturn: Queue<CanvasAvailableMessage>,
       private readonly stopSignal: Queue<LifecycleStopMessage>,
       private readonly deferredQueueFactory: QueueFactory<DeferrableMessage>,
@@ -108,7 +108,7 @@ export class RandomArtGenerator<P extends string, R extends string> implements I
                yield metadata.supports.deferredQueue.next();
             const match = metadata.supports.find((value) => {
                if (this.pendingTasks.has(value.name)) {
-                  const pendingTaskQueue: InputTaskMessage[] =
+                  const pendingTaskQueue: AssignCanvasRequest[] =
                      this.pendingTasks.get(value.name);
                   if (pendingTaskQueue.length > 0) {
                      // TODO: Pop input Queue
@@ -127,8 +127,8 @@ export class RandomArtGenerator<P extends string, R extends string> implements I
    private* monitorNewTaskQueue(): IterableIterator<unknown>
    {
       while(! this.stopRequested) {
-         const newTask: InputTaskMessage<P, R> = yield this.taskLoader.next();
-         const renderPolicyName: P = newTask.taskIdentity.renderPolicyName;
+         const newTask: AssignCanvasRequest<P, R> = yield this.taskLoader.next();
+         const renderPolicyName: P = newTask.taskIdentity.renderPolicy;
          const renderRoleName: R = newTask.taskIdentity.renderRoleName;
          const supportKey = ImagePolicySupport.toString(renderPolicyName, renderRoleName);
          const supportObj = this.supportByPolicyAndRole.get(supportKey);
@@ -137,7 +137,7 @@ export class RandomArtGenerator<P extends string, R extends string> implements I
             // Supports references are kept in descending priority order.
             const match = metadata.supports.find((value) => {
                if (this.pendingTasks.has(value.name)) {
-                  const pendingTaskQueue: InputTaskMessage[] =
+                  const pendingTaskQueue: AssignCanvasRequest[] =
                      this.pendingTasks.get(value.name);
                   if (pendingTaskQueue.length > 0) {
                      // TODO: Pop input Queue
@@ -195,7 +195,7 @@ class ImagePolicySupport<P extends string, R extends string> {
       public readonly role: R,
       public readonly dimensions: CanvasDimensions,
       readonly plotFactory: IncrementalPlotterFactory,
-      readonly inputQueue: Chan<InputTaskMessage>
+      readonly inputQueue: Chan<AssignCanvasRequest>
    ) { }
 
 

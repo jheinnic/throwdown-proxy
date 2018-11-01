@@ -1,18 +1,22 @@
 import {Type} from 'class-transformer';
-import {ValidateNested} from 'class-validator';
+import {IsUUID, ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '../../../infrastructure/config';
-import {ArrayKeysAreUnique} from '../../../infrastructure/validation';
-import {ImageFieldPolicy, ModelSeedPolicy, RenderingPolicy} from '.';
-import '../../../infrastructure/reflection';
+import '@jchptf/reflection';
+import {configClass, configProp} from '@jchptf/di-app-registry';
+import {ArrayKeysAreUnique, UUID} from '../../../infrastructure/validation';
+import {ImageStylePolicy, ModelSeedPolicy, RenderingPolicy} from '.';
 
 @configClass('eth.lotto.playAssets.randomArt')
 export class RandomArtPlayAssets
 {
+   @configProp('configVersion')
+   @IsUUID()
+   public readonly configVersion: UUID = '' as UUID;
+
    @configProp('imagePolicies')
    @ValidateNested()
-   @ArrayKeysAreUnique((policy: ImageFieldPolicy) => policy.name)
-   public readonly imagePolicies: ReadonlyArray<ImageFieldPolicy> = [];
+   @ArrayKeysAreUnique((policy: ImageStylePolicy) => policy.name)
+   public readonly imagePolicies: ReadonlyArray<ImageStylePolicy> = [];
 
    @configProp('seedPolicies')
    @ValidateNested()

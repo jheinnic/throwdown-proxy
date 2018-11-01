@@ -1,6 +1,6 @@
 export interface ModelSeed
 {
-   readonly prefixBits: Uint8Array;
-   readonly suffixBits: Uint8Array;
+   readonly prefixBits: Uint8ClampedArray;
+   readonly suffixBits: Uint8ClampedArray;
    readonly novel: boolean;
 }

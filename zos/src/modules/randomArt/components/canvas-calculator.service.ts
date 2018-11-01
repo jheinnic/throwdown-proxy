@@ -6,11 +6,9 @@ import {memoize} from 'ix/iterable/pipe/memoize';
 import {map} from 'ix/iterable/pipe/map';
 import ndarray from 'ndarray';
 import math from 'mathjs';
-import * as util from 'util';
 
 import {MappedPoint, ICanvasCalculator, IncrementalPlotterFactory} from '../interfaces';
 import {PointMapping} from './point-mapping.class';
-import * as fs from 'fs';
 
 @injectable()
 export class CanvasCalculator implements ICanvasCalculator

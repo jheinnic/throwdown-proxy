@@ -1,7 +1,7 @@
 import {IsInt, IsPositive, Max, Min} from 'class-validator';
 
-import {configProp} from '@jchptf/config';
-import '../../infrastructure/reflection';
+import {configProp} from '@jchptf/di-app-registry';
+import '@jchptf/reflection';
 
 export class BlockLayoutElement {
    @configProp("fieldSize")

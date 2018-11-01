@@ -1,8 +1,8 @@
 import {IsIn, Min, ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/config';
+import {configClass, configProp} from '@jchptf/di-app-registry';
 import {EntropyAlgorithmSelection} from './entropy-algorithm-selection.config';
-import '../../infrastructure/reflection';
+import '@jchptf/reflection';
 
 @configClass('eth.lotto.setupPolicy.ticketMintingPolicy')
 export class TicketMintingPolicy {
