@@ -25,6 +25,7 @@
     "medium": "^1.0.2",
     "promisify": "^0.0.3",
     "read": "^1.0.7",
+    "roundrobin": "^1.0.3",
     "rxjs": "^6.3.3",
     "scrypt": "^6.0.3",
     "transducers-js": "^0.4.174"

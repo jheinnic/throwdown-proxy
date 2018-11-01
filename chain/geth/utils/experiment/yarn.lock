@@ -934,6 +934,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+roundrobin@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/roundrobin/-/roundrobin-1.0.3.tgz#5be419bce3b0129ef379aaa406318cfc57281506"
+
 rxjs@^6.3.3:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"

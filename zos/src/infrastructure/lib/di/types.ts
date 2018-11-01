@@ -1,8 +1,8 @@
 import {SymbolEnum} from '@jchptf/api';
 
-type LibDiTypes = 'AutoIterate' | 'RxjsScheduler';
+type LibTypes = 'AutoIterate' | 'RxjsScheduler';
 
-export const LIB_DI_TYPES: SymbolEnum<LibDiTypes> = {
-   AutoIterate: Symbol["for"]('AutoIterate'),
-   RxjsScheduler: Symbol["for"]('RxjsScheduler')
-};
+export const LIB_DI_TYPES: SymbolEnum<LibTypes> = {
+   AutoIterate: Symbol.for('AutoIterate'),
+   RxjsScheduler: Symbol.for('RxjsScheduler')
+}
