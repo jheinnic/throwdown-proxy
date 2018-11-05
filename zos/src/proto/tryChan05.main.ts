@@ -62,6 +62,12 @@ function seedModel (name: Name, xFromBit = 63, xToBit = 189, yFromBit = 63, yToB
    return modelSeedPolicy;
 }
 
+// addTrigram(12, 140, 32, 128);
+// addRawMapped(12, 108, 32, 104);
+addTrigram(12, 172, 32, 128);
+// addRawMapped(12, 132, 32, 104);
+
+/*
 addTrigram(12, 76, 32, 96);
 addTrigram(12, 76, 32, 160);
 addTrigram(12, 220, 32, 96);
@@ -76,9 +82,10 @@ addEightFromEleven(12, 78, 32, 98);
 addEightFromEleven(12, 78, 32, 164);
 addEightFromEleven(12, 243, 32, 98);
 addEightFromEleven(12, 243, 32, 164);
+*/
 
 setTimeout(function() {
-   const dir = '/Users/jheinnic//Documents/randomArt3/pkFixture6';
+   const dir = '/Users/jheinnic//Documents/randomArt3/pkFixture7';
    const workFactory = new ConcurrentWorkFactory();
    const autoIterate = new AutoIterate(asyncScheduler, workFactory);
 
@@ -86,7 +93,7 @@ setTimeout(function() {
       .split(/\n/);
 
    const chanSrc: Chan.Chan<string> =
-      workFactory.createSourceLoader(keyUuids[Symbol.iterator](), 4, 2);
+      workFactory.createSourceLoader(keyUuids[Symbol.iterator](), 4, 4);
    const chanRdr: Chan.Chan<[string, string, Buffer, Buffer]> =
       chan(2);
    const chanSeed: Chan.Chan<[string, string, ModelSeed]> =
@@ -101,9 +108,9 @@ setTimeout(function() {
       chan(8);
 
    const canvasArray: Canvas[] = [
-      new Canvas(300, 300, "image"),
-      new Canvas(300, 300, "image"),
-      new Canvas(300, 300, "image")
+      new Canvas(896, 896, "image"),
+      new Canvas(896, 896, "image"),
+      new Canvas(896, 896, "image")
    ];
    canvasQueue.push(canvasArray[0], 0);
    canvasQueue.push(canvasArray[1], 0);
@@ -130,7 +137,7 @@ setTimeout(function() {
 // const srcToRdr: WrappableCoRoutineGenerator<[string, string, Buffer, Buffer], [string]> =
 //    srcToRdrGen;
 
-   autoIterate.service(chanSrc, srcToRdrGen, chanRdr, 3);
+   autoIterate.service(chanSrc, srcToRdrGen, chanRdr, 2);
 
    function* rdrToSeedGen(rdr: [string, string, Buffer, Buffer])
    {
@@ -144,7 +151,7 @@ setTimeout(function() {
 
          let ii = iiByName.get(strategy.name);
          if (ii === undefined) {
-            ii = 1;
+            ii = 5;
          }
          retVal.push([`${rdr[0]}_${ii}`, strategyDir, seedModel]);
          iiByName.set(strategy.name, ++ii);
@@ -153,7 +160,7 @@ setTimeout(function() {
       return retVal;
    }
 
-   autoIterate.serviceMany(chanRdr, rdrToSeedGen, chanSeed, 3);
+   autoIterate.serviceMany(chanRdr, rdrToSeedGen, chanSeed, 2);
 
 // co(function* () {
 //    while (true) {
@@ -164,7 +171,7 @@ setTimeout(function() {
 
    const canvasCalculator: ICanvasCalculator = new CanvasCalculator();
    const mapPoints: IncrementalPlotterFactory =
-      canvasCalculator.create(2000, 300, 300, 'square');
+      canvasCalculator.create(100352, 896, 896, 'square');
 
    function* seedToPlotterGen(seed: [string, string, ModelSeed])
    {
@@ -174,7 +181,7 @@ setTimeout(function() {
       return [seed[0], seed[1], canvas, incrPlotter];
    }
 
-   autoIterate.service(chanSeed, seedToPlotterGen, chanPlotter, 3);
+   autoIterate.service(chanSeed, seedToPlotterGen, chanPlotter, 2);
 
    const newPlotQueue = new Queue<IncrementalPlotter>();
    const plotterToTask: Map<IncrementalPlotter, [string, string, Canvas]> =

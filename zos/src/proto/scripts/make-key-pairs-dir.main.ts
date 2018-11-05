@@ -10,7 +10,7 @@ var program = new Command();
 program
    .version("0.0.1")
    .usage("[options] <directory> <file>")
-   .arguments("<file>")
+   .arguments("<directory> <file>")
    .option("-c, --curve <curve>", "Elliptic curve.  Default: ed25519", /^ed25519$/)
    .option("-n, --number <n>", "How many keys to create.  Default: 10", parseInt)
    .option("-i, --isaac <comma-separated number list>", "Use ISAAC with specified seed for deterministic"
