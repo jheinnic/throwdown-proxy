@@ -3,7 +3,7 @@ import {Type} from 'class-transformer';
 
 import {configClass, configProp} from '@jchptf/di-app-registry';
 import {EventSpecification} from './event-specification.config';
-import {SetupPolicy} from './setup-policy.config';
+import {PrizeMintingPolicy} from './prize-minting-policy.config';
 import {Deployment} from './deployment.config';
 import '@jchptf/reflection';
 import {PlayAssets} from './play-assets.config';
@@ -18,8 +18,8 @@ export class LottoConfig
 
    @configProp("setupPolicy")
    @ValidateNested()
-   @Type(() => SetupPolicy)
-   public readonly setupPolicy: SetupPolicy = new SetupPolicy();
+   @Type(() => PrizeMintingPolicy)
+   public readonly setupPolicy: PrizeMintingPolicy = new PrizeMintingPolicy();
 
    @configProp("eventSpec")
    @ValidateNested()

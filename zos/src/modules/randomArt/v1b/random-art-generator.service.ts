@@ -6,10 +6,10 @@ import {Injectable} from '@angular/core';
 import {Chan} from 'medium';
 import {Canvas} from 'canvas';
 
-import {IRandomArtGenerator} from '../interfaces/index';
+import {IRandomArtGenerator} from '../interface/index';
 import {AssignCanvasRequest, WriteOutputTaskMessage} from '../messages/index';
 import '../../../infrastructure/reflection/index';
-import {ArtworkLocator} from '../../tickets/interface';
+import {TicketArtworkLocator} from '../../tickets/interface';
 
 @Injectable()
 export class RandomArtGenerator implements IRandomArtGenerator
@@ -92,10 +92,10 @@ export class RandomArtGenerator implements IRandomArtGenerator
    }
 }
 
-function * manageOnePaintProcess(subject: ArtworkLocator, readLimitter, paintLimitter, writeLimitter) {
+function * manageOnePaintProcess(subject: TicketArtworkLocator, readLimitter, paintLimitter, writeLimitter) {
 
 }
 
-function * loadSeededModel(subject: ArtworkLocator) {
+function * loadSeededModel(subject: TicketArtworkLocator) {
    subject.publicKeyPath
 }

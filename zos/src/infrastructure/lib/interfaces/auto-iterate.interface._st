@@ -1,0 +1,16 @@
+import {Transducer} from 'transducers-js';
+import {SubscriptionLike} from 'rxjs';
+import {AsyncSink} from 'ix';
+import {Chan} from 'medium';
+
+export interface IAutoIterate {
+   run<T>(source: Iterable<T>, sink: AsyncSink<T>, delay?: number): SubscriptionLike;
+
+   cycle<T>(source: Iterable<T>, sink: AsyncSink<T>, delay?: number): SubscriptionLike;
+
+   unwind<T>(master: AsyncSink<Iterable<T>>, sink: AsyncSink<T>, delay?: number): SubscriptionLike
+
+   service<I, O>(source: Chan<any, I>, xducer: Transducer<I, O>, sink: Chan<O, any>, concurrency?: number): void;
+
+   serviceMany<I, O>(source: Chan<any, I>, xducer: Transducer<I, O[]>, sink: Chan<O, any>, concurrency?: number): void;
+}

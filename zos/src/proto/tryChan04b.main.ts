@@ -5,7 +5,7 @@ import {ConcurrentWorkFactory} from '@jchptf/coroutines';
 import {ModelSeed} from '../modules/randomArt/messages';
 import Queue from 'co-priority-queue';
 import {Canvas} from 'canvas';
-import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interfaces';
+import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interface';
 import {AutoIterate} from '../infrastructure/lib';
 import {asyncScheduler} from 'rxjs';
 import * as util from 'util';

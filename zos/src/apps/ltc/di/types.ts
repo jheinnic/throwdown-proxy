@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../../infrastructure/lib';
+import {SymbolEnum} from '@jchptf/api';
 
 type LtcWorkerTypes = 'CreateTicketPoolTaskDef' | 'CreateTicketPoolWorker'
 export const LTC_WORKER_TYPES: SymbolEnum<LtcWorkerTypes> = {

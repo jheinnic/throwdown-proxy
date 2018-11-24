@@ -2,9 +2,10 @@ import {interfaces} from 'inversify';
 import Context = interfaces.Context;
 import Bind = interfaces.Bind;
 
-import {CONFIG_TYPES, ConfigLoader} from '../../infrastructure/config';
-import {Deployment, EventSpecification, PlayAssets, SetupPolicy} from '../config';
+import {Deployment, EventSpecification, PlayAssets, PrizeMintingPolicy} from '../config';
 import {APP_CONFIG_TYPES} from './types';
+import {ConfigLoader} from '../../../node_modules/@jchptf/di-app-registry/dist/config-loader.service';
+import {DI_TYPES, IConfigLoader} from '@jchptf/di-app-registry';
 
 
 export function configContainerModule(bind: Bind): void
@@ -12,8 +13,8 @@ export function configContainerModule(bind: Bind): void
    bind(APP_CONFIG_TYPES.Deployment)
       .toDynamicValue(
          (context: Context) => {
-            const configLoader: ConfigLoader =
-               context.container.get(CONFIG_TYPES.ConfigLoader)
+            const configLoader: IConfigLoader =
+               context.container.get(DI_TYPES.ConfigLoader)
 
             return configLoader.getConfig(Deployment)
          }
@@ -24,7 +25,7 @@ export function configContainerModule(bind: Bind): void
       .toDynamicValue(
          (context: Context) => {
             const configLoader: ConfigLoader =
-               context.container.get(CONFIG_TYPES.ConfigLoader)
+               context.container.get(DI_TYPES.ConfigLoader)
 
             return configLoader.getConfig(EventSpecification)
          }
@@ -35,9 +36,9 @@ export function configContainerModule(bind: Bind): void
       .toDynamicValue(
          (context: Context) => {
             const configLoader: ConfigLoader =
-               context.container.get(CONFIG_TYPES.ConfigLoader)
+               context.container.get(DI_TYPES.ConfigLoader)
 
-            return configLoader.getConfig(SetupPolicy)
+            return configLoader.getConfig(PrizeMintingPolicy)
          }
       )
       .inSingletonScope();
@@ -46,7 +47,7 @@ export function configContainerModule(bind: Bind): void
       .toDynamicValue(
          (context: Context) => {
             const configLoader: ConfigLoader =
-               context.container.get(CONFIG_TYPES.ConfigLoader)
+               context.container.get(DI_TYPES.ConfigLoader)
 
             return configLoader.getConfig(PlayAssets)
          }

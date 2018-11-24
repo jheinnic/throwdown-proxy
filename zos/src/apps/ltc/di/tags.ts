@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../../infrastructure/lib';
+import {SymbolEnum} from '@jchptf/api';
 
 type LtcWorkerVariants = 'CreateTicketPool' | 'AcquireTicketPoolEntropy'
 

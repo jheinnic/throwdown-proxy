@@ -6,7 +6,7 @@ import * as util from 'util';
 // import {IEnable} from '@jchptf/api';
 import {limiter} from '@jchptf/co-limit';
 
-import {IncrementalPlotterFactory, IRandomArtGenerator} from '../../interfaces/index';
+import {IncrementalPlotterFactory, IRandomArtGenerator} from '../../interface/index';
 import {
    CanvasAvailableMessage, CanvasDimensions, DeferrableMessage, AssignCanvasRequest, LifecycleStopMessage,
    PaintEngineTaskMessage, WriteOutputTaskMessage

@@ -6,7 +6,7 @@ import Queue from 'co-priority-queue';
 
 import {ConcurrentWorkFactory} from '@jchptf/coroutines';
 import {AutoIterate} from '../infrastructure/lib';
-import {asGenerator} from '../infrastructure/lib/interfaces/sink-like.type';
+import {asGenerator} from '../infrastructure/lib/interfaces/sink-like.type._st';
 
 const workFactory = new ConcurrentWorkFactory();
 const autoIter = new AutoIterate(asyncScheduler, workFactory);

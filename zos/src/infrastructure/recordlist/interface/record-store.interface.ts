@@ -1,9 +1,6 @@
-import {IRecordShuffleBuilder} from './record-shuffle-builder.interface';
+import {IShufflePlanBuilder} from './record-shuffle-builder.interface';
 import {IRewritePlanBuilder} from './rewrite-plan-builder.interface';
 
-class IShufflePlanBuilder
-{
-}
 
 export interface IRecordStore {
    write(index: number, data: Buffer): Promise<void>;

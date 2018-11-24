@@ -1,0 +1,24 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../predist"
+    },
+    "include": [
+        "./**/*.ts",
+        "../src/**/*.ts",
+        "../typings/**/*.d.ts"
+    ],
+    "exclude": [
+        "../dist",
+        "../build",
+        "../node_modules",
+        "../contracts/**/*",
+        "../migrations/**/*",
+        "../mypool/**/*",
+        "../orig/**/*",
+        "../src/toys/**/*.ts",
+        "../src/infrastructure/lib/SHA256Compress.ts",
+        "../src/infrastructure/outbound/**/*.ts",
+        "../src/modules/randomArt/components/v2"
+    ]
+}

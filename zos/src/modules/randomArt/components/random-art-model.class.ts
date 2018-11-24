@@ -2,7 +2,7 @@ import {Canvas} from 'canvas';
 import * as fs from 'fs';
 import {new_new_picture, new_picture, compute_pixel} from './genjs5';
 
-import {IncrementalPlotObserver} from '../interfaces';
+import {IncrementalPlotObserver} from '../interface';
 import {ModelSeed} from '../messages';
 
 export class RandomArtModel implements IncrementalPlotObserver

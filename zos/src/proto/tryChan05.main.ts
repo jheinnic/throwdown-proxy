@@ -5,7 +5,7 @@ import {ConcurrentWorkFactory} from '@jchptf/coroutines';
 import {ModelSeed} from '../modules/randomArt/messages';
 import Queue from 'co-priority-queue';
 import {Canvas} from 'canvas';
-import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interfaces';
+import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interface';
 import {AutoIterate} from '../infrastructure/lib';
 import {asyncScheduler} from 'rxjs';
 import * as util from 'util';
@@ -265,17 +265,30 @@ setTimeout(function() {
                'Canvas recycling coroutine has exited on an error!  No new painting will begin:', err);
          }
       );
-
-   function logSeedData(seedFile: string, seedModel: ModelSeed)
-   {
-      const preBuf = Buffer.from(seedModel.prefixBits);
-      const sufBuf = Buffer.from(seedModel.suffixBits);
-      const inspected = util.inspect(seedModel, true, 10, false);
-      const preAscii = preBuf.asciiSlice(0);
-      const sufAscii = sufBuf.asciiSlice(0);
-      fs.appendFileSync(
-         seedFile,
-         `${preAscii} ${sufAscii}\n${preAscii}\n${sufAscii}\n${preBuf.hexSlice(0)}\n${sufBuf.hexSlice(
-            0)}\n${inspected}\n`);
-   }
 }, 10000);
+
+function logSeedData(seedFile: string, seedModel: Promise<ModelSeed>|ModelSeed)
+{
+   Promise.resolve(seedModel)
+      .then(
+         (seedModel: ModelSeed): void => {
+            const preBuf = Buffer.from(seedModel.prefixBits.buffer);
+            const sufBuf = Buffer.from(seedModel.suffixBits.buffer);
+            const inspected = util.inspect(seedModel, true, 10, false);
+            const preAscii = preBuf.toString('ascii');
+            const sufAscii = sufBuf.toString('ascii');
+
+            fs.appendFile(
+               seedFile,
+               `${preAscii} ${sufAscii}\n${preAscii}\n${sufAscii}\n${preBuf.toString(
+                  'hex')}\n${sufBuf.toString(
+                  'hex')}\n${inspected}\n`,
+               function (err: NodeJS.ErrnoException) {
+                  if (!!err) {
+                     console.error(`Failed to create or append model seed log file, ${seedFile}:`, err);
+                  }
+               }
+            );
+         }
+      ).catch(console.error.bind(console));
+}

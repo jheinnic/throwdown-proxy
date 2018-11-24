@@ -1,6 +1,6 @@
 import {IDirector} from '@jchptf/api';
 import * as util from "util";
-import {getBuilderDecorators} from './get-builder-decorators.function';
+import {getBuilderDecorators} from '@jchptf/builders';
 
 export interface BuildFoo
 {

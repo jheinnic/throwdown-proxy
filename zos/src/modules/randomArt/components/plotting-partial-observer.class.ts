@@ -2,7 +2,7 @@ import {CompletionObserver, ErrorObserver, NextObserver} from 'ix/observer';
 
 import {
    CANVAS_X_COORD, CANVAS_Y_COORD, IncrementalPlotObserver, MappedPoint, MODEL_X_COORD, MODEL_Y_COORD
-} from '../interfaces';
+} from '../interface';
 
 export class PlottingPartialObserver implements NextObserver<MappedPoint>,
                                                 ErrorObserver<MappedPoint>,

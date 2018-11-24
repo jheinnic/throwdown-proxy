@@ -19,7 +19,7 @@ export * from './prize-tier.config';
 export * from './proof-seed.config';
 export * from './random-org-options.config';
 export * from './serial-nonce-policy.config';
-export * from './setup-policy.config';
+export * from './prize-minting-policy.config';
 export * from './shuffle-policy.config';
 export * from './target-variant.config';
 export * from './ticket-minting-policy.config';

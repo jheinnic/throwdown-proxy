@@ -25,8 +25,11 @@ eth:
         mnemonic: number ticket outer asthma wine define arctic butter tower settle answer weird
         key: xprvA3YzySLTBTCvfPiLeA4PuT3XETYhiL7Rkb3XT7z7JZAabgJXfArVWTUYhB4Tccbj43W9f9m7iXs6HZBfcWa4voeQ3wrvUQ3YtNVvFcvXRd3
         path: m/44'/60'/9'/138/2'
-    setupPolicy:
-      randomSource: nodeCrypto
+      keypairStore:
+    prizeMintingPolicy:
+      entropySource:
+        algorithm: nodeCrypto
+        nodeCrypto:
       secureStore: localFiles
       blockLayout:
         gameId:
@@ -67,14 +70,6 @@ eth:
         generatedBits: 29
         entryCount: 380001
         batchIds: 5
-      ticketMintingPolicy:
-        entropy:
-          algorithm: devFake
-          devFake:
-            hexSeedBits: 987654321abcdef0
-        curve: ed25519
-        seedGeneration: 0
-        paintGeneration: 0
       entropyDefaults:
         devFake:
           hexSeedBits: abcdef0123456789
@@ -87,6 +82,14 @@ eth:
           seedBits: 8192
         nodeCrypto:
         randomOrg:
+    ticketMintingPolicy:
+      entropy:
+        algorithm: devFake
+        devFake:
+          hexSeedBits: 987654321abcdef0
+      keyPairStore: localFiles
+      keyUuidDirectoryBits: [9, 9, 7, 7]
+      curve: ed25519
     eventSpec:
       sponsorId: 9
       gameId: 138

@@ -13,29 +13,29 @@ import {
 } from '../modules/randomArt/index';
 
 const modelSeedOne: ModelSeed = {
-   prefixBits: Uint8Array.of(33, 37, 96, 61, 94, 125),
-   suffixBits: Uint8Array.of(53, 126, 63, 58, 40, 64),
+   prefixBits: Uint8ClampedArray.of(33, 37, 96, 61, 94, 125),
+   suffixBits: Uint8ClampedArray.of(53, 126, 63, 58, 40, 64),
    novel: false
 };
 const modelSeedTwo: ModelSeed = {
-   prefixBits: Uint8Array.of(33, 37, 3, 61, 94, 125),
-   suffixBits: Uint8Array.of(53, 126, 63, 9, 40, 64),
+   prefixBits: Uint8ClampedArray.of(33, 37, 3, 61, 94, 125),
+   suffixBits: Uint8ClampedArray.of(53, 126, 63, 9, 40, 64),
    novel: false
 };
 const modelSeedThree: ModelSeed = {
-   prefixBits: Uint8Array.of(24, 10, 173, 30, 130, 4),
-   suffixBits: Uint8Array.of(31, 17, 190, 2, 210, 28),
+   prefixBits: Uint8ClampedArray.of(24, 10, 173, 30, 130, 4),
+   suffixBits: Uint8ClampedArray.of(31, 17, 190, 2, 210, 28),
    novel: false
 };
 const modelSeedFour: ModelSeed = {
-   prefixBits: Uint8Array.of(65, 82, 88, 73, 80, 68),
-   suffixBits: Uint8Array.of(105, 113, 99, 120, 102, 118),
+   prefixBits: Uint8ClampedArray.of(65, 82, 88, 73, 80, 68),
+   suffixBits: Uint8ClampedArray.of(105, 113, 99, 120, 102, 118),
    novel: false
 
 };
 const modelSeedFive: ModelSeed = {
-   prefixBits: Uint8Array.of(105, 80, 120, 68, 118, 65),
-   suffixBits: Uint8Array.of(73, 102, 88, 99, 65, 82, 113),
+   prefixBits: Uint8ClampedArray.of(105, 80, 120, 68, 118, 65),
+   suffixBits: Uint8ClampedArray.of(73, 102, 88, 99, 65, 82, 113),
    novel: false
 };
 

@@ -1,5 +1,5 @@
 import {CanvasDimensions, AssignCanvasRequest} from '../../messages/index';
-import {IncrementalPlotterFactory} from '../../interfaces/index';
+import {IncrementalPlotterFactory} from '../../interface/index';
 import {Chan} from "chan";
 
 class ImagePolicySupport<P extends string, R extends string> {

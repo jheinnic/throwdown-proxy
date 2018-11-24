@@ -1,4 +1,4 @@
-import {ArtworkLocator, KeyPairLocator} from '../locators/index';
+import {TicketArtworkLocator, KeyPairLocator} from '../locators/index';
 
 /**
  * Every ticket in a pool under construction has a placeholder node in a conceptual merkle
@@ -30,9 +30,9 @@ export interface ITicketPoolStagingArea {
 
    findAllKeyPairs(leftToRight?: boolean): IterableIterator<KeyPairLocator>;
 
-   findAllArtwork(renderStyle: string): IterableIterator<ArtworkLocator>;
+   findAllArtwork(renderStyle: string): IterableIterator<TicketArtworkLocator>;
 
-   findArtwork(renderStyle: string, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<ArtworkLocator>;
+   findArtwork(renderStyle: string, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<TicketArtworkLocator>;
 
    /*
    TODO

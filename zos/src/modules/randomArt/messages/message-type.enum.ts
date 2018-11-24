@@ -1,12 +1,14 @@
 export enum MessageType {
-   RELEASE_CANVAS_REQUEST = "ReleaseCanvasRequest",
-   CANVAS_RELEASED_REPLY = "CanvasReleasedReply",
+   RENDER_AND_STORE_REQUEST = "RenderAndStoreRequest",
+   RENDER_AND_STORE_REPLY = "RenderAndStoreReply",
+   CANVAS_RELEASED_EVENT = "CanvasReleasedEvent",
    ASSIGN_CANVAS_REQUEST = "AssignCanvasRequest",
    CANVAS_ASSIGNED_REPLY = "CanvasAssignedReply",
+   CANVAS_ASSIGNED_EVENT = "CanvasAssignedEvent",
    SHUTDOWN_REQUEST = "ShutdownRequest",
    SHUTTING_DOWN_REPLY = "ShuttingDownReply",
    PAINT_CANVAS_REQUEST = "PaintCanvasRequest",
    CANVAS_PAINTED_REPLY = "CanvasPaintedReply",
-   SAVE_IMAGE_REQUEST = "SaveImageRequest",
-   IMAGE_SAVED_REPLY = "ImageSavedReply"
+   STORE_ARTWORK_REQUEST = "StoreArtworkRequest",
+   ARTWORK_STORED_REPLY = "ArtworkStoredReply"
 }

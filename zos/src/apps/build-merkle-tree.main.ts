@@ -11,7 +11,7 @@ import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure
 import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources';
 import * as crypto from 'crypto';
 import {Container, ContainerModule} from 'inversify';
-import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '@jchptf/di-app-registry';
+import {DI_TYPES, IConfigLoader, configLoaderModule} from '@jchptf/di-app-registry';
 import {configContainerModule} from './di';
 import {Deployment} from './config';
 import * as path from 'path';
@@ -25,7 +25,7 @@ container.load(
 // container.load(
 //    new ContainerModule(initWorkspaceWorkerModule));
 
-const configLoader: ConfigLoader = container.get(CONFIG_TYPES.ConfigLoader);
+const configLoader: IConfigLoader = container.get(DI_TYPES.ConfigLoader);
 console.log(configLoader);
 
 const deployment: Deployment =
@@ -33,7 +33,7 @@ const deployment: Deployment =
 
 // const treeDescriptor: MerkleTreeDescription = new MerkleTreeDescription(256, 256, 8192, 1900005);
 const treeDescriptor: MerkleTreeDescription =
-   new MerkleTreeDescription(512, 256, 8192, 1280 * 32);
+   new MerkleTreeDescription(1, 512, 256, 8192, 1280 * 32);
 
 const digestCache: LRU.Cache<number, MerkleDigestLocator> =
    new LRU<number, MerkleDigestLocator>(Math.pow(2, 6));
@@ -43,8 +43,8 @@ const merkleLocatorFactory: IMerkleLocatorFactory =
 const merkleCalculator: IMerkleCalculator =
    new MerkleCalculator(treeDescriptor, merkleLocatorFactory);
 
-const identityCache: LRU.Cache<MerkleDigestLocator, string> =
-   new LRU<MerkleDigestLocator, string>(Math.pow(2, 9));
+const identityCache: LRU.Cache<string, string> =
+   new LRU<string, string>(Math.pow(2, 9));
 // @ts-ignore
 const digestIdentity: ICanonicalPathNaming =
    new CanonicalPathNaming(merkleCalculator, identityCache);
@@ -59,7 +59,7 @@ const privateKeySource: IterableIterator<Buffer> = isaacGenerator.pseudoRandomBu
 const ecInst = new EC('ed25519');
 console.log(privateKeySource.next().value);
 console.log(ecInst.keyFromPrivate(
-   privateKeySource.next().value.hexSlice(0), 'hex'
+   privateKeySource.next().value, 'hex'
 ));
 
 fs.stat(deployment.localAccess.rootPath, (err: any, stats: fs.Stats) => {

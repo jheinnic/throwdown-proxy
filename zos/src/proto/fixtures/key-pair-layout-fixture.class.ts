@@ -4,6 +4,7 @@ import {
 } from '../../modules/tickets/interface/locators/internal';
 import {KeyPairLocator} from '../../modules/tickets/interface/locators';
 import {injectable} from 'inversify';
+import {Path} from '../../infrastructure/validation';
 
 @injectable()
 export class KeyPairLayoutFixture implements IKeyPairStagingLayout {
@@ -33,7 +34,7 @@ export class KeyPairLayoutFixture implements IKeyPairStagingLayout {
          type: 'private-key-file',
          locator,
          privateKeyPath:
-            `/Users/jheinnic/Documents/randomArt3/pkFixture/privateKeys/${locator.versionUuid}`
+            `/Users/jheinnic/Documents/randomArt3/pkFixture/privateKeys/${locator.versionUuid}` as Path
       };
    }
 
@@ -43,7 +44,7 @@ export class KeyPairLayoutFixture implements IKeyPairStagingLayout {
          type: 'public-key-file',
          locator,
          publicKeyPath:
-            `/Users/jheinnic/Documents/randomArt3/pkFixture/publicKeys/${locator.versionUuid}`
+            `/Users/jheinnic/Documents/randomArt3/pkFixture/publicKeys/${locator.versionUuid}` as Path
       };
    }
 }

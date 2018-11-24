@@ -1,6 +1,7 @@
 import {Transform} from "stream";
+import {Transducer} from 'transducers-js';
 
-export interface IUpdateTransactionAccess// IRewritePlanBuilder
+export interface IRewritePlanBuilder
 {
    swap(indexOne: number, indexTwo: number, ...morePairs: [number, number]): IRewritePlanBuilder;
 
@@ -14,7 +15,7 @@ export interface IUpdateTransactionAccess// IRewritePlanBuilder
 
    stage(index: number, dataProvider: (index: number) => Buffer): IRewritePlanBuilder;
 
-   transform(tx: Transform, ...indices: [number]): IRewritePlanBuilder;
+   transform(tx: Transducer, ...indices: [number]): IRewritePlanBuilder;
 
    rotate(readFirstWriteLast: number, ...writeNext: [number]): IRewritePlanBuilder
 }

@@ -9,4 +9,4 @@ import {Nominal} from 'simplytyped';
  * Paths are a sequence of Name elements used to identify an element within a hierarchical
  * organization.
  */
-export type Path = Nominal<String, 'Path'>;
+export type Path = Nominal<string, 'Path'>;

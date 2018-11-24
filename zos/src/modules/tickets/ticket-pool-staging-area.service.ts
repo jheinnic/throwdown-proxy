@@ -5,7 +5,7 @@ import {
    BlockMappedDigestLocator, ICanonicalPathNaming, IMerkleCalculator, MERKLE_TYPES, MerkleDigestLocator,
    NamedPath
 } from '@jchptf/merkle';
-import {ArtworkLocator, KeyPairLocator} from './interface/locators';
+import {TicketArtworkLocator, KeyPairLocator} from './interface/locators';
 import {APP_CONFIG_TYPES} from '../../apps/di';
 import {Deployment} from '../../apps/config';
 import {IArtworkStagingLayout, IKeyPairStagingLayout} from './interface/internal';
@@ -25,7 +25,7 @@ export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagin
    }
 
    public* findArtwork(
-      renderStyle: string, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<ArtworkLocator>
+      renderStyle: string, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<TicketArtworkLocator>
    {
       let keyLocator: KeyPairLocator;
       for (keyLocator of sourceKeys) {
@@ -76,7 +76,7 @@ export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagin
       }
    }
 
-   public findAllArtwork(renderStyle: string): IterableIterator<ArtworkLocator>
+   public findAllArtwork(renderStyle: string): IterableIterator<TicketArtworkLocator>
    {
       return this.findArtwork(renderStyle, this.findAllKeyPairs());
    }

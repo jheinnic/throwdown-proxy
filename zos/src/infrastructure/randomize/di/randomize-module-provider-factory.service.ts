@@ -1,4 +1,4 @@
-import {injectable, interfaces} from 'inversify';
+import {interfaces} from 'inversify';
 import {CONFIG_TYPES} from '../../outbound/config/di/index';
 import {ConfigLoader} from '../../config/service/index';
 

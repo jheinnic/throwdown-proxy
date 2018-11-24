@@ -1,0 +1,43 @@
+import {MessageHeaders} from '../values/message-headers.value';
+import {IHeadersFactory} from '../interfaces/headers-factory.interface';
+import {inject, injectable} from 'inversify';
+import {HeadersConstructor, NewHeadersBase} from '../interfaces/headers-constructor.interface';
+import {ValueProperties} from '@jchptf/tupletypes';
+import {MESSAGE_DI_TYPES} from '../di/types';
+import {correlationId, errorOn, replyOn} from '../values/call-response-headers.interface'
+import {UUID} from '../../validation';
+import {chan} from 'medium';
+import {v1} from 'uuid';
+import {v1String} from 'uuid/interfaces';
+
+
+@injectable()
+export class HeadersFactory<T extends MessageHeaders> implements IHeadersFactory<T>
+{
+
+   constructor(
+      @inject(
+         MESSAGE_DI_TYPES.HeadersConstructor) private readonly headersConstructor: HeadersConstructor<T>,
+      private readonly uuidFunction: v1String = v1
+   )
+   { }
+
+   public createHeaders(initialState: Partial<T>): T
+   {
+      const newVar: NewHeadersBase<T> = {
+         [correlationId]: (
+            !initialState[correlationId]
+         ) ?
+            this.uuidFunction() as UUID : initialState[correlationId]!,
+         [replyOn]: (
+            !initialState[replyOn]
+         ) ? chan() : initialState[replyOn]!,
+         [errorOn]: (
+            !initialState[errorOn]
+         ) ? chan() : initialState[errorOn]!
+      };
+      return new this.headersConstructor(newVar);
+
+   }
+
+}

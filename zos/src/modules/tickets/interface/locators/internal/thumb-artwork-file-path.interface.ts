@@ -1,8 +1,8 @@
-import {ArtworkLocator} from '../artwork-locator.interface';
+import {TicketArtworkLocator} from '../ticket-artwork-locator.interface';
 
 export interface ThumbArtworkFilePath
 {
    readonly type: 'thumb-artwork-file';
-   readonly locator: ArtworkLocator;
+   readonly locator: TicketArtworkLocator;
    readonly thumbImagePath: string;
 }

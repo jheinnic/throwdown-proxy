@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../lib/index';
+import {SymbolEnum} from '@jchptf/api';
 
 type RandomizeTypeNames = 'SeedBytes' | 'RandomGeneratorService' | 'PseudoRandomGeneratorService' | 'RandomGenerator' | 'PseudoRandomGenerator';
 

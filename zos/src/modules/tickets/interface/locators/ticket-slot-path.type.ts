@@ -1,4 +1,4 @@
 import {Nominal} from 'simplytyped';
-import {Path} from '../../../../infrastructure/validation/path.type';
+import {Path} from '../../../../infrastructure/validation';
 
 export type TicketSlotPath = Nominal<Path, 'TicketSlotPath'>;

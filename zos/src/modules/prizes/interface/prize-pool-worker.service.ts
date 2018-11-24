@@ -1,3 +1,3 @@
-public interface IPrizePoolWorker {
-   public create
-}
+// public interface IPrizePoolWorker {
+//    public create
+// }

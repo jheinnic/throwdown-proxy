@@ -1,5 +1,5 @@
 import {KeyPairLocator} from '../interface/locators';
-import {CompletionSignal} from '../../randomArt/messages/completion-signal.interface';
+import {CompletionSignal} from '../../randomArt/messages';
 import {Path, UUID} from '../../../infrastructure/validation';
 import {RenderStyleName} from '../interface/policies';
 

@@ -1,9 +1,11 @@
-import {SymbolEnum} from '../../infrastructure/lib';
+import {SymbolEnum} from '@jchptf/api';
 
-export const APP_CONFIG_TYPES: SymbolEnum<'Deployment' | 'EventSpecification' | 'SetupPolicy' | 'PlayAssets'> = {
+export const APP_CONFIG_TYPES: SymbolEnum<'Deployment' | 'EventSpecification' | 'PrizeMintingPolicy' | 'TicketMintingPolicy' | 'TicketStagingPolicy' | 'PlayAssets'> = {
    Deployment: Symbol.for('Deployment'),
    EventSpecification: Symbol.for('EventSpecification'),
-   SetupPolicy: Symbol.for('SetupPolicy'),
+   PrizeMintingPolicy: Symbol.for('PrizeMintingPolicy'),
+   TicketMintingPolicy: Symbol.for('TicketMintingPolicy'),
+   TicketStagingPolicy: Symbol.for('TicketStagingPolicy'),
    PlayAssets: Symbol.for('PlayAssets')
 };
 

@@ -7,7 +7,7 @@ import {map} from 'ix/iterable/pipe/map';
 import ndarray from 'ndarray';
 import math from 'mathjs';
 
-import {MappedPoint, ICanvasCalculator, IncrementalPlotterFactory} from '../interfaces';
+import {MappedPoint, ICanvasCalculator, IncrementalPlotterFactory} from '../interface';
 import {PointMapping} from './point-mapping.class';
 
 @injectable()

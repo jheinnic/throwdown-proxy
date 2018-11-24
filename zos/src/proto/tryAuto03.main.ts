@@ -3,8 +3,10 @@ import {asyncScheduler, Subject} from 'rxjs';
 import chan = require('chan');
 import {co} from 'co';
 import Queue from 'co-priority-queue';
+import {ConcurrentWorkFactory} from '@jchptf/coroutines';
 
-const autoIter = new AutoIterate(asyncScheduler);
+const workFactory = new ConcurrentWorkFactory();
+const autoIter = new AutoIterate(asyncScheduler, workFactory);
 
 const source = [1, 2, 3, 4, 5];
 

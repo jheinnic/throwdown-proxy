@@ -1,48 +1,44 @@
 import {injectable} from 'inversify';
-import {IConcurrentWorkFactory} from '@jchptf/coroutines';
-import {CanvasDimensions, AssignCanvasRequest, PaintEngineTaskMessage} from '../messages';
-import {IncrementalPlotterFactory} from '../interfaces';
-import chan from 'chan';
 import {co} from 'co';
 import {Canvas} from 'canvas';
-import * as canvas from 'canvas';
+import {any, Chan, chan} from 'medium';
+import {IncrementalPlotterFactory} from '../interface';
+import {AssignCanvasRequest, PaintToCanvasRequest} from '../messages';
 
-@injectable
+@injectable()
 export class RandomArtPainter {
-   private inputTaskChannel: Chan.Chan<AssignCanvasRequest>;
-
-   private availableCanvasChannel: Chan.Chan<Canvas>;
+   // @ts-ignore
+   private inputRequestChannel: Chan<PaintToCanvasRequest>;
 
    private plotGenerator: IncrementalPlotterFactory;
 
-   private concurrentWorkFactory: IConcurrentWorkFactory;
+   // private concurrentWorkFactory: IConcurrentWorkFactory;
 
    constructor(
-      inputTaskChannel: Chan.Chan<AssignCanvasRequest>,
-      availableCanvasChannel: Chan.Chan<Canvas>,
+      inputRequestChannel: Chan<PaintToCanvasRequest>,
       plotGenerator: IncrementalPlotterFactory,
-      concurrentWorkFactory: IConcurrentWorkFactory,
+      // concurrentWorkFactory: IConcurrentWorkFactory,
    ) {
-      this.inputTaskChannel = inputTaskChannel;
+      this.inputRequestChannel = inputRequestChannel;
       this.plotGenerator = plotGenerator;
-      this.concurrentWorkFactory = concurrentWorkFactory;
+      // this.concurrentWorkFactory = concurrentWorkFactory;
    }
 
    public acceptWork(inputMessage: AssignCanvasRequest): Promise<any> {
+      // @ts-ignore
       const inputQueues = this.canvasInputQueues;
       return co(function * () {
-         const selected = yield chan.select(...inputQueues);
+         const selected = yield any(...inputQueues);
          return yield selected(inputMessage);
       });
    }
 
-   public registerCanvas(availableCanvas: Canvas ) {
-      if (this.plotGenerator.isCompatible(availableCanvas) {
+   public registerCanvas(canvasEvent: Canvas ) {
+      if (this.plotGenerator.isCompatible(canvasEvent)) {
          const newChan: Chan<AssignCanvasRequest> = chan<AssignCanvasRequest>();
-         co(function* () {
-
+         co(function * () {
+            yield newChan;
          })
-      })
+      }
    }
-
 }

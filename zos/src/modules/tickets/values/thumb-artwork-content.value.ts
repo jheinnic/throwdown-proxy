@@ -1,9 +1,9 @@
 import {IsDefined, IsNotEmpty} from 'class-validator';
-import {ArtworkLocator} from '../interface/locators';
+import {TicketArtworkLocator} from '../interface/locators';
 
 export class ThumbArtworkContent {
    @IsDefined()
-   public readonly locator: ArtworkLocator;
+   public readonly locator: TicketArtworkLocator;
 
    @IsDefined()
    @IsNotEmpty()

@@ -5,8 +5,9 @@ import {
    ClassDecoratorFactory, MetadataAccessor, MetadataInspector, PropertyDecoratorFactory
 } from '@loopback/metadata';
 
-import {Wild} from '../lib';
-import '../reflection/index';
+import '@jchptf/reflection';
+import {IConfigLoader} from '@jchptf/di-app-registry';
+import {Wild} from '@jchptf/api';
 
 // export type Uses<T, D> = {[K in keyof T]: T[K] extends D ? T[K] : (T[K] extends T ? never : Uses<T[K],D>) }[keyof T];
 //

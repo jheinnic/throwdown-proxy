@@ -1,10 +1,10 @@
 import {DirectoryPath, FullArtworkFilePath, ThumbArtworkFilePath} from '../locators/internal';
-import {ArtworkLocator} from '../locators';
+import {TicketArtworkLocator} from '../locators';
 
 export interface IArtworkStagingLayout {
-   locateFullArtworkFile(locator: ArtworkLocator): FullArtworkFilePath
+   locateFullArtworkFile(locator: TicketArtworkLocator): FullArtworkFilePath
 
-   locateThumbArtworkFile(locator: ArtworkLocator): ThumbArtworkFilePath
+   locateThumbArtworkFile(locator: TicketArtworkLocator): ThumbArtworkFilePath
 
    findDirectoriesDepthFirst(leftToRight?: boolean): IterableIterator<DirectoryPath>;
 

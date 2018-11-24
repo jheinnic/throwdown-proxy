@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../../infrastructure/lib/index';
+import {SymbolEnum} from '@jchptf/api';
 
 type WorkerTypes = 'InitWorkspace';
 

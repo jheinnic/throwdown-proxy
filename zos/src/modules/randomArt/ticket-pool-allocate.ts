@@ -12,12 +12,12 @@ import {Subject} from 'rxjs';
 
 import {CanvasPlotter, CanvasWriter, RandomArtGenerator, TaskLoader} from './components';
 
-import {MerkleLocatorFactory} from '../../infrastructure/merkle/merkle-locator-factory.class';
+import {} from '../../infrastructure/merkle/merkle-locator-factory.class';
 import {
    BlockMappedDigestLocator, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator,
    IMerkleLocatorFactory, ITopoOrderBuilder, MerkleCalculator, MerkleDigestLocator, MerkleTreeDescription,
-   NamedPath
-} from '../../infrastructure/merkle';
+   NamedPath, MerkleLocatorFactory
+} from '@jchptf/merkle';
 import {configContainerModule} from '../../apps/di';
 
 import {
@@ -25,9 +25,9 @@ import {
 } from '../../infrastructure/randomize';
 
 import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '../../infrastructure/config';
-import {Deployment, PlayAssets, RandomArtPlayAssets, SetupPolicy} from '../../apps/config';
+import {Deployment, PlayAssets, PrizeMintingPolicy} from '../../apps/config';
 
-import {ITaskContentAdapter} from './interfaces';
+import {ITaskContentAdapter} from './interface';
 import {CanvasDimensions} from './messages';
 import {IterableX} from 'ix/iterable';
 import {mapAsync} from 'ix/iterable/mapasync';
@@ -46,8 +46,8 @@ const configLoader: ConfigLoader = container.get(CONFIG_TYPES.ConfigLoader);
 
 const deploymentCfg: Deployment =
    configLoader.getConfig(Deployment, 'eth.lotto.deployment');
-const setupPolicyCfg: SetupPolicy =
-   configLoader.getConfig(SetupPolicy, 'eth.lotto.setupPolicy');
+const setupPolicyCfg: PrizeMintingPolicy =
+   configLoader.getConfig(PrizeMintingPolicy, 'eth.lotto.setupPolicy');
 const playAssetCfg: PlayAssets =
    configLoader.getConfig(PlayAssets, 'eth.lotto.playAssets');
 const randomArtAssetsCfg: RandomArtPlayAssets =

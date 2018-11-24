@@ -1,34 +1,44 @@
 import {injectable} from 'inversify';
 import {
-   installerRequest, requiredImport, DI_COMMON_TAGS, IContainerAccessStrategy
+   DI_COMMON_TAGS, IContainerAccessStrategy, installerRequest, requiredImport
 } from '@jchptf/di-app-registry';
-import {Chanel} from "chanel";
-import Queue from "co-priority-queue";
+import {Chanel} from 'chanel';
+import {Chan} from 'medium';
+import Queue from 'co-priority-queue';
 
 import {
-   CanvasAvailableMessage, DeferrableMessage, AssignCanvasRequest, LifecycleStopMessage,
-   PaintEngineTaskMessage, WriteOutputTaskMessage
+   PaintToCanvasRequest, LifecycleStopMessage, AssignCanvasRequest
 } from '../messages';
-import {CO_TYPES, IConcurrentWorkFactory} from '@jchptf/coroutines';
-import {IncrementalPlotterFactory} from '../interfaces';
+import {CO_TYPES} from '@jchptf/coroutines';
 import {RANDOM_ART_VARIANT_TAGS} from './tags';
 
 @injectable()
 @installerRequest()
-export class RandomArtModuleImports {
+export class RandomArtModuleImports
+{
 
    @requiredImport(
       CO_TYPES.Chan,
-      { type: 'tagged', key: DI_COMMON_TAGS.VariantFor, value: RANDOM_ART_VARIANT_TAGS.InputTask },
+      {
+         type: 'tagged',
+         key: DI_COMMON_TAGS.VariantFor,
+         value: RANDOM_ART_VARIANT_TAGS.InputTask
+      },
       'Singleton'
    )
-   public inputTaskChan: IContainerAccessStrategy<Chan.Chan<AssignCanvasRequest>>;
+   public inputTaskChan: IContainerAccessStrategy<Chan<AssignCanvasRequest>>;
 
-   private readonly taskLoader: Chan.Chan<AssignCanvasRequest>,
-   private readonly canvasReturn: Queue<CanvasAvailableMessage>,
-   private readonly stopSignal: Queue<LifecycleStopMessage>,
-   private readonly deferredQueueFactory: QueueFactory<DeferrableMessage>,
+   constructor(
+      // readonly taskLoader: Chan<AssignCanvasRequest>,
+      // readonly canvasReturn: Queue<CanvasAvailableMessage>,
+      readonly stopSignal: Queue<AssignCanvasRequest>,
+      // private readonly deferredQueueFactory: QueueFactory<DeferrableMessage>,
       // private readonly plotFactories: Map<P, Map<R, IncrementalPlotterFactory>>,
-      private readonly paintingChannel: Chanel<PaintEngineTaskMessage>,
-      private readonly outputChannel: Chanel<WriteOutputTaskMessage>)
+      readonly paintingChannel: Chanel<PaintToCanvasRequest>,
+      // readonly outputChannel: Chanel<WriteOutputTaskMessage>,
+      inputTaskChan: IContainerAccessStrategy<Chan<AssignCanvasRequest>>)
+   {
+      this.inputTaskChan = inputTaskChan;
+   }
+
 }

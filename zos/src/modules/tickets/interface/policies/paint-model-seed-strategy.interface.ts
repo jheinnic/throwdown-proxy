@@ -7,5 +7,5 @@ export interface IPaintModelSeedStrategy {
 
    readonly strategyKind: BitStrategyKind;
 
-   extractSeed(publicKeyX: Buffer, publicKeyY: Buffer): ModelSeed
+   extractSeed(publicKeyX: Buffer, publicKeyY: Buffer): ModelSeed | Promise<ModelSeed>
 }

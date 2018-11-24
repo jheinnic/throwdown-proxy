@@ -18,7 +18,7 @@ export class MerkleTreeDescription {
    public readonly leafBlocksInUse: number;
 
    public constructor(
-      public readonly bitsPerPreImage: number,
+      // public readonly bitsPerPreImage: number,
       public readonly bitsPerDigest: number,
       public readonly bitsPerIOp: number,
       public readonly leafCapacity: number,

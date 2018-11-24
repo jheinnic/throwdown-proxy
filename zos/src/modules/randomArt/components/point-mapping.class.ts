@@ -1,4 +1,4 @@
-import {IterableX, range} from 'ix/iterable';
+import {IterableX} from 'ix/iterable';
 import {startWith} from 'ix/iterable/pipe/startWith';
 import {flatMap} from 'ix/iterable/pipe/flatmap';
 import {memoize} from 'ix/iterable/pipe/memoize';
@@ -8,40 +8,41 @@ import {map} from 'ix/iterable/pipe/map';
 import {Canvas} from 'canvas';
 import ndarray from 'ndarray';
 
+import {stepRange} from '../../../infrastructure/lib';
+import {PlottingPartialObserver} from './plotting-partial-observer.class';
 import {
    IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, MappedPoint,
-   IncrementalPlotProgress
-} from '../interfaces';
-import {PlottingPartialObserver} from './plotting-partial-observer.class';
+   IncrementalPlotProgress, PlotGridData
+} from '../interface';
 
 export class PointMapping implements IncrementalPlotterFactory
 {
    private mappedPoints: IterableX<MappedPoint>;
 
    public constructor(
-      xCount: number,
-      yCount: number,
-      pixelMulti: number,
-      dataArray: Float64Array,
+      plotGridData: PlotGridData,
       private readonly sliceCount: number,
       private readonly sliceSize: number)
    {
+      const { xCount, yCount, pixelMulti, dataArray } = plotGridData;
       const ndDataArray = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
+      const xPointCount = xCount / pixelMulti;
+      const yPointCount = yCount / pixelMulti;
 
-      this.mappedPoints = range(0, xCount / pixelMulti)
+      this.mappedPoints = stepRange(0, xPointCount, pixelMulti)
          .pipe(
-            flatMap((xCanvas: number): Iterable<MappedPoint> =>
-               range(0, yCount / pixelMulti)
+            flatMap((xCanvas: [number, number]): Iterable<MappedPoint> =>
+               stepRange(0, yPointCount, pixelMulti)
                   .pipe(
-                     map((yCanvas: number) =>
+                     map((yCanvas: [number, number]) =>
                         [
-                           xCanvas * pixelMulti, yCanvas * pixelMulti,
-                           ndDataArray.get(xCanvas, yCanvas, 0),
-                           ndDataArray.get(xCanvas, yCanvas, 1)
+                           xCanvas[0], yCanvas[0],
+                           ndDataArray.get(xCanvas[1], yCanvas[1], 0),
+                           ndDataArray.get(xCanvas[1], yCanvas[1], 1)
                         ] as MappedPoint)
                   )
             ),
-            memoize(xCount * yCount / pixelMulti / pixelMulti)
+            memoize(xPointCount * yPointCount)
          );
    }
 

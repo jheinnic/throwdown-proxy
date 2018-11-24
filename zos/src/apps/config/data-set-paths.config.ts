@@ -49,4 +49,8 @@ export class DataSetPaths
    @configProp('ticketArtwork')
    @Matches(/^([^/\0]+\/)*[^/\0]+$/)
    public readonly ticketArtwork: string = '';
+
+   @configProp('ticketTreeSlots')
+   @Matches(/^([^/\0]+\/)*[^/\0]+$/)
+   public readonly ticketTreeSlots: string = '';
 }

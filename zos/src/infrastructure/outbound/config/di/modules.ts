@@ -1,4 +1,4 @@
-import {SymbolEnum} from '../../lib';
+import {SymbolEnum} from '@jchptf/api';
 
 type ConfigLoaderModuleTypes = 'ConfigLoaderModule';
 

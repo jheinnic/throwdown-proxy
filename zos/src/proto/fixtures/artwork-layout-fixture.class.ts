@@ -2,7 +2,7 @@ import {IArtworkStagingLayout} from '../../modules/tickets/interface/internal';
 import {
    DirectoryPath, FullArtworkFilePath, ThumbArtworkFilePath
 } from '../../modules/tickets/interface/locators/internal';
-import {ArtworkLocator} from '../../modules/tickets/interface/locators';
+import {TicketArtworkLocator} from '../../modules/tickets/interface/locators';
 import {injectable} from 'inversify';
 
 @injectable()
@@ -18,7 +18,7 @@ export class ArtworkLayoutFixture implements IArtworkStagingLayout
       return undefined;
    }
 
-   public locateFullArtworkFile(locator: ArtworkLocator): FullArtworkFilePath
+   public locateFullArtworkFile(locator: TicketArtworkLocator): FullArtworkFilePath
    {
       return {
          type: 'full-artwork-file',
@@ -28,7 +28,7 @@ export class ArtworkLayoutFixture implements IArtworkStagingLayout
       };
    }
 
-   public locateThumbArtworkFile(locator: ArtworkLocator): ThumbArtworkFilePath
+   public locateThumbArtworkFile(locator: TicketArtworkLocator): ThumbArtworkFilePath
    {
       return {
          type: 'thumb-artwork-file',

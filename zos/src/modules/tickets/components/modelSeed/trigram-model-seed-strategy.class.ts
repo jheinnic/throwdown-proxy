@@ -12,6 +12,7 @@ import {AbstractModelSeedStrategy} from './abstract-model-seed.strategy.class';
 
 function naturalOrder(element: number, needle: number) { return element - needle; }
 
+const trigrams: Promise<>
 export class TrigramModelSeedStrategy extends AbstractModelSeedStrategy {
    private readonly trigrams: string[] = [];
    private readonly freqSum: number[] = [];

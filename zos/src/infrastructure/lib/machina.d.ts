@@ -1,11 +1,11 @@
 import EventEmitter = NodeJS.EventEmitter;
-import {BagOf} from './utility';
+import {IBagOf} from '@jchptf/api';
 
 export interface FSMOptions<S extends string, A extends string> {
    initialize(options: Pick<FSMOptions<S, A>, Exclude<keyof FSMOptions<S, A>, 'initialize'>>): void;
    namespace: string;
    initialState: keyof S;
-   states: BagOf<IStateDef<S, A>, S>
+   states: IBagOf<IStateDef<S, A>, S>
 }
 
 export type FSMInstance<I, S extends string, A extends string> = FSMOptions<S, A> & I;
@@ -30,7 +30,7 @@ export interface BehavioralFSMOptions<O, S extends string, A extends string> {
    initialize(options: BehavioralFSMOptions<O, S, A>): void;
    namespace: string;
    initialState: keyof S;
-   states: BagOf<Test<O, S, A>, S>
+   states: IBagOf<Test<O, S, A>, S>
 }
 
 export type BehavioralFSMInstance<I, O, S extends string, A extends string> = BehavioralFSMOptions<O, S, A> & I;

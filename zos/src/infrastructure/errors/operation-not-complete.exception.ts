@@ -1,4 +1,4 @@
-class OperationNotCompletedException implements Error
+export class OperationNotCompletedException implements Error
 {
    constructor(
       public message: string,

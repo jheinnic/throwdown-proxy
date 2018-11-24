@@ -1,5 +1,5 @@
 import {TicketSlotIndex} from './ticket-slot-index.interface';
-import {UUID} from '../../../../infrastructure/validation/uuid.type';
+import {UUID} from '../../../../infrastructure/validation';
 
 export interface KeyPairLocator
 {

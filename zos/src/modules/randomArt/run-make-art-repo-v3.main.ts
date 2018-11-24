@@ -37,8 +37,8 @@ import {Deployment} from '../../apps/config';
 
 import {mkdirWithCallback} from '../../infrastructure/recordlist/mkdir-with-callback.function';
 import {CanvasDimensions} from './messages';
-import {ITaskContentAdapter} from './interfaces';
-import {ArtworkLocator, ITicketPoolStagingArea} from '../tickets/interface';
+import {ITaskContentAdapter} from './interface';
+import {TicketArtworkLocator, ITicketPoolStagingArea} from '../tickets/interface';
 import {TicketPoolAssembly} from '../tickets/ticket-pool-staging-area.service';
 import {PointMapping, RandomArtGenerator, RandomArtModel} from './components';
 import {BitStrategyKind, PrefixSelectStyle} from '../tickets/config';
@@ -369,7 +369,7 @@ function launchPaintContent()
    function* processNextTicket() {
       mapAsync(
          inputIterator.pipe(take(1)),
-         (next: ArtworkLocator, idx: number) => {
+         (next: TicketArtworkLocator, idx: number) => {
             limitSourceReader()
          })
    }

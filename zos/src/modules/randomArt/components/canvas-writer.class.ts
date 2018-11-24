@@ -1,10 +1,9 @@
-import {OperatorFunction} from 'ix/interfaces';
-import {map} from 'ix/iterable/pipe/map';
 import {Canvas} from 'canvas';
+import {put} from 'medium';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import {WriteOutputTaskMessage} from '../messages';
+import {StoreArtworkRequest} from '../messages';
 
 export class CanvasWriter
 {
@@ -73,9 +72,12 @@ export class CanvasWriter
       return filePath;
    }
 
-   public writeOutputFile(): OperatorFunction<WriteOutputTaskMessage, Promise<Canvas>>
+   public async writeOutputFile(): Promise<void>
    {
-      return map((taskContext: WriteOutputTaskMessage): Promise<Canvas> => {
+      console.log('Saving...');
+      await put(this.onReturn, this.canvasId);
+      console.log('Saved...')
+      return map((taskContext: StoreArtworkRequest): Promise<Canvas> => {
          const filePath = this.ensurePath(taskContext.relativeOutputPath);
          console.log(`Entered stream writer for ${filePath}`);
 
