@@ -1,19 +1,19 @@
 import {inject, tagged} from 'inversify';
-import {RANDOMIZE_TYPES} from '../di/index';
-import {IReseedingPseudoRandomSource} from '../interface/reseeding-pseudo-random-source.interface';
-import {PRNG_ALGORITHM_KINDS, RANDOMIZE_TAGS} from '../di/tags';
-import {HmacDrbgSeed} from './hmac-drbg-seed.interface';
-import HmacDrbg from 'hmac-drbg';
+import {HmacDrbgOptions, HmacDrbg} from 'hmac-drbg';
+
+import {IPseudoRandomSource} from '../interface';
+import {RANDOMIZE_TYPES, PRNG_ALGORITHM_KINDS, RANDOMIZE_TAGS} from '../di';
+import {BlockHash, MessageDigest} from 'typings/hash.js';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 
-   export class HmacDrbgPseudoRandomSource implements IReseedingPseudoRandomSource<Buffer>
+export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<T>)> implements IPseudoRandomSource
 {
    private readonly hmacDrbg: any; // HmacDrbg;
 
    constructor(
       @inject(RANDOMIZE_TYPES.SeedBytes) @tagged(
-         RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgSeed
+         RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgOptions<T>
    )
    {
       this.hmacDrbg = new HmacDrbg({

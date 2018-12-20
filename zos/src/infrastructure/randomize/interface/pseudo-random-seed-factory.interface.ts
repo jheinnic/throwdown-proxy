@@ -1,6 +1,6 @@
 import {IPseudoRandomSource} from './pseudo-random-source.interface';
 
-export interface IPseudoRandomSourceFactory<S>
+export interface IPseudoRandomSeedFactory
 {
-   seedGenerator(seedSource: S): IPseudoRandomSource;
+   seedNextSource(): Promise<IPseudoRandomSource>;
 }

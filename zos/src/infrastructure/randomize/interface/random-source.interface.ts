@@ -1,4 +1,4 @@
-export interface IRandomGenerator
+export interface IRandomSource
 {
-   randomBytes( bufferSize: number ): IterableIterator<Promise<Buffer>>
+   randomBytes( bufferSize: number ): AsyncIterable<Buffer>;
 }

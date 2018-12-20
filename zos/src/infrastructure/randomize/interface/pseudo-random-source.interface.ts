@@ -1,6 +1,6 @@
 export interface IPseudoRandomSource
 {
-   pseudoRandomIntegers( minValue: number, maxValue: number): IterableIterator<number>
+   pseudoRandomIntegers( minValue: number, maxValue: number): Iterable<number>
 
-   pseudoRandomBuffers( byteCount: number ): IterableIterator<Buffer>
+   pseudoRandomBuffers( byteCount: number ): Iterable<Buffer>
 }

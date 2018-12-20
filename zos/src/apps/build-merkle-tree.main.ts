@@ -8,7 +8,7 @@ import {
    MerkleCalculator, IDfsOrderBuilder, MerkleLocatorFactory
 } from '@jchptf/merkle';
 import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure/randomize/interface';
-import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources';
+import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources/index';
 import * as crypto from 'crypto';
 import {Container, ContainerModule} from 'inversify';
 import {DI_TYPES, IConfigLoader, configLoaderModule} from '@jchptf/di-app-registry';

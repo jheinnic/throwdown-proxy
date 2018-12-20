@@ -9,7 +9,7 @@ import {
    CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory, MerkleCalculator,
    MerkleDigestLocator, MerkleLocatorFactory, MerkleTreeDescription
 } from '@jchptf/merkle';
-import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources';
+import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources/index';
 // import {configContainerModule} from '../apps/di/index';
 // import {Deployment} from '../apps/config/index';
 import {

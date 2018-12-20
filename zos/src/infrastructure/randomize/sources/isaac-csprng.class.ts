@@ -12,7 +12,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 Original work copyright (c) 2012 Yves-Marie K. Rinquin, under MIT license.
 https://github.com/rubycon/isaac.js
 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
-import randombytes from 'randombytes';
+
+import {randombytes} from 'randombytes';
 
 export class IsaacCSPRNG
 {
@@ -34,12 +35,12 @@ export class IsaacCSPRNG
    {
       ////////////////////////////////////////////////////
       /* initial random seed */
-      var internalSeed = userSeed;
-      if (!userSeed) {
+      let internalSeed = userSeed;
+      if (! userSeed) {
+         const uInt_a = randombytes(8);
          internalSeed = new Array(2);
-         var uinta = randombytes(8);
-         internalSeed[0] = uinta.readUInt32BE(0);
-         internalSeed[1] = uinta.readUInt32BE(4);
+         internalSeed[0] = uInt_a.readUInt32BE(0);
+         internalSeed[1] = uInt_a.readUInt32BE(4);
       }
 
       this.acc = this.brs = this.cnt = this.gnt = 0;
@@ -54,7 +55,7 @@ export class IsaacCSPRNG
    private _hexDecode(data: string)
    {
       let j: number;
-      let hexes: string[] = data.match(/.{1,4}/g) || [];
+      let hexes: string[] = data.match(/[0-9a-f]{1,4}/g) || [];
       let back: string = '';
 
       for (j = 0; j < hexes.length; j++) {
@@ -211,8 +212,6 @@ export class IsaacCSPRNG
    /* public: return a string of length (safe) characters consisting of random 7-bit ASCII graphemes */
    public chars(length: number): string
    {
-      //var str = "
-      // ~`'\"_-+={}[]<>/\\,.:;?|!@#$%^&*()0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
       let out: string = '';
 
       for (let i = 0; i < length; i++) {
@@ -234,15 +233,6 @@ export class IsaacCSPRNG
       } else {
          return this._vernam(msg);
       }
-   };
-
-
-   /* public: return a 53-bit fraction in the range [0, 1] */
-   public double(): number
-   {
-      return this.random() + (
-         this.random() * 0x200000 | 0
-      ) * 1.1102230246251565e-16; // 2^-53
    };
 
 
@@ -345,6 +335,13 @@ export class IsaacCSPRNG
    };
 
 
+   // /* public: return a 53-bit fraction in the range [0, 1] */
+   public double(): number
+   {
+      return this.random() + (this.random() * 0x200000 | 0) * 1.1102230246251565e-16; // 2^-53
+   };
+
+
    /* public: return inclusive range */
    public range(loBound: number, hiBound?: number): number
    {
@@ -369,7 +366,7 @@ export class IsaacCSPRNG
    };
 
 
-   /* public: zeroize the CSPRNG */
+   /* public: zero-ify this CSPRNG */
    public reset()
    {
       this.acc = this.brs = this.cnt = 0;
@@ -488,7 +485,7 @@ class SeedMixer
    {
       for (let i = 0; i < 256; i += 8) {
          /* use all the information in the seed */
-         this.a = SeedMixer._add(this.a, this.r[i + 0]);
+         this.a = SeedMixer._add(this.a, this.r[i]);
          this.b = SeedMixer._add(this.b, this.r[i + 1]);
          this.c = SeedMixer._add(this.c, this.r[i + 2]);
          this.d = SeedMixer._add(this.d, this.r[i + 3]);
@@ -500,7 +497,7 @@ class SeedMixer
          this.seed_mix();
 
          /* fill in m[] with messy stuff */
-         this.m[i + 0] = this.a;
+         this.m[i] = this.a;
          this.m[i + 1] = this.b;
          this.m[i + 2] = this.c;
          this.m[i + 3] = this.d;
