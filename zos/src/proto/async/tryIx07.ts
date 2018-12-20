@@ -93,6 +93,7 @@ class CanvasPool implements IWatch<CanvasPoolSizes>
          free: 0
       };
 
+      console.log('Fire for requests');
       go(this.scanForRequests.bind(this))
          .then(() => {
             console.log('Process manager stopping');
@@ -101,6 +102,7 @@ class CanvasPool implements IWatch<CanvasPoolSizes>
             console.error('Process manager error:', err);
          });
 
+      console.log('Fire for returns');
       go(this.scanForReturns.bind(this))
          .then(() => {
             console.log('Process manager stopping');
@@ -115,9 +117,11 @@ class CanvasPool implements IWatch<CanvasPoolSizes>
       while (this.channelOpen) {
          const readyToReserve = this.recentlyReturned;
          this.recentlyReturned = [];
+         console.log('Recent returns: ', readyToReserve);
          for await (let nextCanvas of readyToReserve) {
             nextCanvas.reserve();
             if (await put(this.reserveCanvasChan, nextCanvas)) {
+               console.log('Reserved', nextCanvas);
                const newCanvasPoolSizes = {
                   totalCount: this.canvasPoolSizes.totalCount,
                   reserved: this.canvasPoolSizes.reserved + 1,
@@ -140,27 +144,35 @@ class CanvasPool implements IWatch<CanvasPoolSizes>
    }
 
    public async scanForReturns(): Promise<void> {
+      console.log('Enter scanForReturns');
       while (this.channelOpen) {
          let inCount = 0;
          for await (let nextCanvas of this.availableCanvasQueue) {
+            console.log('Dequeued a canvas');
             inCount++;
             this.recentlyReturned.push(nextCanvas);
-         }
 
-         if (inCount > 0) {
-            const newCanvasPoolSizes = {
-               totalCount: this.canvasPoolSizes.totalCount,
-               reserved: this.canvasPoolSizes.reserved - inCount,
-               free: this.canvasPoolSizes.free + inCount
-            };
-            this.notifyWatches(this.canvasPoolSizes, newCanvasPoolSizes);
-            this.canvasPoolSizes = newCanvasPoolSizes;
-         }
+            console.log('Scan for returns found ' + inCount);
 
-         await(
-            sleep(10)
-         );
+            if (inCount > 0) {
+               const oldCanvasPoolSizes = this.canvasPoolSizes;
+               const newCanvasPoolSizes = {
+                  totalCount: this.canvasPoolSizes.totalCount,
+                  reserved: this.canvasPoolSizes.reserved - inCount,
+                  free: this.canvasPoolSizes.free + inCount
+               };
+               this.canvasPoolSizes = newCanvasPoolSizes;
+               this.notifyWatches(oldCanvasPoolSizes, newCanvasPoolSizes);
+
+               inCount -= inCount;
+            }
+
+            await (
+               sleep(10)
+            );
+         }
       }
+       console.log('All done!');
    }
 
    public register(newCanvas: CanvasId)
@@ -168,11 +180,11 @@ class CanvasPool implements IWatch<CanvasPoolSizes>
       new CanvasManager(this.availableCanvasQueue, newCanvas);
       const newCanvasPoolSizes = {
          totalCount: this.canvasPoolSizes.totalCount + 1,
-         reserved: this.canvasPoolSizes.reserved,
-         free: this.canvasPoolSizes.free + 1
+         reserved: this.canvasPoolSizes.reserved + 1,
+         free: this.canvasPoolSizes.free
       };
-      this.notifyWatches(this.canvasPoolSizes, newCanvasPoolSizes);
       this.canvasPoolSizes = newCanvasPoolSizes;
+      this.notifyWatches(this.canvasPoolSizes, newCanvasPoolSizes);
    }
 
    public addWatch(_id: string, _fn: Watch<CanvasPoolSizes>): boolean
@@ -367,6 +379,7 @@ class CanvasManager
       }
       this.reserved = false;
       this.availableSink.write(this);
+      console.log('Wrote to available sink');
    }
 
    public getReservation(): CanvasId|false
@@ -571,6 +584,10 @@ for (let ii = 0; ii < 4; ii++) {
       .then(console.log.bind(console))
       .catch(console.error.bind(console));
 }
+
+canvasPool.addWatch('strtest', (_id: string, _old: CanvasPoolSizes, newSizes: CanvasPoolSizes) => {
+   console.log('watch notifier receives', newSizes, _id);
+});
 
 /*
 const _w1: CanvasManager = new CanvasManager(1, sources);
