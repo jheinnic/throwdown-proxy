@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 // @ts-ignore
 import {cs} from 'co-stream';
-import {IsaacCSPRNG} from '../infrastructure/randomize/sources';
+import {IsaacCSPRNG} from '../infrastructure/randomize/sources/index';
 import bs = require('binary-search');
 import {co} from 'co';
 
