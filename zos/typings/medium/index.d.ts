@@ -1,10 +1,11 @@
+
 declare module 'medium'
 {
   import 'medium';
-   import {Transducer} from 'transducers-js';
-   import {AnyFunc} from 'simplytyped';
+  import {Transducer} from 'transducers-js';
+  import {AnyFunc} from 'simplytyped';
 
-  export interface Chan<S = any, T = S> extends Promise<T|CLOSED> {}
+  export interface Chan<S = any, T = S> extends Promise<T|object> {}
 
   export interface ChanBuffer {}
 
@@ -31,7 +32,7 @@ declare module 'medium'
   export function put<S = any, T = S>(ch: Chan<S, T>, val: S): Promise<boolean>
 
   /** Takes a value from a channel. Returned Promise resolves to taken value or CLOSED constant if the channel is closed. */
-  export function take<T = any>(ch: Chan<any, T>): Promise<T | CLOSED>;
+  export function take<T = any>(ch: Chan<any, T>): Promise<T | typeof CLOSED>;
 
   /** Immediately invokes (and returns) given async function. */
   export function go<T>( func: AnyFunc<Promise<T>>): Promise<T>;
@@ -40,8 +41,8 @@ declare module 'medium'
   export function sleep(ms: number): Promise<void>
 
   /** A constant, which all takes on a closed channel receive instead of a value.*/
-  export type CLOSED = object;
-  export const CLOSED: CLOSED;
+  const CLOSED: object;
+  // export type CLOSED = typeof CLOSED;
 
   /**
    * Closes a channel. This causes:
