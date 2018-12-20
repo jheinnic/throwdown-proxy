@@ -1,16 +1,12 @@
-import {HostBinding, ChangeDetectionStrategy, Component, ElementRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 
 import {NGXLogger} from 'ngx-logger';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, startWith, takeUntil, tap} from 'rxjs/operators';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/debounceTime';
 
 @Component({
-  selector: 'tdn-layout',
+  selector: 'cai-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,8 +23,8 @@ export class LayoutComponent implements OnInit, OnDestroy
 
   public navbarMargin: { height: number };
 
-  @HostBinding('class.root-layout-container')
-  public readonly rootLayoutContainer = true;
+  // @HostBinding('class.root-layout-container')
+  // public readonly rootLayoutContainer = true;
 
   constructor(private breakpointObserver: BreakpointObserver, private logger: NGXLogger)
   {
@@ -53,13 +49,11 @@ export class LayoutComponent implements OnInit, OnDestroy
   public ngOnInit(): void
   {
     this._subscribed = this._isXSmall$.pipe(
-      tap((value: any) => { this.logger.info('Pretake', value); }),
+      tap((value: any) => { this.logger.info('Pre-Take', value); }),
       takeUntil(this._onDestroyed),
-      // ).pipe(
       startWith(null),
       debounceTime(10),
-      // ).pipe(
-      tap((value: any) => { this.logger.info('Poststart', value); })
+      tap((value: any) => { this.logger.info('Post-Start', value); })
     )
       .subscribe((value: any) => {
         this.logger.info('Trigger: ', value);
