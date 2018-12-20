@@ -7,7 +7,9 @@ import {map} from 'ix/iterable/pipe/map';
 import ndarray from 'ndarray';
 import math from 'mathjs';
 
-import {MappedPoint, ICanvasCalculator, IncrementalPlotterFactory} from '../interface';
+import {
+   MappedPoint, ICanvasCalculator, IncrementalPlotterFactory, CanvasDimensions, RenderScale
+} from '../interface';
 import {PointMapping} from './point-mapping.class';
 
 @injectable()
@@ -97,15 +99,22 @@ export class CanvasCalculator implements ICanvasCalculator
    }
 
    public create(
-      maxPointsPerSlice: number,
-      xCount: number, yCount: number,
-      fitOrFill: 'fit' | 'fill' | 'square',
-      scaleFactor = 1.0, pixelMultiplier = 1): IncrementalPlotterFactory
+      maxPointsPerSlice: number, canvasDimensions: CanvasDimensions, renderScale: RenderScale )
+      // xCount: number, yCount: number,
+      // fitOrFill: 'fit' | 'fill' | 'square',
+      // scaleFactor = 1.0, pixelMultiplier = 1
+: IncrementalPlotterFactory
    {
-      if ((pixelMultiplier % 2) !== 1) {
+      const pixelMulti = renderScale.pixelSize;
+      const xCount = canvasDimensions.pixelWidth;
+      const yCount = canvasDimensions.pixelHeight;
+      const scaleFactor = renderScale.unitScale;
+      const fitOrFill = renderScale.fitOrFill;
+
+      if ((pixelMulti % 2) !== 1) {
          throw new Error('Preview pixel multiplier must be odd so the approximations center right');
       }
-      if (((xCount % pixelMultiplier) > 0) || ((yCount % pixelMultiplier) > 0)) {
+      if (((xCount % pixelMulti) > 0) || ((yCount % pixelMulti) > 0)) {
          throw new Error('Pixel multiplier must be able evenly divide width and height.');
       }
 
@@ -132,9 +141,9 @@ export class CanvasCalculator implements ICanvasCalculator
          xScale *= xCount / yCount;
       }
       const widthPoints: IterableX<number> =
-         CanvasCalculator.computeAffinePixelPoints(xCount, 0.0 - xScale, 1.0 * xScale);
+         CanvasCalculator.computeAffinePixelPoints(xCount, 0.0 - xScale, xScale);
       const heightPoints: IterableX<number> =
-         CanvasCalculator.computeAffinePixelPoints(yCount, 0.0 - yScale, 1.0 * yScale);
+         CanvasCalculator.computeAffinePixelPoints(yCount, 0.0 - yScale, yScale);
 
       const mappedPoints = widthPoints.pipe<[number, number], MappedPoint, MappedPoint>(
          map((xModel: number, xCanvas: number) => [xCanvas, xModel] as [number, number]),
@@ -147,9 +156,9 @@ export class CanvasCalculator implements ICanvasCalculator
          memoize(xCount * yCount)
       );
 
-      const pointCount = xCount * yCount / pixelMultiplier / pixelMultiplier;
+      const pointCount = xCount * yCount / pixelMulti / pixelMulti;
       const dataArray = new Float64Array(2 * pointCount);
-      const dataView = ndarray(dataArray, [xCount / pixelMultiplier, yCount / pixelMultiplier, 2]);
+      const dataView = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
       let pointTuple: MappedPoint;
 
       const runSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
@@ -159,7 +168,7 @@ export class CanvasCalculator implements ICanvasCalculator
       let xDelta = 0;
       let yCanvas = 0;
       let yDelta = 0;
-      let multiDelta = (pixelMultiplier - 1) / 2;
+      let multiDelta = (pixelMulti - 1) / 2;
       for (pointTuple of mappedPoints) {
          if (yDelta == multiDelta) {
             if (xDelta == multiDelta) {
@@ -188,7 +197,8 @@ export class CanvasCalculator implements ICanvasCalculator
          }
       }
 
-      return new PointMapping(xCount, yCount, pixelMultiplier, dataArray, pointCount/runSize, runSize);
+      return new PointMapping(
+         {xCount, yCount, pixelMulti, dataArray }, pointCount/runSize, runSize);
    }
 
    // public create(...args: [number, number, number, ("fit" | "fill" | "square"), number, number]): IncrementalPlotterFactory

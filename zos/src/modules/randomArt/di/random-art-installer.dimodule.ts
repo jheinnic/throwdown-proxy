@@ -15,6 +15,7 @@ import {
    MerkleTreeDescription, IBfsOrderBuilder, BlockMappedDigestLocator,
    IMerkleCalculator, MERKLE_TYPES, MerkleCalculator, MerkleDigestLocator, MerkleLocatorFactory
 } from '@jchptf/merkle';
+import {IMerkleTreeModuleOptionsBuilder} from '@jchptf/merkle/dist/di/merkle-tree-module-options-builder.interface';
 
 interface BuilderWrapper extends IMerkleTreeModuleOptionsBuilder, Instance<ContainerModuleCallBack> {
 }
