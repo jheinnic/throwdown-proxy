@@ -1,9 +1,3 @@
-import {Merge} from 'simplytyped';
-import {MessageHeadersMixin} from './message-headers-mixin.type';
+import {MessageHeadersHelpers} from './message-headers-helpers.interface';
 
-export interface MessageHeaders
-{
-   with<T extends MessageHeaders>(overrides: Partial<T>, mixin: MessageHeadersMixin<T>): Merge<this, T>
-
-   init(): MessageHeaders;
-}
+export type MessageHeaders<T extends any> = T & MessageHeadersHelpers<T>

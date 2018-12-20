@@ -1,7 +1,8 @@
-import {isConstructor, MessageHeaders} from './message-headers.interface';
+import {MessageHeaders} from './message-headers.interface';
+import {isConstructor} from './message-headers-helpers.interface';
 
-export type HeadersConstructor<T extends MessageHeaders> = {
-   new(base?: ThisType<T>, overrides?: Partial<T>): T
+export type HeadersConstructor<T extends any> = {
+   new(base?: Partial<T>, overrides?: Partial<T>): MessageHeaders<T>,
 
-   [isConstructor]: true;
+   [isConstructor]: true
 }

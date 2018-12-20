@@ -1,6 +1,9 @@
-import {HeadersConstructor} from './headers-constructor.interface';
-import {Merge} from 'simplytyped';
-import {MessageHeaders} from './message-headers.interface';
+import {HeadersConstructor} from './headers-constructor.type';
+import {isMixinDecorator} from './message-headers-helpers.interface';
 
-export type MessageHeadersMixin<O extends MessageHeaders> =
-   <I extends MessageHeaders>(input: HeadersConstructor<I>) => HeadersConstructor<Merge<I, O>>
+export interface MessageHeadersMixin<O extends any> {
+   <I extends any>(input: HeadersConstructor<I>): HeadersConstructor<O & I>,
+
+   [isMixinDecorator]: true
+}
+

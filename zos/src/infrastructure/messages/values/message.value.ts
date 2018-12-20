@@ -1,10 +1,9 @@
-import {MessageHeaders} from '../interfaces/message-headers.interface';
-import {SimpleHeaders} from './simple-headers.value';
+import {MessageHeaders} from '../interfaces';
 
-export class Message<P extends Readonly<any>, H extends MessageHeaders = SimpleHeaders>
+export class Message<P extends Readonly<any>, H extends Readonly<any> = Readonly<Object>>
 {
    constructor(
-      public readonly headers: H,
+      public readonly headers: MessageHeaders<H>,
       public readonly payload: P)
    { }
 }

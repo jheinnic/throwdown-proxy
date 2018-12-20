@@ -7,7 +7,7 @@ function isMixin<H, T>(withMixin: HeadersConstructor<H & T> | MessageHeadersMixi
    return withMixin.hasOwnProperty(isMixinDecorator);
 }
 
-export class AbstractHeaders<H = Object> implements MessageHeadersHelpers<H> {
+export class BasicHeaders<H = Object> implements MessageHeadersHelpers<H> {
    public constructor(base?: Partial<H>, overrides?: Partial<H>) {
       Object.assign(this, base, overrides);
       this[initHeaders]();
