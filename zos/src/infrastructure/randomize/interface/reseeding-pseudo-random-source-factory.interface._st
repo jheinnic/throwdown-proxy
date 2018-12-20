@@ -1,0 +1,7 @@
+import {IReseedingPseudoRandomSource} from './reseeding-pseudo-random-source.interface._st';
+import {IPseudoRandomSource} from './pseudo-random-source.interface';
+
+export interface IReseedingPseudoRandomSourceFactory<S, T>
+{
+   seedGenerator(seedSource: S, reseedSource: ): IPseudoRandomSource;
+}

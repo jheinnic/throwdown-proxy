@@ -3,6 +3,7 @@ import {callResponse, CallResponseHeaders} from './call-response-headers.interfa
 import {SimpleHeaders} from './simple-headers.value';
 import {Merge} from 'simplytyped';
 import {UUID} from '../../validation';
+import {getDefaultFor} from '../interfaces/message-headers.interface';
 
 export const Foo = correlated(SimpleHeaders);
 
@@ -11,7 +12,12 @@ export let h1 = new SimpleHeaders();
 console.log(h1);
 
 export let h2 = h1.with({
-   [correlationId]: 'five' as UUID
+   [getDefaultFor]: <P extends keyof CorrelationHeaders>(prop: P): CorrelationHeaders[P]|undefined => {
+      if (prop === correlationId) {
+         return 'five' as UUID;
+      }
+      return undefined;
+   }
 }, correlated);
 
 console.log(h2[correlationId]);
