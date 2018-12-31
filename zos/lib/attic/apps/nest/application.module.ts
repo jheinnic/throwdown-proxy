@@ -2,7 +2,7 @@ import {Inject, Module} from '@nestjs/common';
 import {Canvas} from 'canvas';
 
 import {CoroutinesModule} from '@jchptf/coroutines';
-import {IResourceSemaphore, ResourceSemaphoreModule} from '@jchptf/semaphore';
+import {IResourceSemaphore, ResourceSemaphoreModule, PoolSizes} from '@jchptf/semaphore';
 import {ConfigModule} from '@jchptf/config';
 import {
    APPLICATION_CANVAS_SEMAPHORE_PROVIDER, APPLICATION_MODULE_ID, SEMAPHORE_MODULE_OPTIONS
