@@ -1,0 +1,82 @@
+import {ITicketPoolStagingArea} from './interface';
+import {BitStrategyKind, ImageFieldPolicy, ModelSeedPolicy, RandomArtPlayAssets} from './config';
+
+import {IMerkleCalculator} from '@jchptf/merkle';
+import {IPaintModelSeedStrategy} from './interface/paint-model-seed-strategy.interface';
+import {Base64ToAsciiModelSeedStrategy} from './components/modelSeed/base64-to-ascii-model-seed-strategy.class';
+import {EightFromSevenModelSeedStrategy} from './components/modelSeed/eight-from-seven-model-seed-strategy.class';
+import {Mod128ModelSeedStrategy} from './components/modelSeed/mod-128-model-seed-strategy.class';
+import {Mod160ModelSeedStrategy} from './components/modelSeed/mod-160-model-seed-strategy.class';
+import {RawModelSeedStrategy} from './components/modelSeed/raw-model-seed-strategy.class';
+import {CanvasDimensions} from '../randomArt/messages';
+
+export class PaintInputTaskLoader
+{
+   private readonly seedStrategyMap: Map<string, IPaintModelSeedStrategy>;
+
+   constructor(
+      private readonly merkleCalculator: IMerkleCalculator,
+      private readonly ticketPoolAssembly: ITicketPoolStagingArea,
+      private readonly randomArtPlayAssets: RandomArtPlayAssets
+   )
+   {
+      this.seedStrategyMap = new Map<string, IPaintModelSeedStrategy>();
+
+      let modelSeedPolicy: ModelSeedPolicy;
+      for (modelSeedPolicy of this.randomArtPlayAssets.seedPolicies) {
+         let nextStrategy: IPaintModelSeedStrategy;
+
+         switch (modelSeedPolicy.bitMode) {
+            case BitStrategyKind.base64ToAscii: {
+               nextStrategy = new Base64ToAsciiModelSeedStrategy(modelSeedPolicy);
+               break;
+            }
+            case BitStrategyKind.get8From7: {
+               nextStrategy = new EightFromSevenModelSeedStrategy(modelSeedPolicy);
+               break;
+            }
+            case BitStrategyKind.mod128: {
+               nextStrategy = new Mod128ModelSeedStrategy(modelSeedPolicy);
+               break;
+            }
+            case BitStrategyKind.mod160: {
+               nextStrategy = new Mod160ModelSeedStrategy(modelSeedPolicy);
+               break;
+            }
+            case BitStrategyKind.raw: {
+               nextStrategy = new RawModelSeedStrategy(modelSeedPolicy);
+               break;
+            }
+            default: {
+               throw new Error("Unrecognized BitStrategyKind: " + modelSeedPolicy.bitMode);
+            }
+         }
+
+         this.seedStrategyMap.set(modelSeedPolicy.name, nextStrategy);
+      }
+
+      let imagePolicy: ImageFieldPolicy
+      for (imagePolicy of this.randomArtPlayAssets.imagePolicies) {
+         const thumbCanvas: CanvasDimensions = {
+            pixelHeight: imagePolicy.thumbnail.pixelHeight,
+            pixelWidth: imagePolicy.thumbnail.pixelWidth,
+            scaleFactor: imagePolicy.unitScale,
+            fitOrFill: imagePolicy.fitOrFill
+         };
+
+         const fullCanvas: CanvasDimensions = {
+            pixelHeight: imagePolicy.fullSize.pixelHeight,
+            pixelWidth: imagePolicy.fullSize.pixelWidth,
+            scaleFactor: imagePolicy.unitScale,
+            fitOrFill: imagePolicy.fitOrFill
+         };
+
+         const sanityCanvas: CanvasDimensions = {
+
+         }
+      }
+   }
+
+   public load
+}
+

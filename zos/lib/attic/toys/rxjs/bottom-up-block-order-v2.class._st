@@ -1,0 +1,280 @@
+import {Observable, of, range, zip} from 'rxjs';
+import {bufferCount, concatAll, concatMap, map, reduce} from 'rxjs/operators';
+import {BlockSubtreeLocator} from '../locator/block-subtree-locator.interface';
+// import {AsyncObservableIterator, PendingCallback} from '../../rxjs/async-iterator.class';
+import {MerkleOrientationType} from '../merkle-orientation-type.enum';
+import {MerkleNodeType} from '../merkle-node-type.enum';
+import '../../rxjs/rxjs-to-async-iterator';
+
+/**
+ * All subtrees are complete.  Any subtree of the conceptual Merkle tree is binary, as is the Merkle tree
+ * itself.  The physical storage projection is never partitioned to a forest--it is only a single tree,
+ * and it is not binary.  Each of its nodes has a degree equal to twice the number of leaf nodes in its
+ * associated subtree from partitioned Merkle subtree, which is the same value as the reach metric for
+ * each such Merkle subtree.
+ */
+class BinarySubtreeMetrics
+{
+   /**
+    * The number of steps from a tree (or subtree)'s root node to each of its leaf nodes.
+    */
+   constructor(public readonly depth: number)
+   {
+      if (depth <= 0) {
+         throw Error('Depth must be a positive value');
+      }
+   }
+
+   /**
+    * The number of leaf nodes present in a tree (or subtree).
+    */
+   get width(): number
+   {
+      return Math.pow(2, this.depth);
+   }
+
+   /**
+    * The number of subtree roots from the next-deeper root layer that are reachable from leaf nodes
+    * of the present subtree.  Typically set to twice the width.
+    */
+   get reach(): number
+   {
+      return 2 * this.width;
+   }
+}
+
+export class BottomUpBlockOrderV2
+{
+   /**
+    * 2^D, where D is the depth (or height) of the subtree.  The layer of block roots above or below any
+    * other block root node is always D layers away, and the number of internal nodes in any block subtree
+    * will always be ((2^D) - 1).  There is a slight exception to this rule for the deepest physical layer
+    * of a Merkle Tree that uses a number of layers that does not divide evenly into the ideal subtree
+    * height for its block size to node size ratio.
+    *
+    * This number is frequently useful for calculations that have to deal with finding the "absolute"
+    * logical offset range for all 2^D roots from the next lower physical layer whose values are needed
+    * to calculate all 2^(D-1) leaf nodes of a block-mapped subtree from "current" physical layer.
+    *
+    * For example, if a logical Merkle tree has been partitioned for mapping to physical blocks along
+    * boundaries that split the overall tree into a forest of subtrees, each four layers high, then there
+    * are 2^4 = 16 roots below each of the internal subtrees needed to calculate each of its' own 2^3 = 8
+    * leaf nodes.  A tree divided this way will define subtreeReach = 16, and subtreeWidth = 8,
+    * and calculations will frequently retrieve one value or the other by private field reference.
+    */
+   private readonly subtree: BinarySubtreeMetrics;
+
+   /**
+    * 2^(D-1), where D is the depth (or height) of the subtree.  The layer of logical leaf nodes at the
+    * base of any given block-based subtree will always be D-1 layers away from their root.  There
+    * will always be 2^(D-1) such leaves, and the subtree itself will contain ((2^D) - 1) nodes overall.
+    *
+    * This number is frequently useful for calculations that have to deal with finding the "absolute"
+    * logical offset range for all 2^D roots from the next lower physical layer whose values are needed
+    * to calculate all 2^(D-1) leaf nodes of a block-mapped subtree from "current" physical layer.
+    *
+    * For example, if a logical Merkle tree has been partitioned for mapping to physical blocks along
+    * boundaries that split the overall tree into a forest of subtrees, each four layers high, then there
+    * are 2^4 = 16 roots below each of the internal subtrees needed to calculate each of its' own 2^3 = 8
+    * leaf nodes.  A tree divided this way will define subtreeReach = 16, and subtreeWidth = 8,
+    * and calculations will frequently retrieve one value or the other by private field reference.
+    */
+   // private readonly subtreeWidth: number;
+
+   /**
+    * To generalize this block partitioning strategy to apply generally to all potential Merkle trees, it
+    * becomes necessary to concede that not every possible tree depth will require a perfect multiple of
+    * the ideal subtree height for optimal block packing.  For 8192 byte blocks, and 256 bit hash
+    * values, the optimal fit is a 7-layer subtree, with 127 internal nodes and 128 leaves, consuming
+    * 8160 out of every 8192 bytes.  By coincidence, the initial trees to be deployed with this utility
+    * happen to be 21-layers tall, but they could easily grow to require 22-layers or shrink to require
+    * only 20.  In fact, it is almost certain that the initial protocol will periodically compact the
+    * merkle trees to remove space that is no longer required as records are to be removed over time.
+    *
+    * To compensate for this reality, this library will remove overflow layers from the root node such
+    * that the forest that remains after it has been removed is a perfect multiple that can use optimal
+    * blocks for the rest of its span.  The purpose of this variable is to store the actual depth to use
+    * instead of subtreeWidth for just the special case of the root node.
+    */
+
+   // private readonly rootSubtreeWidth: number;
+
+   /**
+    * For cases where the logarithm of layer width is used in a calculation rather than its absolute
+    * value, rootDepthReduction tracks how many fewer layers the root node has when compared to
+    * interTreeDistance.
+    */
+   private readonly rootSubtree: BinarySubtreeMetrics;
+
+   private readonly treeDepth: number;
+
+   private readonly tierCount: number;
+
+   public constructor(subtreeDepth: number, leafCapacity: number)
+   {
+      this.subtree = new BinarySubtreeMetrics(subtreeDepth);
+      this.treeDepth = Math.floor(Math.log2(leafCapacity)) + 1;
+      this.tierCount = Math.floor(this.treeDepth / subtreeDepth);
+      this.rootSubtree = new BinarySubtreeMetrics(this.treeDepth % this.subtree.depth);
+
+      console.log({
+         subtreeDepth: this.subtree.depth,
+         subtreeWidth: this.subtree.width,
+         subtreeReach: this.subtree.reach,
+         treeDepth: this.treeDepth,
+         tierCount: this.tierCount,
+         rootSubtreeDepth: this.rootSubtree.depth,
+         rootSubtreeWidth: this.rootSubtree.width
+      });
+   }
+
+   run(): Observable<BlockSubtreeLocator>
+   {
+      return range(0, this.tierCount)
+         .pipe(
+            reduce<number, Observable<BlockSubtreeLocator[]>>(
+               (innerSeq: Observable<BlockSubtreeLocator[]>, tierIndex: number) => {
+                  // Logical and Block Offsets refer to the absolute offset for the left-most
+                  // node/block on the layer correlating to tierIndex.
+                  const mappedLogicalRootDepth = (
+                     this.subtree.depth * tierIndex
+                  ) + this.rootSubtree.depth;
+                  const logicalLeafDepth = mappedLogicalRootDepth + this.subtree.depth - 1;
+                  const leftMostLogicalOffset = Math.pow(2, mappedLogicalRootDepth) - 1;
+
+                  console.log(
+                     'Physical tier', tierIndex + 1, 'maps at root to logical layer',
+                     mappedLogicalRootDepth);
+                  console.log(
+                     '...and to leaf logical layer', logicalLeafDepth, ', where leftmost is',
+                     leftMostLogicalOffset, ', and rightmost is', (
+                        2 * leftMostLogicalOffset
+                     ));
+
+                  let leftMostBlockOffset = 1;
+                  let rightMostBlockOffset = this.rootSubtree.width;
+                  for (let ii = 1; ii < tierIndex; ii++) {
+                     const widthGrowthScale = Math.pow(this.subtree.reach, ii);
+                     leftMostBlockOffset += widthGrowthScale;
+                     rightMostBlockOffset += (
+                        widthGrowthScale * this.rootSubtree.width
+                     );
+                  }
+
+                  console.log(
+                     'At physical tier', tierIndex, ', physical leftMost is', leftMostBlockOffset,
+                     '. and physical rightMost is', (
+                        rightMostBlockOffset
+                     ));
+                  const deeperRange = range(leftMostLogicalOffset, 2 * leftMostLogicalOffset);
+                  return zip<BlockSubtreeLocator>(
+                     deeperRange.pipe(
+                        map<number, BlockSubtreeLocator>(
+                           (nodeOffset: number, layerIndex: number): BlockSubtreeLocator => {
+                              const leftMostLeafAddress =
+                                 (
+                                    (
+                                       nodeOffset + 1
+                                    ) * this.subtree.width
+                                 ) - 1;
+                              const leftMostLeafIndex = layerIndex * this.subtree.width;
+
+                              return {
+                                 level: tierIndex,
+                                 levelIndex: layerIndex,
+                                 offset: leftMostBlockOffset + layerIndex,
+                                 orientation: (
+                                    (
+                                       nodeOffset % 2
+                                    ) === 1
+                                 )
+                                    ? MerkleOrientationType.LEFT_CHILD
+                                    : MerkleOrientationType.RIGHT_CHILD,
+                                 root: {
+                                    depth: mappedLogicalRootDepth,
+                                    index: layerIndex,
+                                    address: nodeOffset,
+                                    orientation: (
+                                       (
+                                          nodeOffset % 2
+                                       ) === 1
+                                    )
+                                       ? MerkleOrientationType.LEFT_CHILD
+                                       : MerkleOrientationType.RIGHT_CHILD,
+                                    nodeType: (
+                                       (
+                                          logicalLeafDepth + 1
+                                       ) < this.treeDepth
+                                    )
+                                       ? MerkleNodeType.INTERNAL
+                                       : MerkleNodeType.LEAF
+                                 },
+                                 leafLayer: {
+                                    depth: logicalLeafDepth,
+                                    leftSpan: leftMostLeafIndex,
+                                    rightSpan: leftMostLeafIndex + this.subtree.width - 1,
+                                    leftAddress: leftMostLeafAddress,
+                                    rightAddress: leftMostLeafAddress + this.subtree.width - 1
+                                 }
+                              }
+                           }),
+                        bufferCount(this.subtree.reach)),
+                     innerSeq)
+                     .pipe(
+                        concatMap((pair: BlockSubtreeLocator[][]) => [
+                           ...pair[0].slice(0, this.subtree.reach - 1)
+                              .map((value: BlockSubtreeLocator) => [value]),
+                           [pair[0][this.subtree.reach - 1], ...pair[1]]
+                        ]),
+                     )
+               }, of<BlockSubtreeLocator[]>([
+                  {
+                     level: 0,
+                     levelIndex: 0,
+                     offset: 0,
+                     orientation: MerkleOrientationType.ROOT,
+                     root: {
+                        depth: 0,
+                        index: 0,
+                        address: 0,
+                        orientation: MerkleOrientationType.ROOT,
+                        nodeType: MerkleNodeType.ROOT
+                     },
+                     leafLayer: {
+                        depth: this.rootSubtree.depth,
+                        leftSpan: 0,
+                        rightSpan: this.rootSubtree.width - 1,
+                        leftAddress: this.rootSubtree.width - 1,
+                        rightAddress: 2 * (
+                           this.rootSubtree.width - 1
+                        )
+                     }
+                  }
+               ])),
+            concatAll<BlockSubtreeLocator[]>(),
+            concatAll<BlockSubtreeLocator>()
+         );
+   }
+
+   /*
+   public [Symbol.iterator](): Iterator<(cb: PendingCallback<BlockSubtreeLocator>) => void>
+   {
+      const asyncIter = new AsyncObservableIterator(this.run());
+      return asyncIter.makeIter();
+   }
+   */
+}
+
+let test = new BottomUpBlockOrderV2(4, 64);
+test.run()
+   .subscribe(
+      (nextSubtree: BlockSubtreeLocator) => {
+         // if (!!err) {
+         //    console.error('Error', err);
+         // } else {
+         if (!!nextSubtree) {
+            console.log('Next subtree:', JSON.stringify(nextSubtree));
+         }
+      }
+   );
+

@@ -1,0 +1,120 @@
+// @ts-ignore
+import iota from 'iota';
+// @ts-ignore
+import Topo from 'topo';
+
+interface SubtreeLocator {
+   rootIndex: number,
+   childIndices: number[],
+   layerWidth: number
+}
+
+export class RecursiveTopoFactory
+{
+   private factor = 1;
+   private workStack: SubtreeLocator[];
+   private topo = new Topo();
+
+   public constructor(
+     private readonly rootIndex: number,
+     private readonly endIndex: number,
+     subtreeDepth: number)
+   {
+      this.factor = Math.pow(2, subtreeDepth);
+
+      const initialChildIndices = [];
+      for (let ii = 0; ii < this.factor; ii++) {
+         initialChildIndices[ii] = rootIndex + this.factor + ii - 1;
+      }
+
+      this.workStack = [{
+         rootIndex: rootIndex,
+         layerWidth: 1,
+         childIndices: initialChildIndices
+      }];
+   }
+
+   public run(): void
+   {
+      iota.set(this.rootIndex + this.factor - 1);
+      let nextChildren = new Array(this.factor);
+      for (let ii = 0; ii < this.factor; ii++) {
+         nextChildren[ii] = iota();
+      }
+
+      let currentWidth = 1;
+      let firstNextLeaf = this.factor - 1;
+
+      do {
+         const subTreeLoc: SubtreeLocator | undefined  = this.workStack.shift();
+         console.log(`Post-Discovery traversal now visiting ${subTreeLoc}`);
+
+         if ((! subTreeLoc) || (! subTreeLoc.layerWidth)) {
+            const message = `Aborting due to unexpected null/any/undefined stack pop: ${subTreeLoc}`;
+            console.error(message);
+
+            console.log(this.topo.nodes);
+            console.log(JSON.stringify(this.topo.nodes));
+
+            throw Error(message);
+         }
+
+         if (subTreeLoc.layerWidth > currentWidth) {
+            // Observing a change in the expected width of the layer layer means we have just stepped
+            // from the last node at the previous depth to the first node at the next tier of depth.  If
+            // we fail to adjust iota to account for the associated leap across a number of layers equal
+            // to the subtree height we're using for decomposition, we would be iterating though the
+            // first nodes of layer n+1 instead of n+d, where n is the previously correct leaf node layer
+            // depth and d is the height of out subtree decomposition.
+            //
+            // If we have reached the final layer of the tree and that tree did not split evenly into
+            // the desired subtree depth, the baseline common-case iteration logic above will have
+            // jumped beyond the end of the tree's storage region.  This solution needs code defining
+            // how it will handle the deepest final layer as a special case, but until it does so,
+            // chose to terminate prematurely instead of hacking something even more temporary than
+            // what's already in pipeline.  Check assertion here since we can only overflow layers
+            // when next layer is expected to have different depth.
+            currentWidth = subTreeLoc.layerWidth;
+            firstNextLeaf = ((firstNextLeaf + 1) * this.factor) - 1;
+            iota.set(firstNextLeaf);
+
+            if (firstNextLeaf > this.endIndex) {
+               console.error(
+                  'Aborting at transition to partial node layer, which is still TBD for handling');
+
+               break;
+            }
+         }
+
+         this.populateTopo(subTreeLoc);
+      } while (this.workStack.length > 0);
+
+      console.log(this.topo.nodes);
+      console.log(JSON.stringify(this.topo.nodes));
+   }
+
+   populateTopo (stLoc: SubtreeLocator) {
+      console.log(`Call to populateTopo(${stLoc.rootIndex}, ${stLoc.layerWidth}, ${stLoc.childIndices})`);
+
+      const nextWidth = stLoc.layerWidth * this.factor;
+
+      for (let currentRoot of stLoc.childIndices) {
+         const childIndices: number[] = stLoc.childIndices.map(iota);
+
+         this.topo.add(currentRoot, {
+           group: currentRoot,
+           after: childIndices
+         });
+
+         this.workStack.push({
+            rootIndex: currentRoot,
+            childIndices: childIndices,
+            layerWidth: nextWidth
+         });
+      }
+   }
+}
+
+let test = new RecursiveTopoFactory(0, 500000, 4);
+test.run();
+

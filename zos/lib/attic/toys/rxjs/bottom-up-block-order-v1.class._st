@@ -1,0 +1,156 @@
+import {Observable, of, range, zip} from 'rxjs';
+import {bufferCount, concatAll, concatMap, map, reduce} from 'rxjs/operators';
+import {BlockSubtreeLocator} from '../locator/block-subtree-locator.interface';
+import {AsyncObservableIterator, PendingCallback} from '../../rxjs/async-iterator.class';
+
+export class BottomUpBlockOrderV1 implements Iterable<(cb: PendingCallback<BlockSubtreeLocator>) => void>
+{
+   /**
+    * 2^D, where D is the depth (or height) of the subtree.  The layer of block roots above or below any
+    * other block root node is always D layers away, and the number of internal nodes in any block subtree
+    * will always be ((2^D) - 1).  There is a slight exception to this rule for the deepest physical layer
+    * of a Merkle Tree that uses a number of layers that does not divide evenly into the ideal subtree
+    * height for its block size to node size ratio.
+    *
+    * This number is frequently useful for calculations that have to deal with finding the "absolute"
+    * logical offset range for all 2^D roots from the next lower physical layer whose values are needed
+    * to calculate all 2^(D-1) leaf nodes of a block-mapped subtree from "current" physical layer.
+    *
+    * For example, if a logical Merkle tree has been partitioned for mapping to physical blocks along
+    * boundaries that split the overall tree into a forest of subtrees, each four layers high, then there
+    * are 2^4 = 16 roots below each of the internal subtrees needed to calculate each of its' own 2^3 = 8
+    * leaf nodes.  A tree divided this way will define rootDepthPower = 16, and leafDepthPower = 8,
+    * and calculations will frequently retrieve one value or the other by private field reference.
+    */
+   private readonly rootDepthPower: number;
+
+   /**
+    * 2^(D-1), where D is the depth (or height) of the subtree.  The layer of logical leaf nodes at the
+    * base of any given block-based subtree will always be D-1 layers away from their root.  There
+    * will always be 2^(D-1) such leaves, and the subtree itself will contain ((2^D) - 1) nodes overall.
+    *
+    * This number is frequently useful for calculations that have to deal with finding the "absolute"
+    * logical offset range for all 2^D roots from the next lower physical layer whose values are needed
+    * to calculate all 2^(D-1) leaf nodes of a block-mapped subtree from "current" physical layer.
+    *
+    * For example, if a logical Merkle tree has been partitioned for mapping to physical blocks along
+    * boundaries that split the overall tree into a forest of subtrees, each four layers high, then there
+    * are 2^4 = 16 roots below each of the internal subtrees needed to calculate each of its' own 2^3 = 8
+    * leaf nodes.  A tree divided this way will define rootDepthPower = 16, and leafDepthPower = 8,
+    * and calculations will frequently retrieve one value or the other by private field reference.
+    */
+   private readonly leafDepthPower: number;
+
+   private readonly treeDepth: number;
+
+   private readonly tierCount: number;
+
+
+   public constructor(private readonly subtreeDepth: number, leafCapacity: number)
+   {
+      this.rootDepthPower = Math.pow(2, subtreeDepth);
+      this.leafDepthPower = Math.pow(2, subtreeDepth - 1);
+      this.treeDepth = Math.ceil(Math.log2(leafCapacity)) + 1;
+      this.tierCount = Math.ceil(this.treeDepth / this.subtreeDepth);
+   }
+
+   private run(): Observable<BlockSubtreeLocator>
+   {
+      return range(1, this.tierCount - 1)
+         .pipe(
+            reduce(
+               (innerSeq: Observable<BlockSubtreeLocator[]>, tierIndex: number) => {
+                  // Logical and Block Offsets refer to the absolute offset for the left-most
+                  // node/block on the layer correlating to tierIndex.
+                  const leftMostLogicalOffset = Math.pow(2, this.subtreeDepth * tierIndex) - 1;
+                  let leftMostBlockOffset = 1;
+                  let rightMostBlockOffset = this.rootDepthPower;
+                  for (let ii=1; ii<tierIndex; ii++) {
+                     leftMostBlockOffset += Math.pow(this.rootDepthPower, ii);
+                     rightMostBlockOffset += Math.pow(this.rootDepthPower, ii+1);
+                  }
+
+                  console.log(
+                     'At physical tier', tierIndex, ', physical leftMost is', leftMostBlockOffset,
+                     '. and physical rightMost is', (rightMostBlockOffset));
+                  console.log(
+                     'At logical tier', (tierIndex * this.subtreeDepth), ', logical leftmost is',
+                     leftMostLogicalOffset, ', and logical rightmost is', (2 * leftMostLogicalOffset));
+                  const deeperRange = range(leftMostLogicalOffset, 2*leftMostLogicalOffset);
+                  return zip(
+                     deeperRange.pipe(
+                        map<number, BlockSubtreeLocator>(
+                           (nodeOffset: number, layerIndex: number): BlockSubtreeLocator => {
+                              const leftMostLeafOffset = ((nodeOffset + 1) * this.leafDepthPower) - 1;
+                              const leftMostLeafIndex = layerIndex * this.leafDepthPower;
+                              const rootLayerDepth = tierIndex * this.subtreeDepth;
+
+                              return {
+                                 level: tierIndex,
+                                 levelIndex: layerIndex,
+                                 offset: leftMostBlockOffset + layerIndex,
+                                 rootNode: {
+                                    depth: rootLayerDepth,
+                                    index: layerIndex,
+                                    address: nodeOffset,
+                                 },
+                                 leafLayer: {
+                                    depth: rootLayerDepth + this.subtreeDepth - 1,
+                                    leftSpan: leftMostLeafIndex,
+                                    rightSpan: leftMostLeafIndex + this.leafDepthPower - 1,
+                                    leftAddress: leftMostLeafOffset,
+                                    rightAddress: leftMostLeafOffset + this.leafDepthPower - 1
+                                 }
+                              }
+                           }),
+                        bufferCount(this.rootDepthPower)),
+                     innerSeq)
+                     .pipe(
+                        concatMap((pair: BlockSubtreeLocator[][]) => [
+                           ...pair[0].slice(0, this.rootDepthPower - 1)
+                              .map((value: BlockSubtreeLocator) => [value]),
+                           [pair[0][this.rootDepthPower - 1], ...pair[1]]
+                        ]),
+                     );
+               }, of([
+                  {
+                     level: 1,
+                     levelIndex: 0,
+                     offset: 0,
+                     rootNode: {
+                        depth: 1,
+                        index: 0,
+                        address: 0
+                     },
+                     leafLayer: {
+                        depth: this.subtreeDepth,
+                        leftSpan: 0,
+                        rightSpan: this.rootDepthPower - 1,
+                        leftAddress: this.rootDepthPower - 1,
+                        rightAddress: 2 * (this.rootDepthPower - 1)
+                     }
+                  }
+               ])),
+            concatAll<BlockSubtreeLocator[]>(),
+            concatAll<BlockSubtreeLocator>()
+         );
+   }
+
+   public [Symbol.iterator](): Iterator<(cb: PendingCallback<BlockSubtreeLocator>) => void>
+   {
+      const asyncIter = new AsyncObservableIterator(this.run());
+      return asyncIter.makeIter();
+   }
+}
+
+let test = new BottomUpBlockOrderV1(2, 64);
+for (let nextCallback of test) {
+   nextCallback((err: any, nextSubtree: BlockSubtreeLocator | null | {}) => {
+      if (!!err) {
+         console.error(err);
+      } else {
+         console.log(nextSubtree);
+      }
+   });
+}
+
