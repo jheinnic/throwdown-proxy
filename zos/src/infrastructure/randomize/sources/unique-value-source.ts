@@ -6,7 +6,8 @@ export class UniqueValueSource implements Iterable<Buffer>
 {
    private wordSet: Set<string>;
 
-   private seed: Uint32Array;
+   // private seed: Uint32Array;
+   private isaac: IsaacCSPRNG;
 
    private fullWords: number;
 
@@ -18,8 +19,9 @@ export class UniqueValueSource implements Iterable<Buffer>
 
    constructor(seed: Uint32Array, bits: number, signed: boolean, wordSet: Set<string>)
    {
+      this.isaac = new IsaacCSPRNG([...seed]);
       this.wordSet = wordSet;
-      this.seed = seed;
+      // this.seed = seed;
       this.fullWords = (bits >= 32) ? (bits / 32) : 0;
       this.moduloBits = (bits > (32 * this.fullWords))
          ? (bits % 32)
@@ -37,7 +39,6 @@ export class UniqueValueSource implements Iterable<Buffer>
 
    * init(): Iterator<Buffer>
    {
-      IsaacCSPRNG([...this.seed]);
       // .seed([...this.seed]);
 
       let buffer: Buffer | number;
@@ -48,13 +49,12 @@ export class UniqueValueSource implements Iterable<Buffer>
          genNext = this.generateNext.bind(this);
       } else if (typeof(this.moduloWord) === 'number') {
          const moduloWord: number = this.moduloWord;
-         const isaac = isaac;
-         genNext = function () {
-            return Buffer.from([isaac.rand() % moduloWord]);
+         genNext = () => {
+            return Buffer.from([this.isaac.rand() % moduloWord]);
          };
       } else {
          // We will an exception in this block, but TypeScript can't foresee that...
-         genNext = () => Buffer.from([1]);
+         genNext = function() { return Buffer.from([1]); }
          illegalState('No generation strategy available');
       }
 
@@ -75,13 +75,13 @@ export class UniqueValueSource implements Iterable<Buffer>
 
       for (let ii = 0; ii < this.fullWords; ii++) {
          bos.writeWords([
-            Math.abs(isaac.rand())
+            Math.abs(this.isaac.rand())
          ], 32)
       }
 
       if (this.moduloBits > 0) {
          bos.writeWords([
-            Math.abs(isaac.rand())
+            Math.abs(this.isaac.rand())
          ], this.moduloBits);
       }
 

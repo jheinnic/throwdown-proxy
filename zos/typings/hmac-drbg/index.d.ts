@@ -1,10 +1,13 @@
-import {ConstructorFor} from 'simplytyped';
-import {BlockHash} from '../hash.js';
-
 declare module 'hmac-drbg'
 {
-   export class HmacDrbg
+   import 'hmac-drbg';
+   import {ConstructorFor} from 'simplytyped';
+   import {BlockHash} from 'hash.js';
+
+   export class HmacDrbg<T>
    {
+      constructor(options: HmacDrbgOptions<T>);
+
       generate(len: number, enc: EncodingType, add: string, addEnc?: EncodingType): string;
       generate(len: number, add: string, addEnc?: EncodingType): string;
       generate(len: number): string;

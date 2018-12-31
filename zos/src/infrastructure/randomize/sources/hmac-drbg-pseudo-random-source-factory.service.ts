@@ -1,5 +1,5 @@
 import {HmacDrbgSeed} from './hmac-drbg-seed.interface';
-import {IPseudoRandomSeedFactory, IPseudoRandomSource, IRandomSource} from '../interface';
+import {IPseudoRandomSeedFactory, IPseudoRandomSource} from '../interface';
 import {HmacDrbgPseudoRandomSource} from './hmac-drbg-pseudo-random-source.class';
 
 export class HmacDrbgPseudoRandomSourceFactory implements IPseudoRandomSeedFactory {

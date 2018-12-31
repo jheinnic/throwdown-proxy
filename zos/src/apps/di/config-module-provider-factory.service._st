@@ -4,8 +4,6 @@ import Bind = interfaces.Bind;
 
 import {Deployment, EventSpecification, PlayAssets, PrizeMintingPolicy} from '../config';
 import {APP_CONFIG_TYPES} from './types';
-import {ConfigLoader} from '../../../node_modules/@jchptf/di-app-registry/dist/config-loader.service';
-import {DI_TYPES, IConfigLoader} from '@jchptf/di-app-registry';
 
 
 export function configContainerModule(bind: Bind): void

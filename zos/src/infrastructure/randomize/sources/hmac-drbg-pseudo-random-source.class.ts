@@ -16,16 +16,17 @@ export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<
          RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgOptions<T>
    )
    {
-      this.hmacDrbg = new HmacDrbg({
-         entropy: seedBytes.entropyWord.toString('16'),
-         entropyEnc: 'hex',
-         nonce: seedBytes.nonceWord.toString('16'),
-         nonceEnc: 'hex'
+      this.hmacDrbg = new HmacDrbg(seedBytes);
+      // {
+      //    entropy: seedBytes.entropyWord.toString('16'),
+      //    entropyEnc: 'hex',
+      //    nonce: seedBytes.nonceWord.toString('16'),
+      //    nonceEnc: 'hex'
          // add: [
          //
          // ],
          // addEnc: 'hex'
-      });
+      // });
    }
 
    public* pseudoRandomBuffers(byteCount: number): IterableIterator<Buffer>
