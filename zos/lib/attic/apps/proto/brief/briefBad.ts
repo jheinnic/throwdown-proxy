@@ -14,8 +14,8 @@ import {catchWith} from 'ix/asynciterable/pipe/catchwith';
 import {iWatch, Watch} from '@jchptf/api';
 import {
    EagerFixedIterableLoadStrategy, LoadResourcePoolStrategy, LoadResourcePoolStrategyConfig
-} from '../../infrastructure/lib/semaphore/interfaces/load-strategy-config.interface';
-import {GET_LEASE_MANAGER} from '../../infrastructure/lib/semaphore/resource-pool.constants';
+} from '../../infrastructure/outbound/semaphore/interfaces/load-strategy-config.interface';
+import {GET_LEASE_MANAGER} from '../../infrastructure/outbound/semaphore/resource-pool.constants';
 import {LeaseManager} from './lease-manager.class';
 
 

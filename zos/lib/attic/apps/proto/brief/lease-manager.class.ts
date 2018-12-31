@@ -1,4 +1,4 @@
-import {GET_LEASE_MANAGER} from '../../infrastructure/lib/semaphore/resource-pool.constants';
+import {GET_LEASE_MANAGER} from '../../infrastructure/outbound/semaphore/resource-pool.constants';
 import {TryMe} from './brief03';
 
 export class LeaseManager<T extends object> implements ProxyHandler<T>
