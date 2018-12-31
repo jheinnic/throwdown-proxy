@@ -156,7 +156,7 @@ export class TryMe<T extends object>
    private isOwnedResource(resource: any): resource is ILeasedResource<T>
    {
       return ((!!resource[GET_LEASE_MANAGER]) &&
-         (resource[GET_LEASE_MANAGER]['parentPool'] === this));
+         (resource[GET_LEASE_MANAGER]['parentSemaphore'] === this));
    }
 
    private buildAvailableResourceQueue(): AsyncIterableX<LeaseManager<T>>

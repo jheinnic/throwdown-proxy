@@ -1,23 +1,62 @@
+import 'reflect-metadata';
+import * as fs from 'fs';
 import {NestFactory} from '@nestjs/core';
+
 import {ApplicationModule} from './application.module';
-import {getResourceSemaphoreToken} from '../../infrastructure/lib/semaphore/di/resource-semaphore.token-factory';
-import '@jchptf/reflection'
+import {
+   APPLICATION_CANVAS_SEMAPHORE_PROVIDER, APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER,
+   APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER
+} from './application.constants';
+import {simulateWorkload} from './simulate-workload.function';
 
-async function bootstrap1()
+async function bootstrap()
 {
-   const app = await NestFactory.createApplicationContext(ApplicationModule);
-   const resourceSemaphore = app.get(getResourceSemaphoreToken("FourSquare"));
+   console.log('Starting app context');
+   const preApp = NestFactory.createApplicationContext(ApplicationModule);
+   console.log('Started app context');
+   fs.writeFileSync('./iWillDoIt', 'iWillDoIt', {
+      mode: 0o666,
+      encoding: 'utf8',
+      flag: 'w'
+   });
+   const app = await preApp;
+   console.log('Awaited app context');
+   const resourceSemaphore = app.get(APPLICATION_CANVAS_SEMAPHORE_PROVIDER);
+   const acquireChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER);
+   const recycleChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER);
+
+   // console.log('Acquire', acquireChan);
+   // console.log('Recycle', recycleChan);
+
+   // logic...
+   simulateWorkload(acquireChan, recycleChan)
+      .then((result: number) => {
+         console.log('Yielded', result);
+         app.close();
+         console.log('Closed app context');
+      })
+      .catch((err: any) => {
+         console.error('Trapped error!', err);
+         app.close();
+         console.log('Closed app context');
+      });
+
    console.log(resourceSemaphore.name);
-   // logic...
 }
-async function bootstrap2()
-{
-   const app2 = await NestFactory.create(ApplicationModule);
-   const resourceSemaphore2 = app2.get(getResourceSemaphoreToken("FourSquare"));
-   console.log(resourceSemaphore2.name);
-   // logic...
-}
-bootstrap1();
-bootstrap2();
 
-// const tasksController = app.select(TasksModule).get(TasksController, { strict: true });
+bootstrap()
+   .then(() => {
+      console.log('Bootstrap completed!')
+   })
+   .catch((err: any) => {
+      console.error('Bootstrap failed!', err);
+   });
+console.log('Returned from async bootstrap.');
+
+/*
+let counter = 0;
+setInterval(() => {
+   counter++;
+   // console.log('Wooga wooga', ++counter);
+}, 15000);
+*/

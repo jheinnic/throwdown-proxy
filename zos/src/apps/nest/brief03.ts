@@ -8,8 +8,7 @@ const poissonProcess = require('poisson-process');
 // @ts-ignore
 const randomNormal = require('random-normal');
 
-import '@jchptf/reflection';
-import {ChanBufferType, ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines';
+import {ChanBufferType, IConcurrentWorkFactory} from '@jchptf/coroutines';
 import {iWatch, Watch} from '@jchptf/api';
 
 import {
@@ -142,7 +141,7 @@ export class TryMe<T extends object>
    private isOwnedResource(resource: any): resource is ILeasedResource<T>
    {
       return ((!!resource[GET_LEASE_MANAGER]) &&
-         (resource[GET_LEASE_MANAGER]['parentPool'] === this));
+         (resource[GET_LEASE_MANAGER]['parentSemaphore'] === this));
    }
 
    private async acquireResources(): Promise<Array<LeaseManager<T>>>

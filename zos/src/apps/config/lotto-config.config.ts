@@ -1,11 +1,11 @@
 import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '@jchptf/di-app-registry';
+import {configClass, configProp} from '@jchptf/config';
 import {EventSpecification} from './event-specification.config';
 import {PrizeMintingPolicy} from './prize-minting-policy.config';
 import {Deployment} from './deployment.config';
-import '@jchptf/reflection';
+
 import {PlayAssets} from './play-assets.config';
 
 @configClass("eth.lotto")

@@ -1,7 +1,7 @@
 import {IsInt, IsPositive} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/di-app-registry';
-import '@jchptf/reflection';
+import {configClass, configProp} from '@jchptf/config';
+
 
 @configClass("eth.lotto.setupPolicy.serialNoncePolicy") // "eth.lotto.eventSpec")
 export class SerialNoncePolicy {

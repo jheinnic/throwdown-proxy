@@ -1,8 +1,7 @@
 import {IsIn, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/di-app-registry';
+import {configClass, configProp} from '@jchptf/config';
 import {ShufflePolicy} from './shuffle-policy.config';
 import {ProofSeed} from './proof-seed.config';
 import {BlockLayout} from './block-layout.config';
@@ -10,9 +9,9 @@ import {TierNoncePolicy} from './tier-nonce-policy.config';
 import {SerialNoncePolicy} from './serial-nonce-policy.config';
 import {EntropyAlgorithms} from './entropy-algorithms.config';
 import {EntropyAlgorithmSelection} from './entropy-algorithm-selection.config';
-import {APP_CONFIG_TYPES} from '../di';
+import {PRIZE_MINTING_POLICY_PROVIDER} from '../di';
 
-@configClass('eth.lotto.prizeMinting', APP_CONFIG_TYPES.PrizeMintingPolicy)
+@configClass('eth.lotto.prizeMinting', PRIZE_MINTING_POLICY_PROVIDER)
 export class PrizeMintingPolicy {
    @configProp('entropySource')
    @ValidateNested()

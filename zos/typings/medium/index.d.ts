@@ -41,8 +41,8 @@ declare module 'medium'
   export function sleep(ms: number): Promise<void>
 
   /** A constant, which all takes on a closed channel receive instead of a value.*/
-  const CLOSED: object;
-  // export type CLOSED = typeof CLOSED;
+  const CLOSED: symbol;
+  export type CLOSED = typeof CLOSED;
 
   /**
    * Closes a channel. This causes:

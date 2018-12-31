@@ -1,16 +1,20 @@
-import {LoadSourceStrategy} from '../../../../src/infrastructure/lib/semaphore/di/config/resource-pool.module-config';
+import {CoroutinesModule} from '@jchptf/coroutines';
+import {LoadResourcePoolStrategy, ResourceSemaphoreModule} from '@jchptf/semaphore';
+import {Canvas} from 'canvas';
 
 @Module({
-  imports: [
-     CoRoutinesSupportModule,
-     ResourcePoolModule.forRoot({
-        name: 'FourHundredSquared',
-        loadStrategy: LoadSourceStrategy.EAGER_FIXED_ITERABLE,
-        source: [
-           new Canvas(400, 400), new Canvas(400, 400),
-           new Canvas(400, 400), new Canvas(400, 400)
-        ],
-     }
-     )
-  ]
+   imports: [
+      CoroutinesModule,
+      ResourceSemaphoreModule.forRoot({
+            name: 'FourHundredSquare',
+            loadStrategy: LoadResourcePoolStrategy.EAGER_FIXED_ITERABLE,
+            resources: [
+               new Canvas(400, 400), new Canvas(400, 400),
+               new Canvas(400, 400), new Canvas(400, 400)
+            ],
+         }
+      )
+   ]
 })
+export class ApplicationModule
+{ }

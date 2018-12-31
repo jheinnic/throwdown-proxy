@@ -1,7 +1,7 @@
 import {Matches} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/di-app-registry';
-import '@jchptf/reflection';
+import {configClass, configProp} from '@jchptf/config';
+
 
 @configClass('eth.lotto.eventSetup.keySource') // "eth.lotto.eventSpec")
 export class KeySource

@@ -1,5 +1,5 @@
-import {configClass} from '@jchptf/di-app-registry';
-import '@jchptf/reflection';
+import {configClass} from '@jchptf/config';
+
 
 @configClass()
 export class NodeCryptoOptions

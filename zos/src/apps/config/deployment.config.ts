@@ -1,11 +1,11 @@
 import {Type} from 'class-transformer';
 import {ValidateNested} from 'class-validator';
 
-import {configClass, configProp} from '@jchptf/di-app-registry';
+import {configClass, configProp} from '@jchptf/config';
 import {VaultAccess, KeySource, LocalAccess, DataSetPaths} from '.';
-import '@jchptf/reflection';
+import {DEPLOYMENT_PROVIDER} from '../di';
 
-@configClass('eth.lotto.deployment')
+@configClass('eth.lotto.deployment', DEPLOYMENT_PROVIDER)
 export class Deployment
 {
    @configProp('localAccess')

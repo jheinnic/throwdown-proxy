@@ -1,11 +1,11 @@
 import {IsInt, IsPositive, ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
-import {configClass, configProp} from '@jchptf/di-app-registry';
+import {configClass, configProp} from '@jchptf/config';
 import {PrizePool} from './prize-pool.config';
-import '@jchptf/reflection';
+import {EVENT_SPECIFICATION_PROVIDER} from '../di';
 
-@configClass("eth.lotto.eventSpec") // "eth.lotto.eventSpec")
+@configClass("eth.lotto.eventSpec", EVENT_SPECIFICATION_PROVIDER) // "eth.lotto.eventSpec")
 export class EventSpecification {
    @configProp("sponsorId")
    @IsPositive()

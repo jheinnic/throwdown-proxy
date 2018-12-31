@@ -2,3 +2,6 @@ node-modules/
 src/toys
 mypool
 logs
+dist/
+predist/
+node_modules/
