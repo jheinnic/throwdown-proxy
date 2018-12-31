@@ -1,6 +1,6 @@
-import {ResourcePool} from './resource-pool.class';
-import {IResourceAdapter} from './interfaces/lease-manager.interface';
-import {GET_LEASE_MANAGER} from './resource-pool.constants';
+import {ResourceSemaphore} from './resource-semaphore.class';
+import {GET_LEASE_MANAGER} from './resource-semaphore.constants';
+import {IResourceAdapter} from './interfaces/resource-adapter.interface';
 
 export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, ProxyHandler<T>
 {
@@ -8,7 +8,7 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
    private dryAdapter?: { proxy: T, revoke: () => void };
 
    constructor(
-      readonly parentPool: ResourcePool<T>,
+      readonly parentSemaphore: ResourceSemaphore<T>,
       readonly wetArtifact: T)
    {
       this.inUse = false;
@@ -46,7 +46,7 @@ export class ResourceAdapter<T extends object> implements IResourceAdapter<T>, P
 
       if (! this.inUse) {
          this.inUse = true;
-         this.parentPool.notifyInUse(this.wetArtifact);
+         this.parentSemaphore.notifyInUse(this.wetArtifact);
       }
 
       return Reflect.get(target, prop, receiver);

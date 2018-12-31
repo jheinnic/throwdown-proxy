@@ -2,7 +2,7 @@ import {map, toArray} from 'rxjs/operators';
 import {range} from 'rxjs';
 
 import '@jchptf/reflection';
-import {ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines';
+import {CO_TYPES, IConcurrentWorkFactory} from '@jchptf/coroutines';
 
 import {
    LoadResourcePoolStrategy, LoadResourcePoolStrategyConfig
@@ -17,7 +17,7 @@ import {IResourceSemaphoreFactory} from './interfaces/resource-semaphore-factory
 export class ResourceSemaphoreFactory implements IResourceSemaphoreFactory
 {
    constructor(
-      @Inject(ConcurrentWorkFactory)private readonly concurrentWorkFactory: IConcurrentWorkFactory)
+      @Inject(CO_TYPES.ConcurrentWorkFactory) private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    { }
 
    async createSemaphore<T extends object>(config: LoadResourcePoolStrategyConfig<T>):

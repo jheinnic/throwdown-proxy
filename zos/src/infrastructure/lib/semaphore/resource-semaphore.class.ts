@@ -4,11 +4,11 @@ import {map as txMap} from 'transducers-js';
 import '@jchptf/reflection';
 import {iWatch, Watch} from '@jchptf/api';
 import {ChanBufferType, IConcurrentWorkFactory} from '@jchptf/coroutines';
-import {ILeasedResource} from './interfaces/leased-resource.interface';
-import {GET_LEASE_MANAGER} from './resource-pool.constants';
+import {GET_LEASE_MANAGER} from './resource-semaphore.constants';
 import {IResourceAdapter} from './interfaces/resource-adapter.interface';
 import {IResourceSemaphore} from './interfaces/resource-semaphore.interface';
 import {ResourceAdapter} from './resource-adapter.class';
+import {IManagedResource} from './interfaces/managed-resource.interface';
 
 interface PoolSizes
 {
@@ -130,10 +130,10 @@ export class ResourceSemaphore<T extends object> implements IResourceSemaphore<T
       console.log('Exit scanForRequests');
    }
 
-   private isOwnedResource(resource: any): resource is ILeasedResource<T>
+   private isOwnedResource(resource: any): resource is IManagedResource<T>
    {
       return ((!!resource[GET_LEASE_MANAGER]) &&
-         (resource[GET_LEASE_MANAGER]['parentPool'] === this));
+         (resource[GET_LEASE_MANAGER]['parentSemaphore'] === this));
    }
 
    notifyInUse(_resource: T)
