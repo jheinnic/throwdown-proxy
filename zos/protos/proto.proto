@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package name.jchein.portfolio.random_art;
+
+option java_multiple_files = true;
+option java_outer_classname = "ExampleProto";
+option java_package = "name.jchein.portfolio.randomArt.services.paintQueue.grpc.proto";
+
+// import "name/jchein/portfolio/common/grpc/action/actions.proto";
+
+// Incoming paint task queue.
+service PaintQueue {
+    rpc createPaintTask (stream CreatePaintTask) returns (stream ChannelHeartbeat) { }
+
+    rpc updateTaskState (stream UpdateTaskState) returns (stream ChannelHeartbeat) { }
+}
+
+// Request messages contain command properties.
+message CreatePaintTask {
+    string id = 1;
+    string seedPrefix = 7;
+    string seedSuffix = 8;
+    string renderPolicyId = 9;
+    string stagingPolicyId = 10;
+}
+
+// All except PERCENT_DONE and ERROR use InformationUpdate body.
+enum UpdateType {
+    PERCENT_DONE = 0; // Uses PercentDoneUpdate body
+    FINISHED = 1;
+    STARTED = 2;
+    INFORMATION = 3;
+    ERROR = 4;       // Uses RetryableErrorBody
+    FATAL_ERROR = 5;
+    CANCELLED = 6;
+    UNKNOWN = 7;
+    CLOSE_CHANNEL = 8;
+}
+
+message PercentDoneUpdate {
+    string id = 1;
+    string message = 3;
+    uint32 percentDone = 4;
+}
+
+message InformationUpdate {
+    string id = 1;
+    string message = 3;
+}
+
+message RetryableErrorUpdate {
+    string id = 1;
+    string message = 3;
+    uint32 retryIn = 4;
+}
+
+message UpdateTaskState {
+    UpdateType updateType = 2;
+    oneof updateBody {
+        PercentDoneUpdate percentDoneBody = 13;
+        InformationUpdate informationBody = 14;
+        RetryableErrorUpdate retryErrorBody = 15;
+    }
+}
+
+enum StatusType {
+    HEARTBEAT = 0;
+    CLOSED = 1;   // Only used after receiving a CLOSE_CHANNEL UpdateTaskState message.
+    INFORMATION = 2;
+    ERROR = 3;
+}
+
+message ChannelHeartbeat {
+    StatusType statusType = 2;
+    string message = 3;
+    uint32 requestCount = 4;
+    string lastRequestId = 5;
+}
+

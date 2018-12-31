@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@grpc/proto-loader": "^0.3.0",
     "@jchptf/api": "^0.0.26",
     "@jchptf/builders": "^0.0.9",
     "@jchptf/config": "^0.0.10",
@@ -12,7 +13,7 @@
     "@loopback/metadata": "^0.9.9",
     "@nestjs/common": "^5.5.0",
     "@nestjs/core": "^5.5.0",
-    "@nestjs/typeorm": "^5.2.2",
+    "@nestjs/microservices": "^5.5.0",
     "@thi.ng/bitstream": "^0.4.15",
     "@thi.ng/errors": "^0.1.11",
     "ajv": "^6.5.3",
@@ -49,6 +50,7 @@
     "ethereumjs-util": "^5.2.0",
     "ethereumjs-wallet": "^0.6.0",
     "fluent-interface-builder": "^2.0.1",
+    "grpc": "^1.17.0",
     "harmony-reflect": "^1.6.1",
     "hdkey": "^1.0.0",
     "hmac-drbg": "^1.0.1",
@@ -71,6 +73,7 @@
     "openzeppelin-zos": "^1.9.3",
     "poisson-process": "^1.0.0",
     "random": "^2.0.12",
+    "random-access-file": "^2.0.1",
     "random-normal": "^1.0.0",
     "random-org": "^0.1.6",
     "reflect-metadata": "^0.1.12",
