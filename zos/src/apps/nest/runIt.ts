@@ -12,21 +12,12 @@ import {simulateWorkload} from './simulate-workload.function';
 async function bootstrap()
 {
    console.log('Starting app context');
-   const preApp = NestFactory.createApplicationContext(ApplicationModule);
-   console.log('Started app context');
-   fs.writeFileSync('./iWillDoIt', 'iWillDoIt', {
-      mode: 0o666,
-      encoding: 'utf8',
-      flag: 'w'
-   });
-   const app = await preApp;
+   const app = await NestFactory.createApplicationContext(ApplicationModule);
    console.log('Awaited app context');
+
    const resourceSemaphore = app.get(APPLICATION_CANVAS_SEMAPHORE_PROVIDER);
    const acquireChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER);
    const recycleChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER);
-
-   // console.log('Acquire', acquireChan);
-   // console.log('Recycle', recycleChan);
 
    // logic...
    simulateWorkload(acquireChan, recycleChan)
