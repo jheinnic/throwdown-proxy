@@ -10,9 +10,6 @@ import {
 import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure/randomize/interface';
 import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources/index';
 import * as crypto from 'crypto';
-import {Container, ContainerModule} from 'inversify';
-import {DI_TYPES, IConfigLoader, configLoaderModule} from '@jchptf/di-app-registry';
-import {configContainerModule} from './di';
 import {Deployment} from './config';
 import * as path from 'path';
 import * as fs from 'fs';

@@ -1,9 +1,7 @@
 import {Container, ContainerModule} from 'inversify';
 import {Command} from 'commander';
 
-import {CONFIG_TYPES, configLoaderModule, ConfigLoader} from '../infrastructure/config';
 import {EventSpecification} from './config';
-import {configContainerModule} from './di';
 
 const program = new Command();
 program
