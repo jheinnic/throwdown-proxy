@@ -1,0 +1,66 @@
+[
+ {
+    "name"        : "geth-miner-1",
+    "cwd"         : ".",
+    "script"      : "app.js",
+    "log_date_format"   : "YYYY-MM-DD HH:mm Z",
+    "merge_logs"    : false,
+    "watch"       : false,
+    "exec_interpreter"  : "node",
+    "exec_mode"     : "fork_mode",
+    "env":
+    {
+      "NODE_ENV"    : "private",
+      "RPC_HOST"    : "geth-miner-1",
+      "RPC_PORT"    : "8545",
+      "LISTENING_PORT":       "30303",
+      "INSTANCE_NAME"   : "geth-miner-1",
+      "WS_SERVER"     : "http://geth-stats:3000",
+      "WS_SECRET"     : "test",
+      "VERBOSITY":      "2"
+    }
+  },
+  {
+    "name"        : "geth-miner-2",
+    "cwd"         : ".",
+    "script"      : "app.js",
+    "log_date_format"   : "YYYY-MM-DD HH:mm Z",
+    "merge_logs"    : false,
+    "watch"       : false,
+    "exec_interpreter"  : "node",
+    "exec_mode"     : "fork_mode",
+    "env":
+    {
+      "NODE_ENV"    : "private",
+      "RPC_HOST"    : "geth-miner-2",
+      "RPC_PORT"    : "8545",
+      "LISTENING_PORT":       "30303",
+      "INSTANCE_NAME"   : "geth-miner-2",
+      "WS_SERVER"     : "http://geth-stats:3000",
+      "WS_SECRET"     : "test",
+      "VERBOSITY":      "2"
+    }
+  },
+  {
+    "name"        : "geth-miner-3",
+    "cwd"         : ".",
+    "script"      : "app.js",
+    "log_date_format"   : "YYYY-MM-DD HH:mm Z",
+    "merge_logs"    : false,
+    "watch"       : false,
+    "exec_interpreter"  : "node",
+    "exec_mode"     : "fork_mode",
+    "env":
+    {
+      "NODE_ENV"    : "private",
+      "RPC_HOST"    : "geth-miner-3",
+      "RPC_PORT"    : "8545",
+      "LISTENING_PORT":        "30303",
+      "CONTACT_DETAILS":       "",
+      "INSTANCE_NAME"   : "geth-miner-3",
+      "WS_SERVER"     : "http://geth-stats:3000",
+      "WS_SECRET"     : "test",
+      "VERBOSITY":      "2"
+    }
+  }
+]
