@@ -88,19 +88,25 @@ services:
       - sealerPrivateKey=88a5c1108c582822f320cc6933707c96edb721c3dd4a43e78fc6caa18e0ae1d4
       - sealerKeyPassword=abcd1234
 
-  geth-monitor:
+  geth-netintel:
     build:
-      context: ./geth/monitor2
+      context: ./geth/netintel
     depends_on: 
       - geth-miner-1
       - geth-miner-2
       - geth-miner-3
+      - geth-dashboard
     restart: unless-stopped
     domainname: dev.jchein.name
-    hostname: geth-monitor
+    hostname: geth-netintel
     expose: 
       - 30303
       - 30303/udp
+    links:
+      - geth-miner-1:geth-miner-1
+      - geth-miner-2:geth-miner-2
+      - geth-miner-3:geth-miner-3
+      - geth-dashboard:geth-dashboard
     networks:
       chain-backnet:
     environment:
@@ -109,21 +115,18 @@ services:
       - chainSubnet=172.35.160.96/27
 
   geth-dashboard:
-    build:
-      context: ./geth/dashboard
-    depends_on: 
-      - geth-monitor
+    image: immutability/ethstats
     restart: unless-stopped
     domainname: dev.jchein.name
     hostname: geth-dashboard
     ports:
      - 3001:3000
-    links:
-     - geth-monitor:geth-monitor
     networks:
      portfolio:
      chain-backnet:
        ipv4_address: 172.35.160.99
+    environment:
+     - WS_SECRET=test
 
 volumes:
   geth-data-1:
