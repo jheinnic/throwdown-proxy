@@ -1,11 +1,10 @@
-
 declare module 'medium'
 {
   import 'medium';
   import {Transducer} from 'transducers-js';
   import {AnyFunc} from 'simplytyped';
 
-  export interface Chan<S = any, T = S> extends Promise<T|object> {}
+  export interface Chan<S = any, T = S> extends Promise<T|symbol> {}
 
   export interface ChanBuffer {}
 
@@ -79,14 +78,46 @@ declare module 'medium'
   export function any<S1 = any, S2 = any, S3 = any, S4 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>): AnyAlt<S1|S2|S3|S4>
   export function any<S1 = any, S2 = any, S3 = any, S4 = any, S5 = any>(port1: Alt<S1>, port2: Alt<S2>, port3: Alt<S3>, port4: Alt<S4>, ...ports: Alt<S5>[]): AnyAlt<S1|S2|S3|S4|S5>
 
+  type SyncOrAsync<T> = T | Promise<T>
+
+  export type RepeatFn = () => SyncOrAsync<void|false>;
+
+  export type SeededRepeatFn<Seed> =
+     false extends Seed
+        ? never
+        : Seed extends Promise<any>
+           ? never
+           : (seed: Seed) => SyncOrAsync<Seed|false>;
+
   /**
    * I don't love while loops, so I use this instead.
    *
    * As a bonus, you can track state without mutations! Return a value other than false, and it will be available as the argument to your callback async function.
    * Pass in a seed value as the second argument to repeat.
    */
-  export function repeat<T = any>(func: (val: T) => Promise<T|false>, seed: T): Promise<void>;
-  export function repeat(func: () => Promise<void|false>): Promise<void>;
+  export function repeat(func: RepeatFn): Promise<void>;
+  export function repeat<Seed>(func: SeededRepeatFn<Seed>, seed: SyncOrAsync<Seed>): Promise<void>;
+
+  /**
+   * RepeatTakeFn are used as an argument to repeatTake, alongside a Chan that
+   * provides its input.  Calling repeatTake() begins an asynchronous loop that
+   * calls its RepeatTakeFn with values read from Chan provided as first argument.
+   *
+   * If a RepeatTakeFn returns nothing, loop continues with next value read from
+   * Chan.  If RepeatTake returns false instead, asynchronous loop ends and Promise
+   * returned to repeatTake()'s caller resolves.
+   */
+  export type RepeatTakeFn<Take> = (value: Take) => SyncOrAsync<void|false>;
+
+  /**
+   * SeededRepeatFn is like RepeatTakeFn except to continue the loop a value of 
+   */
+  export type SeededRepeatTakeFn<Take, Seed> =
+     false extends Seed
+        ? never
+        : Seed extends Promise<any>
+           ? never
+           : (take: Take, seed: Seed) => SyncOrAsync<Seed|false>;
 
    /**
     * This is just like repeat above, except that before it repeats, it waits for a successful take on the given channel.
@@ -94,8 +125,8 @@ declare module 'medium'
     *
     * See the ping/pong example above to see this in action.
     */
-  export function repeatTake<T = any, S = any>(ch: Chan<any, T>, fn: (cVal: T, iVal: S) => Promise<S|false>, seed: S): Promise<void>;
-  export function repeatTake<T = any>(ch: Chan<any, T>, fn: (cVal: T) => Promise<void|false>): Promise<void>;
+  export function repeatTake<T = any>(ch: Chan<any, T>, fn: RepeatTakeFn<T>): Promise<void>;
+  export function repeatTake<T = any, S = any>(ch: Chan<any, T>, fn: SeededRepeatTakeFn<T, S>, seed: SyncOrAsync<S>): Promise<void>;
 
   /**
    * Creates a new channel that will receive all puts to the received channels.
