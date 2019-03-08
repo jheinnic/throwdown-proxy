@@ -5,8 +5,7 @@ import { CoroutinesModule } from '@jchptf/coroutines';
 import { IResourceSemaphore, PoolSizes, ResourceSemaphoreModule } from '@jchptf/semaphore';
 import { ConfigModule } from '@jchptf/config';
 import {
-   APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG, SEMAPHORE_MODULE_OPTIONS,
-   APPLICATION_CANVAS_SEMAPHORE_PROVIDER
+   APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG,
 } from './application.constants';
 import { AsyncModuleParamStyle } from '@jchptf/nestjs';
 import { SEMAPHORE_MODULE_CANVAS_OPTIONS } from '../paint-gateway/application.constants';

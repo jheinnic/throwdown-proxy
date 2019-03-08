@@ -1,12 +1,7 @@
-import * as cluster from 'cluster';
-import { cpus } from 'os';
 import {
    getReservationChannelToken, getResourceReturnChannelToken, getResourceSemaphoreToken
 } from '@jchptf/semaphore';
 import { APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG } from './application.constants';
-
-
-
 
 export const APPLICATION_CANVAS_SEMAPHORE_PROVIDER =
    getResourceSemaphoreToken(APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG);
