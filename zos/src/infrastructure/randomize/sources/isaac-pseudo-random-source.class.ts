@@ -1,9 +1,7 @@
-import {inject} from 'inversify';
 import {BitOutputStream} from '@thi.ng/bitstream';
 
 import {IsaacCSPRNG} from './isaac-csprng.class';
-import {IPseudoRandomSource} from '../interface/index';
-import {RANDOMIZE_TYPES} from '../di/index';
+import {IPseudoRandomSource} from '../interface';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 
@@ -11,9 +9,7 @@ export class IsaacPseudoRandomSource implements IPseudoRandomSource
 {
    private readonly isaacCSPRNG: IsaacCSPRNG;
 
-   constructor(
-      @inject(RANDOMIZE_TYPES.SeedBytes) seedBytes: Buffer
-   ) {
+   constructor(seedBytes: Buffer) {
       // Isaac expects an array of 32-bit values as its input, so we have to convert every four
       // bytes of our Buffer to a concatenated integer.  This would likely be done more efficiently
       // by a for loop and calls to readUInt32BE() with 0, 4,...4(n-1), 4(n) as inputs, but it would

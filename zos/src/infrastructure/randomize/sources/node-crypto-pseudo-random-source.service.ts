@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import {IPseudoRandomSource} from '../interface/index';
+import {IPseudoRandomSource} from '../interface';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 

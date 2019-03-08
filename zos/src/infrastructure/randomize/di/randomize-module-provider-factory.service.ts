@@ -1,13 +1,12 @@
-import {interfaces} from 'inversify';
-import {CONFIG_TYPES} from '../../outbound/config/di/index';
-import {ConfigLoader} from '../../config/service/index';
+// import {CONFIG_TYPES} from '../../../../lib/attic/infrastructure/outbound/config/di';
+// import {ConfigLoader} from '../../config/service/index';
 
-export function configLoaderModule(bind: interfaces.Bind)
-{
-   bind(CONFIG_TYPES.ConfigLoader)
-      .to(ConfigLoader)
-      .inSingletonScope();
-}
+// export function configLoaderModule(bind: interfaces.Bind)
+// {
+   // bind(CONFIG_TYPES.ConfigLoader)
+   //    .to(ConfigLoader)
+   //    .inSingletonScope();
+// }
 
 /*
 @injectable()

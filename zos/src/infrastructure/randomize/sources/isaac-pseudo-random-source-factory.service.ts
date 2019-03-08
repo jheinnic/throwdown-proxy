@@ -1,6 +1,5 @@
-import {IPseudoRandomSourceFactory} from '../interface/pseudo-random-seed-factory.interface';
-import {IPseudoRandomSource} from '../interface/pseudo-random-source.interface';
-import {IsaacPseudoRandomSource} from './isaac-pseudo-random-source.class';
+import { IPseudoRandomSourceFactory, IPseudoRandomSource } from '../interface';
+import { IsaacPseudoRandomSource } from './isaac-pseudo-random-source.class';
 
 export class IsaacPseudoRandomSourceFactory implements IPseudoRandomSourceFactory<Buffer>
 {

@@ -1,19 +1,20 @@
-import {inject, tagged} from 'inversify';
-import {HmacDrbgOptions, HmacDrbg} from 'hmac-drbg';
+import { HmacDrbgOptions, HmacDrbg } from 'hmac-drbg';
 
-import {IPseudoRandomSource} from '../interface';
-import {RANDOMIZE_TYPES, PRNG_ALGORITHM_KINDS, RANDOMIZE_TAGS} from '../di';
-import {BlockHash, MessageDigest} from 'typings/hash.js';
+import { BlockHash, MessageDigest } from 'typings/hash.js';
+import { IPseudoRandomSource } from '../interface';
+// import { RANDOMIZE_TYPES, PRNG_ALGORITHM_KINDS, RANDOMIZE_TAGS } from '../di';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 
-export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<T>)> implements IPseudoRandomSource
+export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<T>)>
+ implements IPseudoRandomSource
 {
    private readonly hmacDrbg: any; // HmacDrbg;
 
    constructor(
-      @inject(RANDOMIZE_TYPES.SeedBytes) @tagged(
-         RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgOptions<T>
+      // @inject(RANDOMIZE_TYPES.SeedBytes) @tagged(
+      //    RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgOptions<T>
+      seedBytes: HmacDrbgOptions<T>
    )
    {
       this.hmacDrbg = new HmacDrbg(seedBytes);
@@ -58,5 +59,4 @@ export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<
          );
       }
    }
-
 }
