@@ -3,7 +3,7 @@ import {IsUUID, ValidateNested} from 'class-validator';
 
 import '@jchptf/reflection';
 import {configClass, configProp} from '@jchptf/di-app-registry';
-import {ArrayKeysAreUnique, UUID} from '../../../infrastructure/validation';
+import {ArrayKeysAreUnique, UUID} from '../../../../../src/infrastructure/validation';
 import {ImageStylePolicy, ModelSeedPolicy, RenderingPolicy} from '.';
 
 @configClass('eth.lotto.playAssets.randomArt')

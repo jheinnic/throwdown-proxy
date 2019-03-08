@@ -30,7 +30,7 @@ exports.__esModule = true;
 var fs = require("fs");
 // @ts-ignore
 var co_stream_1 = require("co-stream");
-var sources_1 = require("../infrastructure/randomize/sources");
+var sources_1 = require("../../../src/infrastructure/randomize/sources");
 var bs = require("binary-search");
 var co_1 = require("co");
 var trigrams = [];

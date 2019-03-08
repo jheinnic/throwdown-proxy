@@ -1,5 +1,5 @@
 import {TicketArtworkLocator} from '../ticket-artwork-locator.interface';
-import {Path} from '../../../../../infrastructure/validation';
+import {Path} from '../../../../../../../src/infrastructure/validation';
 
 export interface FullArtworkFilePath
 {

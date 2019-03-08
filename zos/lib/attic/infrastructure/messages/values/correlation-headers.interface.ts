@@ -1,4 +1,4 @@
-import {UUID} from '../../validation';
+import {UUID} from '../../../../../src/infrastructure/validation';
 import {messageHeadersMixin} from '../message-headers-mixin.function';
 import uuid = require('uuid');
 import {MessageHeadersMixin} from '../interfaces';

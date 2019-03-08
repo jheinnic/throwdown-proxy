@@ -2,7 +2,7 @@ import {IsIn, IsInt, IsPositive, MaxLength, Min, MinLength, ValidateNested} from
 
 import '@jchptf/reflection';
 import {configClass, configProp} from '@jchptf/di-app-registry';
-import {Name} from '../../../infrastructure/validation';
+import {Name} from '../../../../../src/infrastructure/validation';
 import {IsLegalFitFillSquare} from './is-legal-fit-fill-square.validator';
 import {PixelDimensions} from './pixel-dimensions.config';
 

@@ -2,7 +2,7 @@ import {MaxLength, MinLength} from 'class-validator';
 
 import '@jchptf/reflection';
 import {configClass, configProp} from '@jchptf/di-app-registry';
-import {Name} from '../../../infrastructure/validation/name.type';
+import {Name} from '../../../../../src/infrastructure/validation/name.type';
 
 @configClass()
 export class RenderingPolicy

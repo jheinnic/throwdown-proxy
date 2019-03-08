@@ -1,6 +1,6 @@
 import {ModelSeed} from '../../../randomArt/messages';
 import {BitStrategyKind} from '../../config';
-import {Name} from '../../../../infrastructure/validation';
+import {Name} from '../../../../../../src/infrastructure/validation';
 
 export interface IPaintModelSeedStrategy {
    readonly name: Name;

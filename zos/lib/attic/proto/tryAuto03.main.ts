@@ -1,4 +1,4 @@
-import {AutoIterate} from '../infrastructure/lib';
+import {AutoIterate} from '../../../src/infrastructure/lib';
 import {asyncScheduler, Subject} from 'rxjs';
 import chan = require('chan');
 import {co} from 'co';

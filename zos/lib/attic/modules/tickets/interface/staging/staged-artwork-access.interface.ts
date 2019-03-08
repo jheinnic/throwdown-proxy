@@ -1,6 +1,6 @@
 import {TicketArtworkLocator, KeyPairLocator, TicketSlotLocator} from '../locators/index';
 import {FullArtworkContent, ThumbArtworkContent} from '../../values/index';
-import {Name} from '../../../../infrastructure/validation/index';
+import {Name} from '../../../../../../src/infrastructure/validation/index';
 
 export interface IStagedArtworkAccess {
    readFullArtworkFile(locator: TicketArtworkLocator): FullArtworkContent

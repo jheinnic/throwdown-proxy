@@ -21,7 +21,7 @@ import {ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines'
 
 import {
    IPseudoRandomSource, IPseudoRandomSourceFactory, IsaacPseudoRandomSourceFactory
-} from '../../infrastructure/randomize';
+} from '../../../../src/infrastructure/randomize';
 
 import {configContainerModule} from '../../apps/di';
 import {Deployment} from '../../apps/config';

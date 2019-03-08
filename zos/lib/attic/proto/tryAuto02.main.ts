@@ -5,7 +5,7 @@ import {co} from 'co';
 import Queue from 'co-priority-queue';
 
 import {ConcurrentWorkFactory} from '@jchptf/coroutines';
-import {AutoIterate} from '../infrastructure/lib';
+import {AutoIterate} from '../../../src/infrastructure/lib';
 import {asGenerator} from '../infrastructure/lib/interfaces/sink-like.type._st';
 
 const workFactory = new ConcurrentWorkFactory();

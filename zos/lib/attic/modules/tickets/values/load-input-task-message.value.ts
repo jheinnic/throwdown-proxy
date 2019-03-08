@@ -1,6 +1,6 @@
 import {KeyPairLocator} from '../interface/locators';
 import {CompletionSignal} from '../../randomArt/messages';
-import {Path, UUID} from '../../../infrastructure/validation';
+import {Path, UUID} from '../../../../../src/infrastructure/validation';
 import {RenderStyleName} from '../interface/policies';
 
 export class LoadInputTaskMessage

@@ -8,7 +8,7 @@ import {map} from 'ix/iterable/pipe/map';
 import {Canvas} from 'canvas';
 import ndarray from 'ndarray';
 
-import {stepRange} from '../../../infrastructure/lib';
+import {stepRange} from '../../../../../src/infrastructure/lib';
 import {PlottingPartialObserver} from './plotting-partial-observer.class';
 import {
    IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, MappedPoint,

@@ -1,4 +1,4 @@
-import {Director} from '../../infrastructure/lib/index';
+import {Director} from '../../../../src/infrastructure/lib';
 import {BlockMappedDigestLocator} from '../../infrastructure/merkle';
 import {bindInputParam, buildable, factoryMethod, ITopoOrderBuilder} from '../../infrastructure/merkle/traversal/topo-order-builder.interface';
 import {TopoOrderOptions} from './topo-order-options.interface';

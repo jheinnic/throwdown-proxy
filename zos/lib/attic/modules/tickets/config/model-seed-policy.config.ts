@@ -4,7 +4,7 @@ import '@jchptf/reflection';
 import {configClass, configProp} from '@jchptf/di-app-registry';
 import {BitStrategyKind} from './bit-strategy-kind.enum';
 import {PrefixSelectStyle} from './prefix-select-style.enum';
-import {Name} from '../../../infrastructure/validation';
+import {Name} from '../../../../../src/infrastructure/validation';
 
 @configClass()
 export class ModelSeedPolicy

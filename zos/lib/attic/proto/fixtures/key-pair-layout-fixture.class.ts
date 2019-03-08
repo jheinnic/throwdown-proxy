@@ -4,7 +4,7 @@ import {
 } from '../../modules/tickets/interface/locators/internal';
 import {KeyPairLocator} from '../../modules/tickets/interface/locators';
 import {injectable} from 'inversify';
-import {Path} from '../../infrastructure/validation';
+import {Path} from '../../../../src/infrastructure/validation';
 
 @injectable()
 export class KeyPairLayoutFixture implements IKeyPairStagingLayout {

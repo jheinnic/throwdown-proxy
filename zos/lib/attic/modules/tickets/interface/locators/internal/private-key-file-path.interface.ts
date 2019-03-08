@@ -1,5 +1,5 @@
 import {KeyPairLocator} from '../key-pair-locator.interface';
-import {Path} from '../../../../../infrastructure/validation';
+import {Path} from '../../../../../../../src/infrastructure/validation';
 
 export interface PrivateKeyFilePath
 {

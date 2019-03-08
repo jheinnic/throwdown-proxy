@@ -1,6 +1,6 @@
 import {inject, injectable} from 'inversify';
 import {RANDOM_ART_TYPES} from '../di/types';
-import {Path} from '../../../infrastructure/validation';
+import {Path} from '../../../../../src/infrastructure/validation';
 import {ICanvasPathMapper} from '../interface/canvas-path-mapper.interface';
 import {TicketArtworkLocator} from '../../tickets/interface/locators';
 import * as path from 'path';

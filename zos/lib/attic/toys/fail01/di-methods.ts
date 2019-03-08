@@ -1,6 +1,6 @@
 import {MetadataAccessor, MetadataInspector, MetadataMap, MethodDecoratorFactory} from '@loopback/metadata';
 import {DI_META} from '../infrastructure/di/decorators/di-meta.symbols';
-import {MixableConstructor} from '../../infrastructure/lib/index';
+import {MixableConstructor} from '../../../../src/infrastructure/lib';
 import {AbstractBehavioralState, Test} from '../../infrastructure/lib/machina';
 
 export interface DiMethod

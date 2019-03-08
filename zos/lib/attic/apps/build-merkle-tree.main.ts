@@ -7,8 +7,8 @@ import {
    DepthFirstVisitMode, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory,
    MerkleCalculator, IDfsOrderBuilder, MerkleLocatorFactory
 } from '@jchptf/merkle';
-import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../infrastructure/randomize/interface';
-import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources/index';
+import {IPseudoRandomSource, IPseudoRandomSourceFactory} from '../../../src/infrastructure/randomize/interface';
+import {IsaacPseudoRandomSourceFactory} from '../../../src/infrastructure/randomize/sources/index';
 import * as crypto from 'crypto';
 import {Deployment} from './config';
 import * as path from 'path';

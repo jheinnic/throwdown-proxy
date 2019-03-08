@@ -22,7 +22,7 @@ import {RawModelSeedStrategy} from '../modules/tickets/components/modelSeed';
 import {Base64ToAsciiModelSeedStrategy} from '../modules/tickets/components/modelSeed';
 import {Mod128ModelSeedStrategy} from '../modules/tickets/components/modelSeed';
 import {Mod160ModelSeedStrategy} from '../modules/tickets/components/modelSeed';
-import {Name} from '../infrastructure/validation';
+import {Name} from '../../../src/infrastructure/validation';
 
 /*
 const container: Container = new Container();

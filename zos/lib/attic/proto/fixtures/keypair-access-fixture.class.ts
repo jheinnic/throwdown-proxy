@@ -1,6 +1,6 @@
 import {IKeyPairStagingAccess} from '../../modules/tickets/interface/staging';
 import {KeyPairLocator, TicketSlotLocator} from '../../modules/tickets/interface/locators';
-import {UUID} from '../../infrastructure/validation';
+import {UUID} from '../../../../src/infrastructure/validation';
 import {PrivateKeyContent, PublicKeyContent} from '../../modules/tickets/values';
 import {injectable} from 'inversify';
 

@@ -11,7 +11,7 @@ import {
    CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory, MerkleCalculator,
    MerkleDigestLocator, MerkleTreeDescription, MerkleLocatorFactory
 } from '@jchptf/merkle';
-import {IsaacPseudoRandomSourceFactory} from '../../infrastructure/randomize/sources/index';
+import {IsaacPseudoRandomSourceFactory} from '../../../../src/infrastructure/randomize/sources/index';
 import {TicketPoolAssembly} from '../../modules/tickets/ticket-pool-staging-area.service';
 import {ITicketPoolStagingArea} from '../../modules/tickets/interface/index';
 import {configContainerModule} from '../../apps/di/index';

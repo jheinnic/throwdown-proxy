@@ -4,7 +4,7 @@ import {IterableX} from 'ix/iterable';
 import * as util from 'util';
 
 import {DI_COMMON_TAGS} from '@jchptf/di-app-registry';
-import {Name} from '../../../../infrastructure/validation';
+import {Name} from '../../../../../../src/infrastructure/validation';
 import {IArtworkStagingLayout} from '../../interface/internal';
 import {
    IKeyPairStagingAccess,

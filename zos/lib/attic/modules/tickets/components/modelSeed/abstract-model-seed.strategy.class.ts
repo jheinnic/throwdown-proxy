@@ -3,7 +3,7 @@ import {BitInputStream} from '@thi.ng/bitstream';
 import {ModelSeed} from '../../../randomArt/messages';
 import {IPaintModelSeedStrategy} from '../../interface';
 import {BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle} from '../../config';
-import {Name} from '../../../../infrastructure/validation';
+import {Name} from '../../../../../../src/infrastructure/validation';
 
 export abstract class AbstractModelSeedStrategy implements IPaintModelSeedStrategy {
    constructor(protected readonly policyData: ModelSeedPolicy) { }

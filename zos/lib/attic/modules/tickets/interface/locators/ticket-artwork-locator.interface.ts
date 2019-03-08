@@ -1,4 +1,4 @@
-import {Name, UUID} from '../../../../infrastructure/validation';
+import {Name, UUID} from '../../../../../../src/infrastructure/validation';
 import {TicketSlotIndex} from './ticket-slot-index.interface';
 
 export interface TicketArtworkLocator

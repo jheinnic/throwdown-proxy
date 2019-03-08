@@ -1,4 +1,4 @@
-import {Name, Path, UUID} from '../../../../infrastructure/validation/index';
+import {Name, Path, UUID} from '../../../../../../src/infrastructure/validation/index';
 import {CanvasDimensions} from './canvas-dimensions.interface';
 import {ModelSeed} from './model-seed.interface';
 import {RenderScale} from './render-scale.interface';

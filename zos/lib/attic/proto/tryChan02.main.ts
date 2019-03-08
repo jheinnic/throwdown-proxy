@@ -6,13 +6,13 @@ import {ModelSeed} from '../modules/randomArt/messages';
 import Queue from 'co-priority-queue';
 import {Canvas} from 'canvas';
 import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interface';
-import {AutoIterate} from '../infrastructure/lib';
+import {AutoIterate} from '../../../src/infrastructure/lib';
 import {asyncScheduler} from 'rxjs';
 import * as util from 'util';
 import * as path from 'path';
 import {Mutable} from '@jchptf/tupletypes';
 import {BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle} from '../modules/tickets/config';
-import {Name} from '../infrastructure/validation';
+import {Name} from '../../../src/infrastructure/validation';
 import {
    Base64ToAsciiModelSeedStrategy, EightFromSevenModelSeedStrategy, EightFromElevenModelSeedStrategy,
    RawMappedModelSeedStrategy

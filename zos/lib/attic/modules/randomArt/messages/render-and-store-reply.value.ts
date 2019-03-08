@@ -1,5 +1,5 @@
 import {MessageType} from './message-type.enum';
-import {Path} from '../../../infrastructure/validation';
+import {Path} from '../../../../../src/infrastructure/validation';
 
 
 export class RenderAndStoreReply

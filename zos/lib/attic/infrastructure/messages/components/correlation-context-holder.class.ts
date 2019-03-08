@@ -1,7 +1,7 @@
 import {v1} from 'uuid';
 import {v1String} from 'uuid/interfaces';
 import {ICorrelationContextHolder} from '../interfaces/correlation-context-holder.interface._st';
-import {UUID} from '../../validation';
+import {UUID} from '../../../../../src/infrastructure/validation';
 import {correlated, CorrelationHeaders, correlationId} from '../values/correlation-headers.interface';
 import {SimpleHeaders} from '../values/simple-headers.value';
 

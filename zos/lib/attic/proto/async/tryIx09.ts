@@ -21,7 +21,7 @@ import * as util from 'util';
 import * as path from 'path';
 import * as uuid from 'uuid';
 import {ec as EC} from 'elliptic';
-import {IsaacCSPRNG} from '../../infrastructure/randomize/sources/index';
+import {IsaacCSPRNG} from '../../../../src/infrastructure/randomize/sources/index';
 import BN = require('bn.js');
 
 import {IWatch, iWatch, Watch} from '@jchptf/api';

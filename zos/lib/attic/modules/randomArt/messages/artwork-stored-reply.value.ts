@@ -1,4 +1,4 @@
-import {Path} from '../../../infrastructure/validation';
+import {Path} from '../../../../../src/infrastructure/validation';
 import {MessageType} from './message-type.enum';
 
 export class ArtworkStoredReply

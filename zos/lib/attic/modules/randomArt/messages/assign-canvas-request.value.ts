@@ -2,7 +2,7 @@ import {ArtworkLocator} from '../interface/locators/artwork-locator.interface';
 import {ModelSeed} from '../interface/locators/model-seed.interface';
 import {MessageType} from './message-type.enum';
 import {CompletionSignal} from './completion-signal.interface';
-import {Path} from '../../../infrastructure/validation';
+import {Path} from '../../../../../src/infrastructure/validation';
 import {CanvasAssignedReply} from './canvas-assigned-reply.value';
 
 export class AssignCanvasRequest

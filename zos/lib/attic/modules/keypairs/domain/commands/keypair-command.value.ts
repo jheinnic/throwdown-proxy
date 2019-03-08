@@ -1,4 +1,4 @@
-import {UUID} from '../../../../infrastructure/validation';
+import {UUID} from '../../../../../../src/infrastructure/validation';
 
 export abstract class KeypairCommand {
    readonly aggregateId: UUID;

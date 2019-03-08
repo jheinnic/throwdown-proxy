@@ -9,7 +9,7 @@ import {
    CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator, IMerkleLocatorFactory, MerkleCalculator,
    MerkleDigestLocator, MerkleLocatorFactory, MerkleTreeDescription
 } from '@jchptf/merkle';
-import {IsaacPseudoRandomSourceFactory} from '../infrastructure/randomize/sources/index';
+import {IsaacPseudoRandomSourceFactory} from '../../../src/infrastructure/randomize/sources/index';
 // import {configContainerModule} from '../apps/di/index';
 // import {Deployment} from '../apps/config/index';
 import {
@@ -20,7 +20,7 @@ import {BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle} from '../modules/ti
 import LRU = require('lru-cache');
 import {EightFromSevenModelSeedStrategy} from '../modules/tickets/components/modelSeed';
 import {Mutable} from '@jchptf/tupletypes';
-import {Name} from '../infrastructure/validation';
+import {Name} from '../../../src/infrastructure/validation';
 
 // const container: Container = new Container();
 // container.load(

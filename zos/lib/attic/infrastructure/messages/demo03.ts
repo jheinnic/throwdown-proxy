@@ -2,7 +2,7 @@ import {correlated, CorrelationHeaders, correlationId} from './values/correlatio
 import {
    callResponse, CallResponseHeaders, errorOn, replyOn
 } from './values/call-response-headers.interface';
-import {UUID} from '../validation';
+import {UUID} from '../../../../src/infrastructure/validation';
 import {chan} from 'medium';
 import {MessageHeaders} from './interfaces';
 import {BasicHeaders} from './values/basic-headers.value';

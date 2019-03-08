@@ -13,7 +13,7 @@ import {
 } from '../modelSeed';
 import {TICKET_POOL_TYPES} from '../../di';
 import {illegalArgs} from '@thi.ng/errors';
-import {UUID} from '../../../../infrastructure/validation';
+import {UUID} from '../../../../../../src/infrastructure/validation';
 
 
 @injectable()

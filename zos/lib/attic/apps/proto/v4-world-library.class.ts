@@ -3,7 +3,7 @@ import {V4Options} from '../../../node_modules/@types/uuid/interfaces';
 import uuid = require('uuid');
 import {illegalArgs} from '@thi.ng/errors';
 import {inject, injectable, optional} from 'inversify';
-import {UUID} from '../../infrastructure/validation';
+import {UUID} from '../../../../src/infrastructure/validation';
 
 @injectable()
 export class V4WorldLibrary implements IWorldLibrary {

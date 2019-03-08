@@ -2,7 +2,7 @@ import {ValidateNested} from 'class-validator';
 import {Type} from 'class-transformer';
 
 import {configClass, configProp} from '@jchptf/config';
-import {HasUniquePrizeTierIds} from '../../infrastructure/validation/has-unique-prize-ids.validator';
+import {HasUniquePrizeTierIds} from '../../../../src/infrastructure/validation/has-unique-prize-ids.validator';
 import {PrizePoolBatching} from './prize-pool-batching.config';
 import {PrizeTier} from './prize-tier.config';
 

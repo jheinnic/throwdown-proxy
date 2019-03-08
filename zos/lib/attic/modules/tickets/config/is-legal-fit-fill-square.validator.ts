@@ -1,5 +1,5 @@
 import {registerDecorator, ValidationArguments} from 'class-validator';
-import {CustomValidationOptions} from '../../../infrastructure/validation';
+import {CustomValidationOptions} from '../../../../../src/infrastructure/validation';
 import {StringKeys} from 'simplytyped';
 
 export function IsLegalFitFillSquare<T>(

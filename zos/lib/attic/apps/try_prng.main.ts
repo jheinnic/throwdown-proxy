@@ -3,7 +3,7 @@ import {bufferCount, map, tap} from 'rxjs/operators';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 
-import {NodeCryptoPseudoRandomSource} from '../infrastructure/randomize/sources/node-crypto-pseudo-random-source.service';
+import {NodeCryptoPseudoRandomSource} from '../../../src/infrastructure/randomize/sources/node-crypto-pseudo-random-source.service';
 
 const randomSource = new NodeCryptoPseudoRandomSource();
 

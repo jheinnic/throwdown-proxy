@@ -1,3 +1,4 @@
+/// <reference file="..
 import {Canvas} from 'canvas'
 // import {Container, ContainerModule} from 'inversify';
 import {from} from 'rxjs';

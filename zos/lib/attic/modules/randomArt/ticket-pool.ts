@@ -19,7 +19,7 @@ import {configContainerModule} from '../../apps/di';
 
 import {
    IPseudoRandomSource, IPseudoRandomSourceFactory, IsaacPseudoRandomSourceFactory
-} from '../../infrastructure/randomize';
+} from '../../../../src/infrastructure/randomize';
 
 import {CONFIG_TYPES, ConfigLoader, configLoaderModule} from '../../infrastructure/config';
 import {Deployment} from '../../apps/config';

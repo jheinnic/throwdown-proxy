@@ -1,7 +1,7 @@
 import {IsOptional} from 'class-validator';
 
 import {configClass, configProp} from '@jchptf/config';
-import {IsDevelopmentOnly} from '../../infrastructure/validation/is-development-only.validator';
+import {IsDevelopmentOnly} from '../../../../src/infrastructure/validation/is-development-only.validator';
 
 
 @configClass("eth.lotto.deployment.localAccess")

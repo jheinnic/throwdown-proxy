@@ -2,7 +2,7 @@ import {asapScheduler, asyncScheduler, from, Observable, range, Subject, zip} fr
 import {bufferCount, map, mapTo, flatMap, observeOn, take, tap} from 'rxjs/operators';
 import * as fs from "fs";
 import {sprintf} from 'sprintf-js';
-import {UniqueValueSource} from '../infrastructure/randomize/sources/unique-value-source';
+import {UniqueValueSource} from '../../../src/infrastructure/randomize/sources/unique-value-source';
 
 export class MerkleTreeFactory
 {

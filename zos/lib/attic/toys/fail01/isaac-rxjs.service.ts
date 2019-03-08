@@ -2,8 +2,8 @@ import {Observable, OperatorFunction, queueScheduler} from 'rxjs';
 import {map, observeOn, withLatestFrom} from 'rxjs/operators';
 import {BitInputStream, BitOutputStream} from '@thi.ng/bitstream';
 
-import {PseudoRandomSource} from '../../infrastructure/randomize/interface/pseudo-random-source.interface';
-import {IsaacCSPRNG} from '../../infrastructure/randomize/sources/isaac-csprng.class';
+import {PseudoRandomSource} from '../../../../src/infrastructure/randomize/interface/pseudo-random-source.interface';
+import {IsaacCSPRNG} from '../../../../src/infrastructure/randomize/sources/isaac-csprng.class';
 
 // interface ByteGeneratorState {
 //    readonly generator: IsaacCSPRNG,

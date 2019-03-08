@@ -1,4 +1,4 @@
-import {UUID} from '../../infrastructure/validation';
+import {UUID} from '../../../../src/infrastructure/validation';
 import {IsUUID} from 'class-validator';
 
 export class PublicKeyReply {

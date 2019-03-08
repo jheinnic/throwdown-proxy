@@ -11,7 +11,7 @@ import 'ix/add/asynciterable-operators/flatmap';
 import 'ix/add/asynciterable-operators/share';
 import 'ix/add/iterable-operators/share';
 import 'ix/add/asynciterable/asyncify';
-import {AutoIterate} from '../../infrastructure/lib';
+import {AutoIterate} from '../../../../src/infrastructure/lib';
 import {asyncScheduler} from 'rxjs';
 
 const autoIter = new AutoIterate(asyncScheduler);

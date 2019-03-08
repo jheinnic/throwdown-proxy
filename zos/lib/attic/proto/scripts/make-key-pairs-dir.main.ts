@@ -1,6 +1,6 @@
 import {Command} from 'commander';
 import {ec as EC} from 'elliptic';
-import {IsaacCSPRNG} from '../../infrastructure/randomize/sources/index';
+import {IsaacCSPRNG} from '../../../../src/infrastructure/randomize/sources/index';
 import * as fs from 'fs';
 import * as uuid from 'uuid';
 import BN = require('bn.js');

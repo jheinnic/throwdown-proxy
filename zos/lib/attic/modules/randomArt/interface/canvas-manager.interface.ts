@@ -1,6 +1,6 @@
 import {PNGStream} from 'canvas';
 import {CanvasDimensions} from '../messages';
-import {UUID} from '../../../infrastructure/validation';
+import {UUID} from '../../../../../src/infrastructure/validation';
 
 export interface ICanvasManager {
    release(): void;

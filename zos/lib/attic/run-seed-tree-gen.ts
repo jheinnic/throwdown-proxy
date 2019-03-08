@@ -1,4 +1,4 @@
-import {UniqueValueSource} from './infrastructure/randomize/sources/unique-value-source';
+import {UniqueValueSource} from '../../src/infrastructure/randomize/sources/unique-value-source';
 import {generateSeedTree} from './modules/prizes/generate-seed-tree';
 
 let seedValues = Uint32Array.of(
