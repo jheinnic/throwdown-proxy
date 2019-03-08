@@ -1,0 +1,100 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    ecosystems: [Ecosystem]
+}
+
+type Mutation {
+    createEcosystem(createEcosystem: CreateEcosystem): Ecosystem
+    createStudySubject(uuid: ID): ResearchSubject
+}
+
+type Subscription {
+    ecosystemCreated: Ecosystem
+    subjectStudied: ResearchSubject
+}
+
+type EcosystemTemplate {
+    uuid: ID
+    displayName: string
+    proteinGraphCount: integer
+    geneUnitCount: integer
+    geneGlyphCountMean: float
+    geneGlyphCountDev: float
+    geneGlyphCdf: [GlyphCdfItem]
+    termMatrixHeight: integer
+    termMatrixWidth: integer
+    termScoreNorm: integer
+    roundScores: boolean
+    trigramLists: [TrigramList]
+    prefixCellCdf: [TermCdfItem]
+    suffixCellCdf: [TermCdfItem]
+}
+
+type TrigramList {
+    index: integer
+    name: string
+    contents: [string]
+}
+
+enum CdfType {
+    PREFIX,
+    SUFFIX
+}
+
+
+type TermCdfItem {
+    cdfType: CdfType
+    cdfProbability: float
+    termList: string
+    initialScoreMean: float
+    initialScoreDev: float
+}
+
+enum GlyphModifierKind {
+    ALTER_MAINTENANCE_CYCLE_INTERVAL,
+    ALTER_MAINTENANCE_CYCLE_DURATION,
+    ALTER_ROW_MAJOR_MOVEMENT_INTERVAL,
+    ALTER_ROW_MAJOR_MOVEMENT_DISTANCE,
+    ALTER_COLUMN_MAJOR_MOVEMENT_INTERVAL,
+    ALTER_COLUMN_MAJOR_MOVEMENT_DISTANCE,
+    ALTER_SOURCE_DEPLETED_EVENT_POLICY,
+    ALTER_TRANSFER_FLOW_INCREASE_INTERVAL,
+    ALTER_TRANSFER_FLOW_INCREASE_DEGREE,
+    ALTER_MAXIMUM_TRANSFER_FLOW,
+    ALTER_TRANSFER_FLOW_OVER_LIMIT_POLICY,
+    ALTER_TRANSFER_FLOW_DECREASE_INTERVAL,
+    ALTER_TRANSFER_FLOW_DECREASE_DEGREE,
+    ALTER_MINIMUM_TRANSFER_FLOW,
+    ALTER_TRANSFER_FLOW_BELOW_LIMIT_POLICY,
+    TRIGGER_FLOW_REVERSAL_EVENT,
+    TRIGGER_INTER_PREFIX_ROW_SWAP_EVENT,
+    TRIGGER_INTER_PREFIX_COL_SWAP_EVENT,
+    TRIGGER_INTER_SUFFIX_ROW_SWAP_EVENT,
+    TRIGGER_INTER_SUFFIX_COL_SWAP_EVENT,
+    TRIGGER_PREFIX_SUFFIX_ROW_SWAP_EVENT,
+    TRIGGER_PREFIX_SUFFIX_COL_SWAP_EVENT,
+    TRIGGER_SKIP_PEER_TURNS_EVENT,
+    TRIGGER_REPEAT_PEER_TURNS_EVENT,
+    TRIGGER_IMMEDIATE_MAINTENANCE_EVENT,
+    TRIGGER_IMMEDIATE_MOVEMENT_EVENT,
+    TRIGGER_PREFIX_SUFFIX_SWAP,
+}
+
+type GlyphCfgItem {
+
+}
+
+type Ecosystem {
+    uuid: ID
+    displayName: string
+    proteinRules: [ProteinRule]
+    geneUnits: [GeneUnit]
+}
+
+type GeneUnit {
+
+}

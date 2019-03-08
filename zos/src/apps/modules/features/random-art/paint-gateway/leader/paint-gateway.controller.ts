@@ -3,7 +3,7 @@ import {GrpcMethod} from '@nestjs/microservices';
 import {Observable} from 'rxjs';
 
 @Controller()
-export class PaintQueueController {
+export class PaintGatewayController {
    @GrpcMethod("PaintQueue", "createPaintTask")
    createPaintTask (newTasks: Observable<CreatePaintTask>, meta: any ): Observable<ChannelHeartbeat> { }
 

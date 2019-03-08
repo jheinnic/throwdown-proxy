@@ -366,6 +366,7 @@ function launchPaintContent()
    function* readTaskInput() {
 
    }
+
    function* processNextTicket() {
       mapAsync(
          inputIterator.pipe(take(1)),

@@ -1,0 +1,66 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type Query {
+    ecosystems: [Ecosystem]
+}
+
+type Mutation {
+    createEcosystem(createEcosystem: CreateEcosystem): Ecosystem
+    collectResearchData(uuid: ID): ResearchSubject
+}
+
+type Subscription {
+    ecosystemCreated: Ecosystem
+    subjectStudied: ResearchSubject
+}
+
+
+type Ecosystem {
+    uuid: ID
+    displayName: string
+    geneUnits: [GeneUnit]
+    geneUnitCount: integer
+    featureGlyphs: [TrigramList]
+    identifiedTraits: [Trait]
+    studiedSubjects: [ResearchSubject]
+}
+
+enum GlyphShape {
+    ROUND,
+    SQUARE
+}
+
+enum GlyphSuit {
+    HEARTS,
+    DIAMONDS
+    CLUBS,
+    SPADES,
+}
+
+enum GlyphShade {
+    LIGHT,
+    DARK
+}
+
+enum GlyphTermColor {
+    RED,
+    YELLOW,
+    BLUE
+}
+
+type FeatureGlyph {
+    index: integer
+    shape: GlyphShape
+    shade: GlyphShade
+    suit: GlyphSuit
+    termFace: GlyphTermColor
+    slotIndex: number
+}
+
+type GeneUnit {
+    index: number
+    name: string
+}
