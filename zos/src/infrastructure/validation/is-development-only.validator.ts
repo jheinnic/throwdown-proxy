@@ -1,5 +1,5 @@
 import {
-   registerDecorator, ValidatorConstraint, ValidatorConstraintInterface
+   registerDecorator, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
 import {CustomValidationOptions} from './custom-validation-options.interface';
 
@@ -11,6 +11,10 @@ export class IsDevelopmentOnlyValidator implements ValidatorConstraintInterface
       // Fail iff NODE_ENV is not 'development' and also 'value' is not undefined.
       return (process.env.NODE_ENV === 'development') || (!value);
    }
+
+   defaultMessage(args: ValidationArguments): string {
+      return `${args.property} is only validly set in development mode`;
+   }
 }
 
 export function IsDevelopmentOnly(validationOptions?: CustomValidationOptions)
@@ -19,6 +23,8 @@ export function IsDevelopmentOnly(validationOptions?: CustomValidationOptions)
       registerDecorator({
          target: object.constructor,
          propertyName: propertyName,
+         name: 'FOR_DEVELOPMENT_ONLY',
+         async: false,
          options: validationOptions,
          constraints: [],
          validator: IsDevelopmentOnlyValidator

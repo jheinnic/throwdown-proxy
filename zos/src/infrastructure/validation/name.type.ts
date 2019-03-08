@@ -7,9 +7,17 @@ import {Nominal} from 'simplytyped';
  * enforcement.
  *
  * Name is associated with a constrained character set, has a maximum length, and serves a functional
- * purpose in establishing loose referential integrity.  Name is a poor choice for linking objects
+ * purpose by providing loose referential integrity.  Name is a poor choice for linking objects
  * across document boundaries because names are mutable, and cannot be kept in sync across independent
- * aggregate boundaries.  Name should not be used to represent an identifier from a foreign system,
+ * aggregate boundaries.  Name should not be used to represent an identifier from a foreign context,
  * because no guarantees can be made about discrepancies regarding character set or maximum length.
+ *
+ * However, within the boundaries of a single aggregate, names can serve as a means of linking
+ * reusable sub-graphs using identifiers that are user-managed.  Aggregates that use names this way
+ * are responsible for defining the semantics of name mutability--e.g. whether a user's intent
+ * to change a name should propagate to existing usage of the previous name for linking
+ * purposes, or whether changing a name should instead cause links to be severed.  Aggregates may
+ * utilize names only for establishing references in commands and events as well, although caution
+ * must be taken to include name changes with an event in such cases.
  */
 export type Name = Nominal<string, 'Name'>;

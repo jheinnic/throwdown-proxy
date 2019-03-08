@@ -1,0 +1,1 @@
+export type FitOrFill = 'fit' | 'fill' | 'square';

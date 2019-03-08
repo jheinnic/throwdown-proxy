@@ -1,0 +1,54 @@
+import {
+   CANVAS_X_COORD, CANVAS_Y_COORD, IncrementalPlotObserver, MappedPoint, MODEL_X_COORD, MODEL_Y_COORD
+} from '../interface';
+import {Observer} from 'rxjs';
+
+
+/**
+ * Strategy extension interfaces for implementing side effects to trigger during a walk of a RandomArt
+ * model's rectangular region of interest, mapping each discrete pixel point from that region's
+ * proportionally sized canvas grid to the floating point cartesian plane of a canonical model region.
+ *
+ * The typical use of this interface is to feed model coordinates into a seeded artwork model, extract
+ * pixel color information, and then use the canvas coordinates to place that pixel in an
+ * image.
+ *
+ * Aside from the "workhorse" plot method, there are two methods used to signal the end of a call
+ * sequence--one for completion with error, the other for normal end-of-data completion.
+ */
+export class PlottingPartialObserver implements Observer<MappedPoint>
+{
+   constructor(private readonly plotter: IncrementalPlotObserver) { }
+
+   private _closed: boolean = false;
+
+   public get closed(): boolean
+   {
+      console.log('closed');
+      return this._closed;
+   }
+
+   public complete(): void
+   {
+      console.log('complete');
+      if (!this._closed) {
+
+      }
+   }
+
+   public error(err: any): void
+   {
+      this.plotter.onError(err);
+   }
+
+   public next(value: MappedPoint): void
+   {
+      try {
+         this.plotter.plot(
+            value[CANVAS_X_COORD], value[CANVAS_Y_COORD],
+            value[MODEL_X_COORD], value[MODEL_Y_COORD]);
+      } catch (err) {
+         this.error(err);
+      }
+   }
+}

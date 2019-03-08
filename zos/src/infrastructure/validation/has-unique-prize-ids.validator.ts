@@ -1,8 +1,8 @@
 import {
    registerDecorator, ValidatorConstraint, ValidatorConstraintInterface
 } from 'class-validator';
-import {PrizeTier} from '../../../lib/attic/apps/config';
 import {CustomValidationOptions} from './custom-validation-options.interface';
+import {PrizeTier} from '../../apps/oldConfig';
 
 @ValidatorConstraint({async: false})
 export class HasUniquePrizeTierIdsValidator implements ValidatorConstraintInterface
