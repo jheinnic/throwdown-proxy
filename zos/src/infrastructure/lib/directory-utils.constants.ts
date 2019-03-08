@@ -3,12 +3,13 @@ import * as path from "path";
 import {promisify} from "util";
 import ErrnoException = NodeJS.ErrnoException;
 import { illegalArgs } from '@thi.ng/errors';
+import { IDirectoryUtils } from './directory-utils.interface';
 
 const PRIVATE_MODE = 0o700;
 
 const pStat = promisify(fs.stat);
-const pMkdir = promisify(fs.mkdir);
-const pAccess = promisify(fs.access);
+// const pMkdir = promisify(fs.mkdir);
+// const pAccess = promisify(fs.access);
 
 function ensurePrivateDir(dirPath: string): Promise<string>
 {
@@ -123,7 +124,7 @@ async function checkSubtreeArgs(subtreePath: string, subtreeRoot: string) {
    return dirOrder;
 }
 
-async function ensurePrivateSubtree(subtreeRoot: string, subtreePath: string) {
+async function ensurePrivateSubtree(subtreeRoot: string, subtreePath: string): Promise<string> {
    const dirOrder: string[] = await checkSubtreeArgs(subtreePath, subtreeRoot);
 
    let remainingPath = subtreeRoot;
@@ -142,7 +143,7 @@ async function ensurePrivateSubtree(subtreeRoot: string, subtreePath: string) {
    return remainingPath;
 }
 
-async function ensureWritableSubtree(subtreeRoot: string, subtreePath: string) {
+async function ensureWritableSubtree(subtreeRoot: string, subtreePath: string): Promise<string> {
    const dirOrder: string[] = await checkSubtreeArgs(subtreePath, subtreeRoot);
 
    let remainingPath = subtreeRoot;
@@ -161,7 +162,7 @@ async function ensureWritableSubtree(subtreeRoot: string, subtreePath: string) {
    return remainingPath;
 }
 
-export const directoryUtils = {
+export const directoryUtils: IDirectoryUtils = {
    ensurePrivateDir,
    ensureWritableDir,
    ensurePrivateSubtree,
