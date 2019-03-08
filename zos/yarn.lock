@@ -57,13 +57,13 @@
     simplytyped "^1.6.0"
     tslib "^1.9.3"
 
-"@jchptf/config@^0.0.24":
-  version "0.0.24"
-  resolved "http://localhost:4873/@jchptf%2fconfig/-/config-0.0.24.tgz#6417c99ff2d73d22f095ef125b1a8c1468256876"
-  integrity sha512-5t1b3US5q9qy1+bCEAPxRXYFE9yegsxDHJohtMfk4tteJfUWmy8el4xCa+7tEYCxsFyG8FMZ8Hx8h400ondZPQ==
+"@jchptf/config@^0.0.25":
+  version "0.0.25"
+  resolved "http://localhost:4873/@jchptf%2fconfig/-/config-0.0.25.tgz#cd6f0f4c6db17c7dbf892a651c21e0254c060c70"
+  integrity sha512-J+y7/aZgddG14fLtlnbtA5TjXVNXQSvxE2AFb9NUTDcbXi+Iq6Osj5JIw1sbScg6IRvUqrqAh/rI5TXOJ6kr8g==
   dependencies:
     "@jchptf/api" "^0.0.37"
-    "@jchptf/nestjs" "^0.0.3"
+    "@jchptf/nestjs" "^0.0.4"
     "@jchptf/reflection" "^0.0.9"
     "@nestjs/common" "^5.5.0"
     "@thi.ng/errors" "^0.1.12"
@@ -78,23 +78,23 @@
     simplytyped "^1.6.0"
     tslib "^1.9.3"
 
-"@jchptf/consul@^0.0.13":
-  version "0.0.13"
-  resolved "http://localhost:4873/@jchptf%2fconsul/-/consul-0.0.13.tgz#ee7711335cbd42a3ea40e971ac896018b4fec49d"
-  integrity sha512-ysdbnkpTptjgrTz0jURzR6alHsr6+nihhloOP8I0dqDj/8v2yx4kVZtppHTpHL/64ANKEBSrV27j/D6syuCdBA==
+"@jchptf/consul@^0.0.14":
+  version "0.0.14"
+  resolved "http://localhost:4873/@jchptf%2fconsul/-/consul-0.0.14.tgz#a43f3ee25283610e56f1585227519f23655f562d"
+  integrity sha512-Q1v7ZB0Y906b8wyALNktdXOe40gvq2Xjt7xKJ1n4bCw94hzQrEJozVqtL2R37lXC5uW/3GHdDkbC7P/04020Ew==
   dependencies:
-    "@jchptf/nestjs" "^0.0.3"
+    "@jchptf/nestjs" "^0.0.4"
     "@thi.ng/errors" "^0.1.12"
     simplytyped "^1.6.0"
     tslib "^1.9.3"
 
-"@jchptf/coroutines@^0.0.33":
-  version "0.0.33"
-  resolved "http://localhost:4873/@jchptf%2fcoroutines/-/coroutines-0.0.33.tgz#a1b13a19055c4a5c4bef3fdeef127293a75efcf4"
-  integrity sha512-h3whKGTDwfk2wVxYMaoldh0oCm1w0LqKizeLkHPHYhvUAQkzAjtJDMWwT5Nj5bXeWjuPCnMZR7ylpLTC7CmABA==
+"@jchptf/coroutines@^0.0.34":
+  version "0.0.34"
+  resolved "http://localhost:4873/@jchptf%2fcoroutines/-/coroutines-0.0.34.tgz#a8a31f0c1209d7b20cc0b4727879d8ed2a991458"
+  integrity sha512-d/prhky8KlB+gK46VxjcvSEdn+I/fLcKG20kt8LJsJzsqpf3oigH/nM0TmokgF68EzWBzC0hkOJ0iE7FycQZkA==
   dependencies:
     "@jchptf/api" "^0.0.37"
-    "@jchptf/nestjs" "^0.0.3"
+    "@jchptf/nestjs" "^0.0.4"
     "@jchptf/reflection" "^0.0.9"
     "@jchptf/txtypes" "^0.0.8"
     "@nestjs/common" "^5.5.0"
@@ -109,13 +109,13 @@
     transducers-js "^0.4.174"
     tslib "^1.9.3"
 
-"@jchptf/merkle@^0.0.24":
-  version "0.0.24"
-  resolved "http://localhost:4873/@jchptf%2fmerkle/-/merkle-0.0.24.tgz#6952e3cc765c6b40931010836b65f980c42509d0"
-  integrity sha512-IoJPFB/WUo2Y/lJqe+MYG7sJziAtjiC6RqGBlAENNFL7/fEtU+gw36SopCW+AnP5CXMCU899nAFqIByM4yvUwA==
+"@jchptf/merkle@^0.0.25":
+  version "0.0.25"
+  resolved "http://localhost:4873/@jchptf%2fmerkle/-/merkle-0.0.25.tgz#a2e504867f7969a648df75be2486e47f59a9c448"
+  integrity sha512-EHXhA5HI4Fk2GZwND8StNwD0F3+G6hDH2G1NoHWarUyXjDDrBm6sdOy5fDN/aOB10dT1P2Ae9kD0pdKDCgZqPw==
   dependencies:
     "@jchptf/api" "^0.0.37"
-    "@jchptf/nestjs" "^0.0.3"
+    "@jchptf/nestjs" "^0.0.4"
     "@jchptf/reflection" "^0.0.9"
     binary-search "^1.3.4"
     lru-cache "^4.1.3"
@@ -138,6 +138,17 @@
   version "0.0.3"
   resolved "http://localhost:4873/@jchptf%2fnestjs/-/nestjs-0.0.3.tgz#4807794374b45163f6def6da2514bde665216147"
   integrity sha512-zegjRWQYlDPJo7LrvvdwnJCA70oR3mOsY1b1jmbu6XinUcSF/ojTUrqvYHb+mvykiOAXvmKicCyvqI1iQr3ljQ==
+  dependencies:
+    "@jchptf/objecttypes" "^0.0.8"
+    "@nestjs/common" "^5.7.3"
+    "@thi.ng/errors" "^0.1.12"
+    simplytyped "^1.8.0"
+    tslib "^1.9.3"
+
+"@jchptf/nestjs@^0.0.4":
+  version "0.0.4"
+  resolved "http://localhost:4873/@jchptf%2fnestjs/-/nestjs-0.0.4.tgz#212131eaae8e739e0fbe2d02e7c9ed90919927c9"
+  integrity sha512-5NYmMCmYhyuS60HLKh5jH92p5E4QK5PHncCaRt1zUODQpvj9GZc7/N8W5Vhj8QeHSkb5uJKcSAn1JRPZedUxeA==
   dependencies:
     "@jchptf/objecttypes" "^0.0.8"
     "@nestjs/common" "^5.7.3"
@@ -173,14 +184,14 @@
     simplytyped "^1.6.0"
     tslib "^1.9.3"
 
-"@jchptf/semaphore@^0.0.19":
-  version "0.0.19"
-  resolved "http://localhost:4873/@jchptf%2fsemaphore/-/semaphore-0.0.19.tgz#1a17ccd3da7d70f7a8891ee75eae2bc5d8db8739"
-  integrity sha512-M8sMcNKEG7zxgyoMa8ojzyXLYh3SrKZGCij/uUpBLQvq+g3CMeBOHlSKwohF4Apk3VMScIxNCkG+3xdm6VVBNg==
+"@jchptf/semaphore@^0.0.21":
+  version "0.0.21"
+  resolved "http://localhost:4873/@jchptf%2fsemaphore/-/semaphore-0.0.21.tgz#a6ecabcc2d9cd8ac5d8e6f422e867ddc0784c891"
+  integrity sha512-81gAWycmwPa1zswq0h2qNayezZ55WrQknxrEFrNJILW6MjTRtIebT5jGJNDXH2gJKDIwVS82Ib/WZ++Ni5sUEw==
   dependencies:
     "@jchptf/api" "^0.0.37"
-    "@jchptf/coroutines" "^0.0.33"
-    "@jchptf/nestjs" "^0.0.3"
+    "@jchptf/coroutines" "^0.0.34"
+    "@jchptf/nestjs" "^0.0.4"
     "@jchptf/reflection" "^0.0.9"
     "@jchptf/txtypes" "^0.0.8"
     "@nestjs/common" "^5.5.0"
