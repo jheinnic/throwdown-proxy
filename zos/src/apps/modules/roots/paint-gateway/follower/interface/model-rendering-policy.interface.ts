@@ -4,5 +4,6 @@ import { IncrementalPlotter, IRandomArtModel } from '.';
 
 export interface IModelRenderingPolicy {
    create(genModel: IRandomArtModel, canvas: Canvas, canvasResizeOk?: boolean): IncrementalPlotter;
-   // isCompatible(canvas: Canvas): boolean;
 }
+// export type IModelRenderingPolicy =
+//    (genModel: IRandomArtModel, canvas: Canvas, canvasResizeOk?: boolean) => IncrementalPlotter;

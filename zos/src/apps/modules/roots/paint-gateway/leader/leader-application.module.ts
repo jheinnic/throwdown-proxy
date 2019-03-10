@@ -1,4 +1,4 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import * as cluster from 'cluster';
 import * as util from 'util';
 
@@ -12,15 +12,13 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
 // import { AppConfigConstants } from '../../../config/app-config.constants';
 // import APP_BOOTSTRAP_PROVIDER_TOKEN = AppConfigConstants.APP_BOOTSTRAP_PROVIDER_TOKEN;
 
-import {
-   APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG, SEMAPHORE_MODULE_OPTIONS
-} from '../workload-sim/application.constants';
 import { LeaderApplication } from './leader-application.class';
-import { IsaacModule } from '../../shared/isaac/isaac.module';
-import { Canvas } from "canvas";
-import { CANVAS_APP_SEMAPHORE_TAG, SEMAPHORE_MODULE_CANVAS_OPTIONS } from './application.constants';
+import { IsaacModule } from '../../../shared/isaac/isaac.module';
+import { APPLICATION_MODULE_ID } from './application.constants';
+import {
+   APPLICATION_SEMAPHORE_TAG, SEMAPHORE_MODULE_OPTIONS
+} from '../../workload-sim/application.constants';
 
-@Global()
 @Module({
    imports: [
       CoroutinesModule,
@@ -30,11 +28,7 @@ import { CANVAS_APP_SEMAPHORE_TAG, SEMAPHORE_MODULE_CANVAS_OPTIONS } from './app
             style: AsyncModuleParamStyle.VALUE,
             useValue: SEMAPHORE_MODULE_OPTIONS
          }, APPLICATION_SEMAPHORE_TAG),
-      ResourceSemaphoreModule.forFeature<Canvas>(
-         APPLICATION_MODULE_ID, {
-            style: AsyncModuleParamStyle.VALUE,
-            useValue: SEMAPHORE_MODULE_CANVAS_OPTIONS
-         }, CANVAS_APP_SEMAPHORE_TAG),
+
       ConfigModule.forRootWithFeature(
          {},
          APPLICATION_MODULE_ID,
@@ -58,5 +52,5 @@ import { CANVAS_APP_SEMAPHORE_TAG, SEMAPHORE_MODULE_CANVAS_OPTIONS } from './app
       LeaderApplication, // ...followerChannelProviders
    ]
 })
-export class ApplicationModule
+export class LeaderApplicationModule
 {}

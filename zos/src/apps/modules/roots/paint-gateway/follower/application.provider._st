@@ -1,22 +1,11 @@
 // @ts-ignore
 import { Chan, close, put, repeatTake, take, sleep, chan } from 'medium';
 import { Inject, Injectable } from '@nestjs/common';
-import { ArtworkTaskDefinition } from '../../../../../modules/randomArt/interface/model/artwork-task-definition.interface';
-import {
-   RECEIVE_ART_TASK_REQUEST_CHANNEL, RECEIVE_PAINT_REPLY_CHANNEL, RECEIVE_UPLOAD_REPLY_CHANNEL,
-   SEND_ART_TASK_REPLY_CHANNEL,
-   SEND_PAINT_REQUEST_CHANNEL, SEND_UPLOAD_REQUEST_CHANNEL
-} from './follower-application.constants';
 import { IAdapter } from '@jchptf/api';
-// import {
-//    RECEIVE_ART_TASK_REQUEST_CHANNEL, RECEIVE_PAINT_REPLY_CHANNEL, RECEIVE_UPLOAD_REPLY_CHANNEL,
-//    SEND_ART_TASK_REPLY_CHANNEL, SEND_PAINT_REQUEST_CHANNEL, SEND_UPLOAD_REQUEST_CHANNEL
-// } from './follower-application.constants';
-
+import { ArtworkTaskDefinition } from './interface/model';
 
 // TODO: Find and finish the code that takes IPC messages from/to the cluster parent/child channel and
 //       undo the curry rig typing that power need with the service lines feeing Hoban.
-
 
 @Injectable()
 export class FollowerApplication
@@ -55,7 +44,7 @@ export class FollowerApplication
       this.receiveUploadReplies = receiveUploadRepliesAdapter.unwrap();
    }
 
-   async run(): Promise<void>
+   async start(): Promise<void>
    {
       console.log('I am a child');
 
@@ -73,9 +62,9 @@ export class FollowerApplication
 
          return true;
       }, true).then(() => {
-         console.log('Async finis returned');
+         console.log('Async child completed normally');
       }).catch(err => {
-         console.error('What happened', err);
+         console.error('Async child completed on error', err);
       });
 
       process.on('message', async (msg: string | ArtworkTaskDefinition) => {
@@ -99,6 +88,10 @@ export class FollowerApplication
          async (val: any) => {
             await put(this.sendUploadRequests, val);
          }
+      ).then(
+         () => { console.debug('Paint thread completed normally')}
+      ).catch(
+         (err: any) => { console.error('Paint thread completed on error', err); }
       );
 
       repeatTake(
@@ -106,6 +99,10 @@ export class FollowerApplication
          async (val: any) => {
             await put(this.artTaskReplies, val);
          }
+      ).then(
+         () => { console.debug('Upload thread completed normally')}
+      ).catch(
+         (err: any) => { console.error('Upload thread completed on error', err); }
       );
 
       await retVal;

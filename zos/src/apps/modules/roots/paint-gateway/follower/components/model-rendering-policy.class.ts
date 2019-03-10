@@ -1,17 +1,17 @@
-import {IterableX} from 'ix/iterable';
-import {flatMap} from 'ix/iterable/pipe/flatmap';
-import {memoize} from 'ix/iterable/pipe/memoize';
-import {buffer} from 'ix/iterable/pipe/buffer';
-import {map} from 'ix/iterable/pipe/map';
-import {Canvas} from 'canvas';
+import { IterableX } from 'ix/iterable';
+import { flatMap } from 'ix/iterable/pipe/flatmap';
+import { memoize } from 'ix/iterable/pipe/memoize';
+import { buffer } from 'ix/iterable/pipe/buffer';
+import { map } from 'ix/iterable/pipe/map';
+import { illegalArgs } from '@thi.ng/errors';
+import { Canvas } from 'canvas';
 import ndarray from 'ndarray';
 
-import {stepRange} from '../../../infrastructure/lib';
 import {
    IModelRenderingPolicy, MappedPoint, PlotGridData,
    IncrementalPlotter, IRandomArtModel, IWorkPartitions
 } from '../interface';
-import { illegalArgs } from '@thi.ng/errors';
+import { stepRange } from '../../../../../../infrastructure/lib';
 
 export class ModelRenderingPolicy implements IModelRenderingPolicy
 {
