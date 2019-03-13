@@ -14,10 +14,8 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
 
 import { LeaderApplication } from './leader-application.class';
 import { IsaacModule } from '../../../shared/isaac/isaac.module';
-import { APPLICATION_MODULE_ID } from './application.constants';
-import {
-   APPLICATION_SEMAPHORE_TAG, SEMAPHORE_MODULE_OPTIONS
-} from '../../workload-sim/application.constants';
+import { WorkerPool } from './worker-pool.service';
+import { APPLICATION_MODULE_ID } from './leader-application.constants';
 
 @Module({
    imports: [
@@ -26,9 +24,12 @@ import {
       ResourceSemaphoreModule.forFeature<cluster.Worker>(
          APPLICATION_MODULE_ID, {
             style: AsyncModuleParamStyle.VALUE,
-            useValue: SEMAPHORE_MODULE_OPTIONS
-         }, APPLICATION_SEMAPHORE_TAG),
-
+            // useExisting: WorkerPool
+            // useFactory: (workerPool: WorkerPool) => workerPool,
+            // inject: [WorkerPool]
+            useValue: new WorkerPool()
+         }
+      ),
       ConfigModule.forRootWithFeature(
          {},
          APPLICATION_MODULE_ID,
@@ -46,10 +47,10 @@ import {
       MerkleModule
    ],
    controllers: [],
-   providers: [LeaderApplication],
+   providers: [WorkerPool, LeaderApplication],
    exports: [
       CoroutinesModule, IsaacModule, ResourceSemaphoreModule, ConfigModule, MerkleModule,
-      LeaderApplication, // ...followerChannelProviders
+      LeaderApplication, WorkerPool
    ]
 })
 export class LeaderApplicationModule

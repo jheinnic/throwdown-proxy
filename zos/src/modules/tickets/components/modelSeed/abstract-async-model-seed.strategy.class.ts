@@ -2,8 +2,8 @@ import { BitInputStream } from '@thi.ng/bitstream';
 
 import { IPaintModelSeedStrategy } from '../../interface';
 import { BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle } from '../../config';
-import { IModelSeed } from '../../../randomArt/interface/model';
 import { Name } from '../../../../infrastructure/validation';
+import { IModelSeed } from '../../../../apps/modules/roots/paint-gateway/follower/interface/model';
 
 export abstract class AbstractAsyncModelSeedStrategy implements IPaintModelSeedStrategy {
    constructor(protected readonly policyData: ModelSeedPolicy) { }
@@ -24,10 +24,13 @@ export abstract class AbstractAsyncModelSeedStrategy implements IPaintModelSeedS
       let yFrom = this.policyData.yFromBit;
       let yTo = this.policyData.yToBit;
 
+      const xLen = xBuffer.byteLength * 8;
+      const yLen = yBuffer.byteLength * 8;
+
       if (!this.policyData.xRunsForward) {
          xBuffer.reverse();
-         xFrom = 256 - xFrom;
-         xTo = 256 - xTo;
+         xFrom = xLen - xFrom;
+         xTo = xLen - xTo;
 
          xFrom += xTo;
          xTo = xFrom - xTo;
@@ -35,8 +38,8 @@ export abstract class AbstractAsyncModelSeedStrategy implements IPaintModelSeedS
       }
       if (!this.policyData.yRunsForward) {
          yBuffer.reverse();
-         yFrom = 256 - yFrom;
-         yTo = 256 - yTo;
+         yFrom = yLen - yFrom;
+         yTo = yLen - yTo;
          yFrom += yTo;
          yTo = yFrom - yTo;
          yFrom = yFrom - yTo;

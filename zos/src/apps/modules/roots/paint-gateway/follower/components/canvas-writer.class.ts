@@ -5,36 +5,11 @@ import * as fs from 'fs';
 import { ICanvasStoragePolicy } from '../interface';
 import { IDirectoryUtils } from '../../../../../../infrastructure/lib/directory-utils.interface';
 import { Path, UUID } from '../../../../../../infrastructure/validation';
-import { Limiter } from '@jchptf/coroutines';
+import { ILimiter } from '@jchptf/coroutines';
+import { IAdapter } from '@jchptf/api';
 
 export class CanvasWriter implements ICanvasStoragePolicy
 {
-   /*
-   private static ensureDirectory(dirPath: string)
-   {
-      if (fs.existsSync(dirPath)) {
-         let isDirectory = false;
-         try {
-            const stats = fs.statSync(dirPath);
-            isDirectory = stats.isDirectory();
-         } catch (err) {
-            throw Error(dirPath + ' is not an accessible directory: ' + err);
-         }
-
-         if (!isDirectory) {
-            throw Error(dirPath + ' exists, but is not a directory');
-         }
-      } else {
-         try {
-            CanvasWriter.ensureDirectory(path.dirname(dirPath));
-            fs.mkdirSync(dirPath);
-         } catch (err) {
-            throw Error(dirPath + ' did not exist and could not be created: ' + err);
-         }
-      }
-   }
-   */
-
    private readonly directoryCheck: Promise<string>;
    private readonly writeOutputFile:
       (uuid: UUID, filePath: Path, canvas: Canvas) => Promise<UUID>;
@@ -42,7 +17,7 @@ export class CanvasWriter implements ICanvasStoragePolicy
    constructor(
       private readonly outputDir: string,
       private readonly dirUtils: IDirectoryUtils,
-      private readonly limiter: Limiter,
+      private readonly limiter: ILimiter,
       private readonly requirePrivacy: boolean = false)
    {
       if (!this.outputDir.endsWith('/')) {
@@ -59,16 +34,16 @@ export class CanvasWriter implements ICanvasStoragePolicy
       this.writeOutputFile = this.limiter(this.doStore.bind(this));
    }
 
-   public async store(uuid: UUID, filePath: Path, canvas: Canvas): Promise<UUID>
+   public async store(uuid: UUID, filePath: Path, canvasAdapter: IAdapter<Canvas>): Promise<UUID>
    {
-      return this.writeOutputFile(uuid, filePath, canvas);
+      return this.writeOutputFile(uuid, filePath, canvasAdapter.unwrap());
    }
 
    private async doStore(uuid: UUID, filePath: Path, canvas: Canvas): Promise<UUID>
    {
-      console.log(`Saving ${filePath}...`);
-
       await this.directoryCheck;
+
+      console.log(`Saving ${filePath}...`);
 
       return await new Promise<UUID>(
          (resolve, reject) => {
@@ -77,13 +52,24 @@ export class CanvasWriter implements ICanvasStoragePolicy
                path.join(this.outputDir, filePath)
             );
 
-            out.on('end', () => {
-               console.log(`Saved png of ${out.bytesWritten} bytes to ${filePath}`);
+            out.on('close', () => {
+               console.log(`Saved ${out.bytesWritten} bytes to ${filePath}`);
                resolve(uuid);
             });
 
+            // stream.on('end', () => {
+            //    console.log(`Alt saved png of ${out.bytesWritten} bytes to ${filePath}`);
+            //    resolve(uuid);
+            // })
+
+            out.on('error', function (err: any) {
+               console.error('Brap from writeStream!', err);
+               reject(err);
+               out.close();
+            });
+
             stream.on('error', function (err: any) {
-               console.error('Brap!', err);
+               console.error('Brap from pngStream!', err);
                reject(err);
                out.close();
             });

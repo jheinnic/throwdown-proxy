@@ -3,11 +3,10 @@ import {NestFactory} from '@nestjs/core';
 import {Transport} from '@nestjs/microservices';
 import * as cluster from 'cluster';
 
-import {ApplicationModule} from '../modules/roots/paint-gateway/application.module';
-import {LeaderApplication} from '../modules/roots/paint-gateway/leader-application.class';
-
-import {FollowerApplicationModule} from '../modules/roots/paint-gateway/follower/follower-application.module';
-import {FollowerApplication} from '../modules/roots/paint-gateway/follower/follower-application.provider';
+import { LeaderApplicationModule } from '../modules/roots/paint-gateway/leader/leader-application.module';
+import { LeaderApplication } from '../modules/roots/paint-gateway/leader/leader-application.class';
+import { FollowerApplicationModule } from '../modules/roots/paint-gateway/follower/follower-application.module';
+import { FollowerApplication } from '../modules/roots/paint-gateway/follower/follower-application.service';
 
 async function bootstrap()
 {
@@ -15,7 +14,7 @@ async function bootstrap()
       console.log('Process starting');
       if (cluster.isMaster) {
          console.log('Leader starting');
-         const ctx = await NestFactory.createMicroservice(ApplicationModule, {
+         const ctx = await NestFactory.createMicroservice(LeaderApplicationModule, {
             transport: Transport.GRPC,
             options: {
                package: 'name.jchein.portfolio.services.randomArt.paintGateway.grpc.proto',

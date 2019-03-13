@@ -10,6 +10,7 @@ import {
    CANVAS_X_COORD, CANVAS_Y_COORD, MODEL_X_COORD, MODEL_Y_COORD,
    IModelSeed, IncrementalPlotProgress, IRandomArtModel, MappedPoint,
 } from '../interface';
+import { IAdapter } from '@jchptf/api';
 
 /**
  * Strategy extension interfaces for implementing side effects to trigger during a walk of a
@@ -42,7 +43,7 @@ export class RandomArtModel implements IRandomArtModel
          this.genModel = new_picture(prefix, suffix);
       }
 
-      this.compute_pixel = compute_pixel.bind(this.genModel);
+      this.compute_pixel = compute_pixel; // .bind(this.genModel);
    }
 
    /*
@@ -87,9 +88,10 @@ export class RandomArtModel implements IRandomArtModel
     * @param pixelMulti
     */
    public plot(
-      canvas: Canvas, sliceCount: number = 1, pixelMulti: number = 1
+      canvasAdapter: IAdapter<Canvas>, sliceCount: number = 1, pixelMulti: number = 1
    ): OperatorFunction<MappedPoint[], IncrementalPlotProgress>
    {
+      const canvas: Canvas = canvasAdapter.unwrap();
       const context = canvas.getContext('2d')!;
       if (context === null) {
          throw new Error('Canvas failed to return a 2D context object?');
@@ -102,7 +104,8 @@ export class RandomArtModel implements IRandomArtModel
                points.forEach((value: MappedPoint) => {
                   try {
                      context.fillStyle =
-                        this.compute_pixel(value[MODEL_X_COORD], value[MODEL_Y_COORD]);
+                        this.compute_pixel(
+                           this.genModel, value[MODEL_X_COORD], value[MODEL_Y_COORD]);
                      context.fillRect(
                         value[CANVAS_X_COORD], value[CANVAS_Y_COORD], pixelMulti, pixelMulti);
                   } catch (err) {

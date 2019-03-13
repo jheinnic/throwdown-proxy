@@ -1,8 +1,9 @@
-import { Chan, go, put, sleep } from 'medium';
+import { go, sleep } from 'medium';
 import { Worker } from 'cluster';
 // import {cluster.Worker} from 'canvas';
-import {IAdapter} from '@jchptf/api';
+// import {IAdapter} from '@jchptf/api';
 import * as util from 'util';
+import { IResourceSemaphore } from '@jchptf/semaphore';
 
 // @ts-ignore
 const poissonProcess = require('poisson-process');
@@ -16,8 +17,7 @@ async function runScenario(
    meanServiceTime: number,
    serviceTimeStdDev: number,
    userWorkload: number,
-   acquireChan: Chan<any, Worker>,
-   returnChan: Chan<Worker, any>
+   workerSemaphore: IResourceSemaphore<Worker>,
 )
 {
    let ii: number;
@@ -34,20 +34,33 @@ async function runScenario(
             poissonProcess.sample(averageInteropMs)
          );
 
-      console.log(`${userId} :: ${serviceTime} -> ${nextOpTime}`)
+      console.log(`${userId}, ${ii} :: ${serviceTime} -> ${nextOpTime}`);
 
       const t0 = Date.now();
-      const thing: Worker = await acquireChan;
-      const t1 = Date.now();
-      const pSend = util.promisify(thing.send.bind(thing));
-      thing.on('message', (msg) => {
-         console.log('GOT', msg);
-      });
+      // let t1: number, t1a: number, t2: number, t3a: number;
+      let [t1, t1a, t2, t2a] = [-1, -1, -1, -1];
+      // const thing: Worker|CLOSED = await acquireChan;
+      await workerSemaphore.borrowResource<void>(
+         async (thing: Worker): Promise<void> => {
+            const pSend = util.promisify(thing.send);
+            t1a = 0;
 
-      await pSend(serviceTime, undefined);
-      await sleep(serviceTime);
+            thing.on('message', (msg) => {
+               console.log(`Received ${msg} after ${Date.now() - t1a} for ${userId}, ${ii + 1}`);
+            });
 
-      const t2 = Date.now();
+            t1a = Date.now();
+            await pSend(
+               `Sending request of ${serviceTime} for ${userId}, ${ii + 1}`, 'send handle');
+            t1 = Date.now();
+            await sleep(serviceTime);
+            t2a = Date.now();
+            await pSend(`served for ${serviceTime}`, 'send handle');
+            t2 = Date.now();
+
+            return;
+         }
+      );
       // await new Promise((resolve, _rejects) => {
       //    thing.on('message', (event: any) => {
       //       console.log('Intercepted', event);
@@ -56,12 +69,15 @@ async function runScenario(
       // });
       // const t2b = Date.now();
       // console.log('Intercepted after', t2b - t2);
-      await put(returnChan, thing);
+      // await put(returnChan, thing);
+
       const t3 = Date.now();
       await sleep(nextOpTime);
       const t4 = Date.now();
 
-      console.log(`${userId} -- ${ii + 1} of ${userWorkload} ::\n ** ${t1 - t0} to acquire\n ** ${t2
+      console.log(
+         `Worker ${userId}, #${ii + 1} binding (${t1 - t1a}) and sending (${t2 - t2a}) should both be negligible`);
+      console.log(`${userId}, #${ii + 1} of ${userWorkload} ::\n ** ${t1 - t0} to acquire\n ** ${t2
       - t1} of ${serviceTime} service time\n ** ${t3 - t2} to recycle\n ** ${t4
       - t3} of ${nextOpTime} to next op`);
    }
@@ -76,8 +92,7 @@ async function runTests(
    serviceTimeStdDev: number,
    userErlangs: number,
    userWorkload: number,
-   acquireChan: Chan<any, Worker>,
-   recycleChan: Chan<Worker, any>)
+   workerSemaphore: IResourceSemaphore<Worker>)
 {
    console.log(averageArrivalMs, averageInteropMs, meanServiceTime, serviceTimeStdDev, userErlangs, userWorkload);
    let ii = 0;
@@ -86,15 +101,11 @@ async function runTests(
       const simulateUser = async function()
       {
          await runScenario(
-            ii, averageInteropMs, meanServiceTime, serviceTimeStdDev, userWorkload, acquireChan!,
-            recycleChan!
-         );
+            ii, averageInteropMs, meanServiceTime, serviceTimeStdDev,
+            userWorkload, workerSemaphore);
       }
 
-      console.log(
-         'Launching user', (
-            ii + 1
-         ));
+      console.log(`Launching user #${ii + 1}`);
       promises[ii] = go(simulateUser);
 
       const nextUserIn = Math.round(poissonProcess.sample(averageArrivalMs));
@@ -118,8 +129,7 @@ async function runTests(
 // const userErlangs = 20;
 // const userWorkload = 80;
 
-export function simulateWorkload(
-   acquireChan: IAdapter<Chan<any, Worker>>, releaseChan: IAdapter<Chan<Worker, any>>)
+export function simulateWorkload(workerSemaphore: IResourceSemaphore<Worker>)
 {
    console.log('Load test factory entered!');
    const averageArrivalMs = 1500;
@@ -129,7 +139,7 @@ export function simulateWorkload(
    const userErlangs = 5;
    const userWorkload = 6;
 
-   console.log('Running tests with', acquireChan, releaseChan);
+   console.log('Running tests with', workerSemaphore);
    return runTests(
       averageArrivalMs,
       averageInteropMs,
@@ -137,8 +147,9 @@ export function simulateWorkload(
       serviceTimeStdDev,
       userErlangs,
       userWorkload,
-      acquireChan.unwrap(),
-      releaseChan.unwrap()
+      workerSemaphore,
+      // acquireChan.unwrap(),
+      // releaseChan.unwrap()
    )
       .then(
          () => {

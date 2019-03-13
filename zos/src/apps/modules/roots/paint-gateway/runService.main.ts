@@ -8,6 +8,7 @@ import { LeaderApplicationModule } from './leader/leader-application.module';
 import { LeaderApplication } from './leader/leader-application.class';
 import { FollowerApplicationModule } from './follower/follower-application.module';
 import { FollowerApplication } from './follower/follower-application.service';
+import { FollowerAutoDriver } from './follower/experiment/follower-auto-driver.service';
 
 async function bootstrap()
 {
@@ -33,20 +34,31 @@ async function bootstrap()
          console.log('Closed app context');
       } else if (cluster.isWorker) {
          console.log('Follower starting');
-         const ctx =
-            await NestFactory.createApplicationContext(FollowerApplicationModule);
+         const ctx = await NestFactory.createApplicationContext(
+            FollowerApplicationModule);
          console.log('Follower context loaded');
-
          const mainApp = ctx.get(FollowerApplication);
-         console.log('Follower application', mainApp);
-         console.log('Yielded', await mainApp.start());
+         const autoDriver = ctx.get(FollowerAutoDriver);
 
-         ctx.close();
-         console.log('Closed follower context');
+         // Ramp up...
+         const lifecyclePromise = mainApp.start();
+         console.log('Follower has asynchronously started its application');
+         // const driverWorkloadPromise = driveWorkload(mainApp);
+         const driverWorkloadPromise = autoDriver.start();
+         console.log('Follower has asynchronously begun driving a workload');
+
+         // Wait to ramp down...
+         await driverWorkloadPromise;
+         console.log('Workload driver has completed normally.');
+         await lifecyclePromise;
+         console.log('Application lifecycle has completed normally.');
+         await ctx.close();
+         console.log('Closed follower NestContext normally.  Exiting...');
       }
-      console.log('Process returning');
+      console.log('Process exiting gracefully...');
    } catch (err) {
-      console.error('ERROR', err);
+      console.error('Process exiting abnormally on trapped error!', err);
+      throw err;
    }
 }
 

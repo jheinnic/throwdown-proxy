@@ -1,28 +1,37 @@
-import {Inject, Injectable} from '@nestjs/common';
-import {Chan} from 'medium';
+import { Worker } from 'cluster';
+import { cpus } from "os";
+import { Inject, Injectable } from '@nestjs/common';
 
-import {IAdapter} from '@jchptf/api';
-import {
-   WORKER_RECYCLING_CHANNEL_PROVIDER, WORKER_RESERVATION_CHANNEL_PROVIDER
-} from './application.constants';
+import { IResourceSemaphore } from '@jchptf/semaphore';
+import { WORKER_SEMAPHORE_PROVIDER } from './leader-application.constants';
 
 
 @Injectable()
 export class LeaderApplication {
    constructor(
-      @Inject(WORKER_RESERVATION_CHANNEL_PROVIDER) private readonly _acquireChan: IAdapter<Chan<any, any>>,
-      @Inject(WORKER_RECYCLING_CHANNEL_PROVIDER) private readonly _recycleChan: IAdapter<Chan<any, any>>
-   ) { }
+      @Inject(WORKER_SEMAPHORE_PROVIDER) private readonly workerSemaphore: IResourceSemaphore<Worker>
+   )
+   { }
 
    public async start(): Promise<number> {
       try {
-         if (this._acquireChan !== undefined) {
-            return 0; // await simulateWorkload(this.acquireChan, this.recycleChan);
+         if (this.workerSemaphore !== undefined) {
+            // await simulateWorkload(this.workerSemaphore);
+            for( let ii = 0; ii < cpus.length; ii += 1.) {
+               this.workerSemaphore.borrowResource(
+                  (worker: Worker) => {
+                     console.log( `Leader found worker #${worker.id + 1} at process ${worker.process.pid}`);
+                  }
+               );
+            }
          }
+
+         console.log("Leader believes his or her work is done!  Exiting gracefully.");
       } catch(err) {
          console.error('Trapped error!', err);
+         return -1;
       }
 
-      return -1;
+      return 0;
    }
 }

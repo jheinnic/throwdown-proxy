@@ -1,12 +1,11 @@
 import 'reflect-metadata';
-import {NestFactory} from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
+import { Worker } from 'cluster';
 
-import {ApplicationModule} from '../modules/roots/workload-sim/application.module';
-import {
-   APPLICATION_CANVAS_SEMAPHORE_PROVIDER, APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER,
-   APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER
-} from '../modules/roots/workload-sim/application.constants';
-import {simulateWorkload} from '../modules/roots/workload-sim/simulate-workload.function';
+import { ApplicationModule } from './application.module';
+import { CANVAS_SEMAPHORE_PROVIDER_TOKEN } from './application.constants';
+import { simulateWorkload } from './simulate-workload.function';
+import { IResourceSemaphore } from '@jchptf/semaphore';
 
 async function bootstrap()
 {
@@ -14,12 +13,14 @@ async function bootstrap()
    const app = await NestFactory.createApplicationContext(ApplicationModule);
    console.log('Awaited app context');
 
-   const resourceSemaphore = app.get(APPLICATION_CANVAS_SEMAPHORE_PROVIDER);
-   const acquireChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER);
-   const recycleChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER);
+   const resourceSemaphore = app.get<IResourceSemaphore<Worker>>(CANVAS_SEMAPHORE_PROVIDER_TOKEN);
+   // const acquireChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER);
+   // const recycleChan = app.get(APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER);
+
+   console.log(resourceSemaphore);
 
    // logic...
-   simulateWorkload(acquireChan, recycleChan)
+   simulateWorkload(resourceSemaphore)
       .then((result: number) => {
          console.log('Yielded', result);
          app.close();
@@ -30,8 +31,6 @@ async function bootstrap()
          app.close();
          console.log('Closed app context');
       });
-
-   console.log(resourceSemaphore.name);
 }
 
 bootstrap()

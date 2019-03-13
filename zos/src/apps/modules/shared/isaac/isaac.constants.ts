@@ -1,5 +1,5 @@
 import {
-   getDynamicProviderBinding,
+   getDynamicModuleType,
    getGlobalProviderToken, getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent
 } from '@jchptf/nestjs';
 import { IPseudoRandomSourceFactory, IPseudoRandomSource } from '../../../../infrastructure/randomize/interface';
@@ -21,8 +21,8 @@ export const ISAAC_GENERATOR_FACTORY_PROVIDER_TOKEN =
 export const ISAAC_SEED_BUFFER_PROVIDER_TOKEN =
    getLocalProviderToken(ISAAC_MODULE, ISAAC_BUFFER_TYPE);
 
-export const ISAAC_DYNAMIC_GENERATOR_PROVIDER_BINDING =
-   getDynamicProviderBinding(ISAAC_MODULE, "SeededGenerator");
+export const ISAAC_SEEDED_GENERATOR_DYNAMIC_MODULE_KIND =
+   getDynamicModuleType(ISAAC_MODULE, "SeededGenerator");
 
-export const ISAAC_DYNAMIC_SEQUENCE_PROVIDER_BINDING =
-   getDynamicProviderBinding(ISAAC_MODULE, "PRNGSequence");
+export const ISAAC_PRNG_SEQUENCE_DYNAMIC_MODULE_KIND =
+   getDynamicModuleType(ISAAC_MODULE, "PRNGSequence");

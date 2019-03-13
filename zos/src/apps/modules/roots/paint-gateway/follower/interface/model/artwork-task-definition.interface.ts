@@ -1,5 +1,5 @@
-import { Path, UUID } from '../../../../infrastructure/validation';
 import {IModelSeed} from './model-seed.interface';
+import { Path, UUID } from '../../../../../../../infrastructure/validation';
 
 export interface ArtworkTaskDefinition
 {

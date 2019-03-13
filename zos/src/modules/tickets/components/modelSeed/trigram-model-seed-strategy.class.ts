@@ -36,7 +36,7 @@ export class TrigramModelSeedStrategy extends AbstractAsyncModelSeedStrategy {
             txt;
 
          while (typeof (txt = yield reader.read()) === 'string') {
-            console.log('line', txt);
+            // console.log('line', txt);
             const tokens = txt.split(/ /);
             trigrams.push(tokens[0].toLowerCase());
             prefixSum += parseInt(tokens[1]);
@@ -52,7 +52,7 @@ export class TrigramModelSeedStrategy extends AbstractAsyncModelSeedStrategy {
 
    public get strategyKind(): BitStrategyKind
    {
-      return BitStrategyKind.raw;
+      return BitStrategyKind.trigrams;
    }
 
 

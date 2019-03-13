@@ -8,8 +8,20 @@ import { ConfigModule } from '@jchptf/config';
 
 import { FollowerApplication } from './follower-application.service';
 import { followerChannelProviders } from './follower-channels.provider';
-import { APPLICATION_MODULE_ID, CANVAS_APP_SEMAPHORE_TAG, SEMAPHORE_MODULE_CANVAS_OPTIONS } from './application.constants';
+import { APPLICATION_MODULE_ID } from './follower-application.constants';
 import { CanvasCalculator } from './components';
+import { FollowerAutoDriver } from './experiment/follower-auto-driver.service';
+import { IAdapter } from '@jchptf/api';
+
+const CANVAS_SEMAPHORE_RESOURCE_POOL: IAdapter<Canvas>[] =
+   new Array<IAdapter<Canvas>>(4);
+for (let ii = 0; ii < 4; ii += 1) {
+   const tempCanvas = new Canvas(400, 400);
+   tempCanvas.getContext('2d');
+   CANVAS_SEMAPHORE_RESOURCE_POOL[ii] = {
+      unwrap() { return tempCanvas; }
+   }
+}
 
 @Module({
    imports: [
@@ -20,15 +32,21 @@ import { CanvasCalculator } from './components';
          'apps/config/**/!(*.d).{ts,js}',
          process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
       ),
-      ResourceSemaphoreModule.forFeature<Canvas>(
+      ResourceSemaphoreModule.forFeature<IAdapter<Canvas>>(
          APPLICATION_MODULE_ID, {
             style: AsyncModuleParamStyle.VALUE,
-            useValue: SEMAPHORE_MODULE_CANVAS_OPTIONS
-         }, CANVAS_APP_SEMAPHORE_TAG),
+            useValue: CANVAS_SEMAPHORE_RESOURCE_POOL
+         }),
    ],
    controllers: [ ],
-   providers: [CanvasCalculator, FollowerApplication, ...followerChannelProviders],
-   exports: [CoroutinesModule, ConfigModule, CanvasCalculator, FollowerApplication]
+   providers: [
+      CanvasCalculator, ...followerChannelProviders,
+      FollowerApplication, FollowerAutoDriver,
+   ],
+   exports: [
+      CoroutinesModule, ConfigModule, CanvasCalculator,
+      FollowerApplication, FollowerAutoDriver,
+   ]
 })
 export class FollowerApplicationModule
 {

@@ -5,10 +5,10 @@ import { CoroutinesModule } from '@jchptf/coroutines';
 import { IResourceSemaphore, PoolSizes, ResourceSemaphoreModule } from '@jchptf/semaphore';
 import { ConfigModule } from '@jchptf/config';
 import {
-   APPLICATION_MODULE_ID, APPLICATION_SEMAPHORE_TAG,
+   APPLICATION_MODULE_ID, CANVAS_SEMAPHORE_RESOURCE_POOL, CANVAS_SEMAPHORE_PROVIDER_TOKEN,
+   CANVAS_SEMAPHORE_TAG,
 } from './application.constants';
 import { AsyncModuleParamStyle } from '@jchptf/nestjs';
-import { SEMAPHORE_MODULE_CANVAS_OPTIONS } from '../paint-gateway/application.constants';
 
 @Module({
    imports: [
@@ -16,8 +16,8 @@ import { SEMAPHORE_MODULE_CANVAS_OPTIONS } from '../paint-gateway/application.co
       ResourceSemaphoreModule.forFeature<Canvas>(
          APPLICATION_MODULE_ID, {
             style: AsyncModuleParamStyle.VALUE,
-            useValue: SEMAPHORE_MODULE_CANVAS_OPTIONS
-         }, APPLICATION_SEMAPHORE_TAG),
+            useValue: CANVAS_SEMAPHORE_RESOURCE_POOL
+         }, CANVAS_SEMAPHORE_TAG),
       ConfigModule.forRootWithFeature(
          {},
          APPLICATION_MODULE_ID,
@@ -39,14 +39,14 @@ import { SEMAPHORE_MODULE_CANVAS_OPTIONS } from '../paint-gateway/application.co
             console.log('Watcher added.  Returning from factory');
             return retVal;
          },
-         inject: [APPLICATION_CANVAS_SEMAPHORE_PROVIDER]
-      }
+         inject: [CANVAS_SEMAPHORE_PROVIDER_TOKEN]
+      },
       // {
       //    provide: 'loadTest',
       //    useFactory: simulateWorkload,
       //    inject: [
-      //       APPLICATION_CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER,
-      //       APPLICATION_CANVAS_SEMAPHORE_RETURNS_CHANNEL_PROVIDER
+      //       CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER_TOKEN,
+      //       CANVAS_SEMAPHORE_RETURN_CHANNEL_PROVIDER_TOKEN
       //    ]
       // }
    ],
