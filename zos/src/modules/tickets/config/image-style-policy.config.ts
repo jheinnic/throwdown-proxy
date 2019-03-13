@@ -1,10 +1,10 @@
 import {IsIn, IsInt, IsPositive, MaxLength, Min, MinLength, ValidateNested} from 'class-validator';
 
 import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/di-app-registry';
 import {Name} from '../../../infrastructure/validation';
 import {IsLegalFitFillSquare} from './is-legal-fit-fill-square.validator';
 import {PixelDimensions} from './pixel-dimensions.config';
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass()
 export class ImageStylePolicy {

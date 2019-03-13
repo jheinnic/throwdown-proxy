@@ -1,10 +1,11 @@
 import {Type} from 'class-transformer';
 import {IsUUID, ValidateNested} from 'class-validator';
 
-import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/di-app-registry';
 import {ArrayKeysAreUnique, UUID} from '../../../infrastructure/validation';
 import {ImageStylePolicy, ModelSeedPolicy, RenderingPolicy} from '.';
+import { configClass, configProp } from '@jchptf/config';
+
+
 
 @configClass('eth.lotto.playAssets.randomArt')
 export class RandomArtPlayAssets

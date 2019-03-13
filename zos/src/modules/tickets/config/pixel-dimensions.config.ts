@@ -1,7 +1,7 @@
 import {IsInt, IsPositive} from 'class-validator';
 
 import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/di-app-registry';
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass()
 export class PixelDimensions {

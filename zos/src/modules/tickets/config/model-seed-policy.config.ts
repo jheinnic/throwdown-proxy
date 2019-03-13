@@ -1,10 +1,10 @@
-import {Allow, MaxLength, Min, MinLength} from 'class-validator';
+import { Allow, MaxLength, Min, MinLength } from 'class-validator';
 
-import '@jchptf/reflection';
-import {configClass, configProp} from '@jchptf/di-app-registry';
-import {BitStrategyKind} from './bit-strategy-kind.enum';
-import {PrefixSelectStyle} from './prefix-select-style.enum';
-import {Name} from '../../../infrastructure/validation';
+import { BitStrategyKind } from './bit-strategy-kind.enum';
+import { PrefixSelectStyle } from './prefix-select-style.enum';
+import { Name } from '../../../infrastructure/validation';
+
+import { configClass, configProp } from '@jchptf/config';
 
 @configClass()
 export class ModelSeedPolicy
