@@ -14,7 +14,8 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
    imports: [
       CoroutinesModule,
       ResourceSemaphoreModule.forFeature<Canvas>(
-         APPLICATION_MODULE_ID, {
+         APPLICATION_MODULE_ID,
+         ApplicationModule, {
             style: AsyncModuleParamStyle.VALUE,
             useValue: CANVAS_SEMAPHORE_RESOURCE_POOL
          }, CANVAS_SEMAPHORE_TAG),
