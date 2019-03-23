@@ -10,7 +10,6 @@ import {
    CANVAS_X_COORD, CANVAS_Y_COORD, MODEL_X_COORD, MODEL_Y_COORD,
    IModelSeed, IncrementalPlotProgress, IRandomArtModel, MappedPoint,
 } from '../interface';
-import { IAdapter } from '@jchptf/api';
 
 /**
  * Strategy extension interfaces for implementing side effects to trigger during a walk of a
@@ -28,7 +27,7 @@ import { IAdapter } from '@jchptf/api';
 export class RandomArtModel implements IRandomArtModel
 {
    private readonly genModel: any;
-   private readonly compute_pixel: (x: number, y: number) => string;
+   private readonly compute_pixel: (genModel: any, x: number, y: number) => string;
 
    public constructor(public readonly modelSeed: IModelSeed)
    {
@@ -88,10 +87,10 @@ export class RandomArtModel implements IRandomArtModel
     * @param pixelMulti
     */
    public plot(
-      canvasAdapter: IAdapter<Canvas>, sliceCount: number = 1, pixelMulti: number = 1
+      canvas: Canvas, sliceCount: number = 1, pixelMulti: number = 1
    ): OperatorFunction<MappedPoint[], IncrementalPlotProgress>
    {
-      const canvas: Canvas = canvasAdapter.unwrap();
+      // const canvas: Canvas = canvasAdapter.unwrap();
       const context = canvas.getContext('2d')!;
       if (context === null) {
          throw new Error('Canvas failed to return a 2D context object?');

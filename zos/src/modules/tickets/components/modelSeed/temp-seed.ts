@@ -118,17 +118,17 @@ export class Sequence {
 }
 
 export class WordSystem {
-    private symbolCount: number;
-    private tokenCount: number;
-    private genAffinity: ndarray<number>;
+    public readonly symbolCount: number;
+    public readonly tokenCount: number;
+    public readonly genAffinity: ndarray<number>;
 
     constructor(
-      private readonly outerSymbols: OuterSymbol[],
-      private readonly suffixTokens: string[],
-      private readonly suffixLength: number,
-      private readonly initialPrfix: string,
-      private readonly wheelProbability: ProbabilityState[],
-      private readonly initialWheel: number,
+      public readonly outerSymbols: OuterSymbol[],
+      public readonly suffixTokens: string[],
+      public readonly suffixLength: number,
+      public readonly initialPrefix: string,
+      public readonly wheelProbability: ProbabilityState[],
+      public readonly initialWheel: number,
       rawGenerationAffinity: number[] )
     {
         this.symbolCount = outerSymbols.length;
@@ -137,13 +137,13 @@ export class WordSystem {
     }
 }
 
-export class Randomizer
-{
-    constructor( ) { }
-        
-    public generateSequence(length: { mean: number, dev: number }): Sequence
-    {
-       return undefined;
-    }
-}
+// export class Randomizer
+// {
+//     constructor( ) { }
+//
+//     public generateSequence(length: { mean: number, dev: number }): Sequence
+//     {
+//        return undefined;
+//     }
+// }
 

@@ -11,6 +11,7 @@ import { ASYNC_SINK_TYPE, CHAN_TYPE, MONITOR_TYPE } from '@jchptf/coroutines';
 
 import { UUID } from '../../../../../infrastructure/validation';
 import { ICanvasStoragePolicy, IModelRenderingPolicy } from './interface';
+import { CloudinaryCredentials, CloudinaryV2 } from 'cloudinary';
 
 export const APPLICATION_MODULE_ID =
    getModuleIdentifier('@jchptf/random-art/paint-gateway/follower');
@@ -58,3 +59,11 @@ export const RENDER_POLICY_LOOKUP_PROVIDER_TOKEN =
    getLocalProviderToken(APPLICATION_MODULE_ID, RENDER_POLICY_LOOKUP_TYPE);
 export const STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN =
    getLocalProviderToken(APPLICATION_MODULE_ID, STORAGE_POLICY_LOOKUP_TYPE);
+
+export const CLOUDINARY_SERVER_CLIENT_TYPE =
+   getNamedTypeIntent<CloudinaryV2>('CloudinaryV2ServerClient');
+export const CLOUDINARY_CREDENTIALS_TYPE =
+   getNamedTypeIntent<CloudinaryCredentials>('CloudinaryCredentials');
+
+export const CLOUDINARY_SERVER_CLIENT_PROVIDER_TOKEN =
+   getLocalProviderToken(APPLICATION_MODULE_ID, CLOUDINARY_SERVER_CLIENT_TYPE);

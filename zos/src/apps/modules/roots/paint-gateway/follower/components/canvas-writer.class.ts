@@ -2,11 +2,11 @@ import { Canvas } from 'canvas';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { ICanvasStoragePolicy } from '../interface';
+import { ILimiter } from '@jchptf/coroutines';
+
+import { ICanvasStoragePolicy, IModelSeed } from '../interface';
 import { IDirectoryUtils } from '../../../../../../infrastructure/lib/directory-utils.interface';
 import { Path, UUID } from '../../../../../../infrastructure/validation';
-import { ILimiter } from '@jchptf/coroutines';
-import { IAdapter } from '@jchptf/api';
 
 export class CanvasWriter implements ICanvasStoragePolicy
 {
@@ -34,9 +34,13 @@ export class CanvasWriter implements ICanvasStoragePolicy
       this.writeOutputFile = this.limiter(this.doStore.bind(this));
    }
 
-   public async store(uuid: UUID, filePath: Path, canvasAdapter: IAdapter<Canvas>): Promise<UUID>
+   public async store(
+      uuid: UUID,
+      _modelSeed: IModelSeed,
+      filePath: Path,
+      canvasAdapter: Canvas): Promise<UUID>
    {
-      return this.writeOutputFile(uuid, filePath, canvasAdapter.unwrap());
+      return this.writeOutputFile(uuid, filePath, canvasAdapter);
    }
 
    private async doStore(uuid: UUID, filePath: Path, canvas: Canvas): Promise<UUID>

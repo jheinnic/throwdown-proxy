@@ -82,7 +82,7 @@ export const plotCompleteMonitorProvider: NestProvider<IChanMonitor<IncrementalP
    };
 
 export const renderPolicyLookupProvider: NestProvider<(uuid: UUID) => IModelRenderingPolicy,
-   SyncFunc<[ICanvasCalculator], SyncFunc<[UUID], IModelRenderingPolicy>>> =
+   (calc: ICanvasCalculator) => (uuid: UUID) => IModelRenderingPolicy> =
    {
       provide: RENDER_POLICY_LOOKUP_PROVIDER_TOKEN,
       useFactory: (calc: ICanvasCalculator) => {
@@ -101,6 +101,23 @@ export const renderPolicyLookupProvider: NestProvider<(uuid: UUID) => IModelRend
       inject: [CanvasCalculator],
    };
 
+// export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasStoragePolicy,
+//    SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStoragePolicy>>> =
+//    {
+//       provide: STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN,
+//       useFactory:
+//          (concurrentFactory: IConcurrentWorkFactory) => {
+//             const retVal: ICanvasStoragePolicy = new CanvasWriter(
+//                '/Users/jheinnic/Documents/randomArt3/20180313',
+//                directoryUtils,
+//                concurrentFactory.createLimiter(3, 10)
+//             );
+//
+//             return (_uuid: UUID) => retVal;
+//          },
+//       inject: [CONCURRENT_WORK_FACTORY]
+//    };
+
 export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasStoragePolicy,
    SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStoragePolicy>>> =
    {
@@ -108,7 +125,7 @@ export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasSt
       useFactory:
          (concurrentFactory: IConcurrentWorkFactory) => {
             const retVal: ICanvasStoragePolicy = new CanvasWriter(
-               '/Users/jheinnic/Documents/randomArt3/20180313',
+               '/Users/jheinnic/Documents/randomArt3/20180320',
                directoryUtils,
                concurrentFactory.createLimiter(3, 10)
             );
@@ -117,6 +134,8 @@ export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasSt
          },
       inject: [CONCURRENT_WORK_FACTORY]
    };
+
+// export const cloudinaryProvider: NestProvider = { };
 
 export const followerChannelProviders: Provider[] = [
    requestChannelProvider,

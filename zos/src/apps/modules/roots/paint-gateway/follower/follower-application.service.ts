@@ -128,7 +128,7 @@ export class FollowerApplication
             try {
                const paintPolicy = this.paintPolicyLookup(nextTask.renderPolicy);
                const artModel = new RandomArtModel(nextTask.modelSeed);
-               const plotIterator = paintPolicy.create(artModel, canvasAdapter, true);
+               const plotIterator = paintPolicy.create(artModel, canvas, true);
                const completeSignal = this.paintMonitor.request(plotIterator);
 
                this.paintDriver.write(plotIterator);
@@ -137,7 +137,7 @@ export class FollowerApplication
                const storagePolicy = this.storagePolicyLookup(nextTask.storagePolicy);
                const returnUuid =
                   await storagePolicy.store(
-                     nextTask.taskId, nextTask.storagePath, canvasAdapter);
+                     nextTask.taskId, nextTask.modelSeed, nextTask.storagePath, canvas);
 
                if (returnUuid !== nextTask.taskId) {
                   throw illegalState(

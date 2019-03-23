@@ -22,12 +22,12 @@ import { APPLICATION_MODULE_ID } from './leader-application.constants';
       CoroutinesModule,
       IsaacModule,
       ResourceSemaphoreModule.forFeature<cluster.Worker>(
-         APPLICATION_MODULE_ID, {
-            style: AsyncModuleParamStyle.VALUE,
-            // useExisting: WorkerPool
+         APPLICATION_MODULE_ID, LeaderApplicationModule, {
+            style: AsyncModuleParamStyle.EXISTING,
+            useExisting: WorkerPool,
             // useFactory: (workerPool: WorkerPool) => workerPool,
             // inject: [WorkerPool]
-            useValue: new WorkerPool()
+            // useValue: new WorkerPool()
          }
       ),
       ConfigModule.forRootWithFeature(

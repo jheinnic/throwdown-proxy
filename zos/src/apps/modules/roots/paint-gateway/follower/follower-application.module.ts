@@ -30,10 +30,15 @@ for (let ii = 0; ii < 4; ii += 1) {
          {},
          APPLICATION_MODULE_ID,
          'apps/config/**/!(*.d).{ts,js}',
-         process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
+         process.env['NODE_ENV'] === 'production' ? './dist' : './dist'
+      ),
+      ConfigModule.forFeature(
+         APPLICATION_MODULE_ID,
+         'apps/modules/roots/paint-gateway/follower/config/**/!(*.d).{ts,js}',
+         process.env['NODE_ENV'] === 'production' ? './dist' : './dist'
       ),
       ResourceSemaphoreModule.forFeature<IAdapter<Canvas>>(
-         APPLICATION_MODULE_ID, {
+         APPLICATION_MODULE_ID, FollowerApplicationModule, {
             style: AsyncModuleParamStyle.VALUE,
             useValue: CANVAS_SEMAPHORE_RESOURCE_POOL
          }),
