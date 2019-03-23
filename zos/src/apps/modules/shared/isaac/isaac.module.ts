@@ -1,8 +1,9 @@
 import { DynamicModule, Module, Provider } from '@nestjs/common';
-import { ISAAC_GENERATOR_FACTORY_PROVIDER } from './isaac-generator-factory.provider';
 import {
    AsyncModuleParam, asyncProviderFromParam, DynamicProviderToken, ModuleIdentifier
 } from '@jchptf/nestjs';
+
+import { ISAAC_GENERATOR_FACTORY_PROVIDER } from './isaac-generator-factory.provider';
 import { ISAAC_SEED_BUFFER_PROVIDER_TOKEN } from './isaac.constants';
 import { getDynamicIsaacGeneratorProviderToken } from './isaac.utilities';
 import {
