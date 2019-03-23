@@ -60,10 +60,8 @@ export class FollowerAutoDriver
             const loopPfx = sprintf('%03d', iter);
             for (let ii = 0; ii < 3; ii += 1) {
                const prefix = prefixes[ii];
-               // const firstName = prenames[ii];
                for (let jj = 0; jj < 3; jj += 1) {
                   const suffix = suffixes[jj];
-                  // const surName = surnames[jj];
 
                   const modelSeed = await this.seedStrategy.extractSeed(prefix, suffix);
                   const firstName =
@@ -88,9 +86,6 @@ export class FollowerAutoDriver
          console.error('Closed follower context abnormally!  Exiting...', err);
          throw err;
       }
-
-      console.info('Closing follower context normally somehow...  Exiting...');
-      return;
    }
 }
 

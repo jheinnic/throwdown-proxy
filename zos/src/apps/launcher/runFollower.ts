@@ -1,14 +1,8 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { sprintf } from 'sprintf-js';
-import uuid = require('uuid');
-import { randomBytes } from 'crypto';
 
 import { FollowerApplicationModule } from '../modules/roots/paint-gateway/follower/follower-application.module';
 import { FollowerApplication } from '../modules/roots/paint-gateway/follower/follower-application.service';
-import { TrigramModelSeedStrategy } from '../../modules/tickets/components/modelSeed';
-import { BitStrategyKind, PrefixSelectStyle } from '../../modules/tickets/config';
-import { Name, Path, UUID } from 'infrastructure/validation';
 import { FollowerAutoDriver } from '../modules/roots/paint-gateway/follower/experiment/follower-auto-driver.service';
 
 async function bootstrap()
@@ -41,69 +35,6 @@ async function bootstrap()
       throw err;
    }
 }
-
-async function driveWorkload(mainApp: FollowerApplication): Promise<void>
-{
-   try {
-      const renderPolicy = uuid.v4().toString() as UUID;
-      const storagePolicy = uuid.v4().toString() as UUID;
-      let iter = 1;
-      while (true) {
-         let prefixes: Buffer[] = [
-            randomBytes(9),
-            randomBytes(9),
-            randomBytes(9)
-         ];
-         let suffixes: Buffer[] = [
-            randomBytes(9),
-            randomBytes(9),
-            randomBytes(9)
-         ];
-
-         // @ts-ignore
-         const loopPfx = sprintf("%03d", iter);
-         for (let ii = 0; ii < 3; ii += 1) {
-            const prefix = prefixes[ii];
-            for (let jj = 0; jj < 3; jj += 1) {
-               const suffix = suffixes[jj];
-
-               const modelSeed = await strategy.extractSeed(prefix, suffix);
-               const firstName = Buffer.from(modelSeed.prefixBits).toString('ascii');
-               const lastName = Buffer.from(modelSeed.suffixBits).toString('ascii');
-               const fileName = `${loopPfx}-${firstName}_${lastName}.png`;
-
-               const taskId = await mainApp.submitTask(
-                  modelSeed, fileName as Path, renderPolicy, storagePolicy
-               );
-
-               console.log(`Submitted ${await taskId}`);
-            }
-         }
-
-         iter += 1;
-      }
-      console.log('Closed follower context normally.  Exiting...');
-   } catch (err) {
-      console.error('Closed follower context abnormally!  Exiting...', err);
-      throw err;
-   }
-}
-
-const seedVariant = {
-   name: 'seedName' as Name,
-   nameExtension: '64toA_yRx_128bit',
-   bitMode: BitStrategyKind.trigrams,
-   prefixSelect: PrefixSelectStyle.USE_X,
-   xRunsForward: true,
-   yRunsForward: true,
-   xFromBit: 0,
-   xToBit: 71,
-   yFromBit: 0,
-   yToBit: 71,
-   useNewModel: false
-};
-const strategy =
-   new TrigramModelSeedStrategy(seedVariant);
 
 bootstrap()
    .then(() => {
