@@ -15,7 +15,7 @@ import * as crypto from 'crypto';
 import {
    BlockMappedDigestLocator, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator,
    IMerkleLocatorFactory, ITopoOrderBuilder, MerkleCalculator, MerkleDigestLocator, MerkleTreeDescription,
-   NamedPath, MerkleLocatorFactory
+   INamedPath, MerkleLocatorFactory
 } from '@jchptf/merkle';
 import {ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines';
 
@@ -190,7 +190,7 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
    firstGeneration: 25
 };
 
-function toPrivateKeyFile(namedElement: NamedPath<any>): string
+function toPrivateKeyFile(namedElement: INamedPath<any>): string
 {
    return path.join(
       ellipticModelGenConfig.outputRoot,
@@ -198,7 +198,7 @@ function toPrivateKeyFile(namedElement: NamedPath<any>): string
       namedElement.name + '_private.key');
 }
 
-function toPublicKeyFile(namedElement: NamedPath<any>): string
+function toPublicKeyFile(namedElement: INamedPath<any>): string
 {
    return path.join(
       ellipticModelGenConfig.outputRoot,

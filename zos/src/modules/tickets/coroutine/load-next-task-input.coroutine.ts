@@ -1,7 +1,7 @@
 import {TicketArtworkLocator} from '../interface';
 
 export function loadNextTaskInputGeneratorFactory(
-   artworkIterator: IterableIterator<TicketArtworkLocator>
+   _artworkIterator: IterableIterator<TicketArtworkLocator>
 ) {
 
 }

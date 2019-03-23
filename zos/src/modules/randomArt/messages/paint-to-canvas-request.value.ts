@@ -1,8 +1,8 @@
-import { ArtworkLocator, ICanvasManager, IModelSeed, IncrementalPlotProgress } from '../interface';
 import {MessageType} from './message-type.enum';
 import { Canvas } from 'canvas';
 import { CanvasPaintedReply } from './canvas-painted-reply.value';
 import { Chan } from 'medium';
+import { IModelSeed } from '../../../apps/modules/roots/paint-gateway/follower/interface/model';
 
 export class PaintToCanvasRequest
 {

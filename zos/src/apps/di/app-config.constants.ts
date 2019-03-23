@@ -1,4 +1,4 @@
-import {AppBootstrap} from './app-bootstrap.config';
+import {AppBootstrap} from '../config/app-bootstrap.config';
 import {
    getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent, LocalProviderToken,
    ModuleIdentifier, TypeIdentifier

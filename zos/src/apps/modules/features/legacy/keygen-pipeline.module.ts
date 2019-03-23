@@ -7,21 +7,26 @@ import { ConsulModule } from '@jchptf/consul';
 import { ConfigModule } from '@jchptf/config';
 import { APPLICATION_MODULE_ID } from '../../roots/workload-sim/application.constants';
 import { AsyncModuleParamStyle } from '@jchptf/nestjs';
-import { SEMAPHORE_MODULE_OPTIONS } from '../../roots/workload-sim/semaphore-module-options.constants';
-import { LeaderApplication } from '../../roots/paint-gateway/leader-application.class';
+import { LeaderApplication } from '../../roots/paint-gateway/leader/leader-application.class';
+import { WorkerPool } from '../../roots/paint-gateway/leader/worker-pool.service';
 
 @Global()
 @Module({
    imports: [
       CoroutinesModule,
       ResourceSemaphoreModule.forFeature<cluster.Worker>(
-         APPLICATION_MODULE_ID, { style: AsyncModuleParamStyle.VALUE,
-            useValue: SEMAPHORE_MODULE_OPTIONS }),
+         APPLICATION_MODULE_ID, ApplicationModule, {
+            style: AsyncModuleParamStyle.EXISTING,
+            useExisting: WorkerPool,
+            // useFactory: (workerPool: WorkerPool) => workerPool,
+            // inject: [WorkerPool]
+            // useValue: new WorkerPool()
+         }),
       ConfigModule.forRootWithFeature(
          {},
          APPLICATION_MODULE_ID,
          'apps/config/**/!(*.d).{ts,js}',
-         process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
+         process.env['NODE_ENV'] === 'production' ? './dist' : './dist'
       ),
       ConsulModule.forRoot({
          style: AsyncModuleParamStyle.VALUE,

@@ -1,23 +1,25 @@
-import {inject, injectable, multiInject, tagged} from 'inversify';
+import {Injectable, Inject} from '@nestjs/common';
 import {illegalArgs} from '@thi.ng/errors';
 import {IterableX} from 'ix/iterable';
-import * as util from 'util';
 
-import {DI_COMMON_TAGS} from '@jchptf/di-app-registry';
 import {Name} from '../../../../infrastructure/validation';
-import {IArtworkStagingLayout} from '../../interface/internal';
+import {IArtworkStagingLayout} from '../../interface/staging';
 import {
    IKeyPairStagingAccess,
    IPolicyMetadataAccess, RenderStyleMetadata, RenderStyleName
 } from '../../interface';
 import {TICKET_POOL_NAMES, TICKET_POOL_TYPES} from '../../di';
-import {LoadInputTaskMessage} from '../../values/load-input-task-message.value';
+import { LoadInputTaskMessage } from '../../messages';
+import { CONCURRENT_WORK_FACTORY, IConcurrentWorkFactory } from '@jchptf/coroutines';
+import { Chan } from 'medium';
 
 
-@injectable()
+@Injectable()
 export class PaintInputTaskAdapter
 {
    private readonly renderPolicies: Map<RenderStyleName, RenderStyleMetadata>;
+
+   private readonly completionSignal: Chan<void>;
 
    /**
     * Given an iterator over public key pairs, a domain of play asset metadata, and a list
@@ -31,16 +33,20 @@ export class PaintInputTaskAdapter
     * @param policyMetadataAccess
     * @param renderPolicyNames
     * @param artworkLayout
+    * @param workFactory
     */
    constructor(
-      @inject(TICKET_POOL_TYPES.KeyPairAccess)
+      @Inject(TICKET_POOL_TYPES.KeyPairAccess)
       private readonly keyPairAccess: IKeyPairStagingAccess,
-      @inject(TICKET_POOL_TYPES.PolicyAccess)
+      @Inject(TICKET_POOL_TYPES.PolicyAccess)
       private readonly policyMetadataAccess: IPolicyMetadataAccess,
-      @multiInject(TICKET_POOL_TYPES.Name) @tagged(DI_COMMON_TAGS.VariantFor, TICKET_POOL_NAMES.RenderPolicy)
+      // @multiInject(TICKET_POOL_TYPES.Name) @tagged(DI_COMMON_TAGS.VariantFor, TICKET_POOL_NAMES.RenderPolicy)
+      @Inject(TICKET_POOL_NAMES.RenderPolicy)
       private readonly renderPolicyNames: ReadonlyArray<Name>,
-      @inject(TICKET_POOL_TYPES.ArtworkLayout)
-      private readonly artworkLayout: IArtworkStagingLayout
+      @Inject(TICKET_POOL_TYPES.ArtworkLayout)
+      private readonly artworkLayout: IArtworkStagingLayout,
+      @Inject(CONCURRENT_WORK_FACTORY)
+      workFactory: IConcurrentWorkFactory
    )
    {
       this.renderPolicies =
@@ -65,6 +71,8 @@ export class PaintInputTaskAdapter
             );
          }
       }
+
+      this.completionSignal = workFactory.createChan<void>().unwrap();
    }
 
    *[Symbol.iterator](): IterableIterator<LoadInputTaskMessage>
@@ -85,15 +93,16 @@ export class PaintInputTaskAdapter
                   assetPolicyVersion: this.policyMetadataAccess.getConfigVersion(),
                   renderStyleName: nextRender.name
                }).fullImagePath,
-               {
-                  resolve: () => {
-                     console.log(`Resolved pipeline for ${util.inspect(nextPublicKey)}`)
-                  },
-                  reject: (err: any) => {
-                     console.error(`Failed pipeline for ${util.inspect(nextPublicKey)}: ${err}`)
-                  }
-               }
-            );
+               this.completionSignal
+               // {
+               //    resolve: () => {
+               //       console.log(`Resolved pipeline for ${util.inspect(nextPublicKey)}`)
+               //    },
+               //    reject: (err: any) => {
+               //       console.error(`Failed pipeline for ${util.inspect(nextPublicKey)}: ${err}`)
+               //    }
+               // }
+            )
          }
       }
    }

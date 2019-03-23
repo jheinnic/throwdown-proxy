@@ -1,5 +1,6 @@
-import {getDynamicProviderToken, getModuleIdentifier, getNamedTypeIntent} from '@jchptf/nestjs';
-import {CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING} from '@jchptf/config';
+import {
+   getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent
+} from '@jchptf/nestjs';
 
 export const appModuleId = getModuleIdentifier('@jchptf/zosConfig');
 
@@ -11,14 +12,14 @@ export const TICKET_STAGING_POLICY_TYPE = getNamedTypeIntent('TicketStagingPolic
 export const PLAY_ASSETS_TYPE = getNamedTypeIntent('PlayAssets');
 
 export const DEPLOYMENT_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, DEPLOYMENT_TYPE);
+   getLocalProviderToken(appModuleId, DEPLOYMENT_TYPE);
 export const EVENT_SPECIFICATION_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, EVENT_SPECIFICATION_TYPE);
+   getLocalProviderToken(appModuleId, EVENT_SPECIFICATION_TYPE);
 export const PRIZE_MINTING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PRIZE_MINTING_POLICY_TYPE);
+   getLocalProviderToken(appModuleId, PRIZE_MINTING_POLICY_TYPE);
 export const TICKET_MINTING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_MINTING_POLICY_TYPE);
+   getLocalProviderToken(appModuleId, TICKET_MINTING_POLICY_TYPE);
 export const TICKET_STAGING_POLICY_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, TICKET_STAGING_POLICY_TYPE);
+   getLocalProviderToken(appModuleId, TICKET_STAGING_POLICY_TYPE);
 export const PLAY_ASSETS_PROVIDER =
-   getDynamicProviderToken(appModuleId, CONFIG_MODULE_DYNAMIC_PROVIDER_BINDING, PLAY_ASSETS_TYPE);
+   getLocalProviderToken(appModuleId, PLAY_ASSETS_TYPE);

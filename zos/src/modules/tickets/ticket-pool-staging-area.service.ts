@@ -1,24 +1,27 @@
-import {inject} from 'inversify';
+import { Injectable, Inject } from '@nestjs/common';
 import * as path from 'path';
 
 import {
-   BlockMappedDigestLocator, ICanonicalPathNaming, IMerkleCalculator, MERKLE_TYPES, MerkleDigestLocator,
-   NamedPath
+   BlockMappedDigestLocator, ICanonicalPathNaming, IMerkleCalculator, INamedPath,
+   MERKLE_PATH_NAMING_LPT,
+   MERKLE_TREE_CALCULATOR_LPT, MerkleDigestLocator,
 } from '@jchptf/merkle';
-import {TicketArtworkLocator, KeyPairLocator} from './interface/locators';
-import {APP_CONFIG_TYPES} from '../../apps/di';
-import {Deployment} from '../../apps/oldConfig';
-import {IArtworkStagingLayout, IKeyPairStagingLayout} from './interface/internal';
-import {IStagedArtworkAccess, IKeyPairStagingAccess} from './interface';
-import { Inject, Injectable } from '@nestjs/common';
+
+import {
+   TicketArtworkLocator, KeyPairLocator,
+   IArtworkStagingLayout, IKeyPairStagingLayout,
+   IArtworkStagingAccess, IKeyPairStagingAccess,
+} from './interface';
+import { Name, UUID } from '../../infrastructure/validation';
+import { Deployment } from '../../apps/oldConfig';
 
 @Injectable()
-export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagingAccess, IArtworkStagingLayout, IStagedArtworkAccess
+export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagingAccess, IArtworkStagingLayout, IArtworkStagingAccess
 {
    constructor(
-      @Inject(MERKLE_TYPES.MerkleCalculator) private readonly merkleCalc: IMerkleCalculator,
-      @Inject(MERKLE_TYPES.CanonicalNamingService) private readonly namingService: ICanonicalPathNaming,
-      @Inject(APP_CONFIG_TYPES.Deployment) private readonly deployment: Deployment)
+      @Inject(MERKLE_TREE_CALCULATOR_LPT) private readonly merkleCalc: IMerkleCalculator,
+      @Inject(MERKLE_PATH_NAMING_LPT) private readonly namingService: ICanonicalPathNaming,
+      @Inject(Deployment) private readonly deployment: Deployment)
    // @inject(APP_CONFIG_TYPES.EventSpecification) private readonly eventSpec: EventSpecification,
    // @inject(APP_CONFIG_TYPES.SetupPolicy) private readonly setupPolicy: SetupPolicy,
    // @inject(RANDOM_ART_CONFIG_TYPES.RandomArtPlayAssets) private readonly playAssets: RandomArtPlayAssets
@@ -27,29 +30,31 @@ export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagin
    }
 
    public* findArtwork(
-      renderStyle: string, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<TicketArtworkLocator>
+      renderStyleName: Name, sourceKeys: Iterable<KeyPairLocator>): IterableIterator<TicketArtworkLocator>
    {
       let keyLocator: KeyPairLocator;
       for (keyLocator of sourceKeys) {
-         const digestLocator = this.merkleCalc.findDigestByLayerAndIndex(keyLocator.slotIndex.relativeAssetIndex);
-         const artName: NamedPath<MerkleDigestLocator> = this.namingService.getLeafDigestPathName(
+         const digestLocator = this.merkleCalc.findLeafDigestByIndex(keyLocator.slotIndex.relativeAssetIndex);
+         const artName: INamedPath<MerkleDigestLocator> = this.namingService.getLeafDigestPathName(
             this.deployment.dataSetPaths.ticketArtwork, digestLocator
          );
          yield {
             type: 'artwork',
-            slotLocator: keyLocator.slotLocator,
-            renderStyle,
-            publicKeyPath: keyLocator.publicKeyPath,
-            autoImageCheckPath: keyLocator.autoImageCheckPath,
-            fullImagePath: `${artName.name}_${renderStyle}_full.png`,
-            thumbImagePath: `${artName.name}_${renderStyle}_thumb.png`
+            slotIndex: keyLocator.slotIndex,
+            renderStyleName,
+            keyPairVersion: '' as UUID,
+            assetPolicyVersion: '' as UUID,
+            // publicKeyPath: keyLocator.publicKeyPath,
+            // autoImageCheckPath: keyLocator.autoImageCheckPath,
+            // fullImagePath: `${artName.name}_${renderStyle}_full.png`,
+            // thumbImagePath: `${artName.name}_${renderStyle}_thumb.png`
          };
       }
    }
 
    public* findAllDirectoriesDepthFirst(leftToRight?: boolean): IterableIterator<Directories>
    {
-      let namedBlock: NamedPath<BlockMappedDigestLocator>;
+      let namedBlock: INamedPath<BlockMappedDigestLocator>;
       for (namedBlock of this.namingService.findAllBlocksPathNamesDepthFirst('', leftToRight)) {
          yield {
             type: 'directory',
@@ -61,15 +66,17 @@ export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagin
       }
    }
 
-   public* findAllKeyPairs(leftToRight?: boolean): IterableIterator<KeyPairLocator>
+   public* findAllKeyPairs(leftToRight?: boolean): IterableIterator<KeyPairFilePath>
    {
-      let digestName: NamedPath<MerkleDigestLocator>;
+      let digestName: INamedPath<MerkleDigestLocator>;
       for (digestName of this.namingService.findLeafDigestPathNames('', leftToRight))
       {
          yield {
             type: 'key-pair',
-            slotLocator: {
-               index: digestName.pathTo.index
+            slotIndex: {
+               depthLevel: digestName.pathTo.layer.depth,
+               directoryIndex: digestName.pathTo.index,
+               relativeAssetIndex: digestName.pathTo.index % digestName.pathTo.layer.size
             },
             publicKeyPath: path.join(this.deployment.dataSetPaths.ticketPublicKeys, `${digestName.name}_publicKey.dat`),
             privateKeyPath: path.join(this.deployment.dataSetPaths.ticketPrivateKeys, `${digestName.name}_privateKey.dat`),
@@ -78,14 +85,14 @@ export class TicketPoolAssembly implements IKeyPairStagingLayout, IKeyPairStagin
       }
    }
 
-   public findAllArtwork(renderStyle: string): IterableIterator<TicketArtworkLocator>
+   public findAllArtwork(renderStyleName: Name): IterableIterator<TicketArtworkLocator>
    {
-      return this.findArtwork(renderStyle, this.findAllKeyPairs());
+      return this.findArtwork(renderStyleName, this.findAllKeyPairs());
    }
 
    public* findLeafDirectories(leftToRight?: boolean): IterableIterator<Directories>
    {
-      let namedBlock: NamedPath<BlockMappedDigestLocator>;
+      let namedBlock: INamedPath<BlockMappedDigestLocator>;
       for (namedBlock of this.namingService.findLeafBlockPathNames('', leftToRight)) {
          yield {
             type: 'directory',

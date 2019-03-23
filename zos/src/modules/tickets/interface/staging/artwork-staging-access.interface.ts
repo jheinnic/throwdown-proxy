@@ -2,7 +2,7 @@ import {TicketArtworkLocator, KeyPairLocator, TicketSlotLocator} from '../locato
 import {FullArtworkContent, ThumbArtworkContent} from '../../values/index';
 import {Name} from '../../../../infrastructure/validation/index';
 
-export interface IStagedArtworkAccess {
+export interface IArtworkStagingAccess {
    readFullArtworkFile(locator: TicketArtworkLocator): FullArtworkContent
 
    readThumbArtworkFile(locator: TicketArtworkLocator): ThumbArtworkContent

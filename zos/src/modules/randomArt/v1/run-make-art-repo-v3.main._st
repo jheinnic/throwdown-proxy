@@ -15,7 +15,7 @@ import * as crypto from 'crypto';
 import {
    BlockMappedDigestLocator, CanonicalPathNaming, ICanonicalPathNaming, IMerkleCalculator,
    IMerkleLocatorFactory, ITopoOrderBuilder, MerkleCalculator, MerkleDigestLocator, MerkleTreeDescription,
-   NamedPath, MerkleLocatorFactory
+   INamedPath, MerkleLocatorFactory
 } from '@jchptf/merkle';
 import {ConcurrentWorkFactory, IConcurrentWorkFactory} from '@jchptf/coroutines';
 
@@ -35,7 +35,6 @@ import {Deployment} from '../../apps/oldConfig';
 // import {EllipticPublicKeyModelGenerator} from './v1/extensions/elliptic-public-key-model-generator';
 // import {EllipticPublicKeyModelAdapter} from './v1/extensions/elliptic-model-adapter.class';
 
-import {mkdirWithCallback} from '../../infrastructure/recordlist/mkdir-with-callback.function';
 import {CanvasDimensions} from './messages';
 import {ITaskContentAdapter} from './interface';
 import {TicketArtworkLocator, ITicketPoolStagingArea} from '../tickets/interface';
@@ -88,8 +87,8 @@ const isaacGenerator: IPseudoRandomSource =
    );
 const privateKeySource64 =
    isaacGenerator.pseudoRandomBuffers(8);
-const privateKeySource256 =
-   isaacGenerator.pseudoRandomBuffers(32);
+// const privateKeySource256 =
+//    isaacGenerator.pseudoRandomBuffers(32);
 const privateKeySource512 =
    isaacGenerator.pseudoRandomBuffers(64);
 
@@ -190,7 +189,7 @@ const ellipticModelGenConfig: EllipticModelGenConfig = {
    firstGeneration: 25
 };
 
-function toPrivateKeyFile(namedElement: NamedPath<any>): string
+function toPrivateKeyFile(namedElement: INamedPath<any>): string
 {
    return path.join(
       ellipticModelGenConfig.outputRoot,
@@ -198,7 +197,7 @@ function toPrivateKeyFile(namedElement: NamedPath<any>): string
       namedElement.name + '_private.key');
 }
 
-function toPublicKeyFile(namedElement: NamedPath<any>): string
+function toPublicKeyFile(namedElement: INamedPath<any>): string
 {
    return path.join(
       ellipticModelGenConfig.outputRoot,

@@ -1,5 +1,7 @@
-import {inject, injectable} from 'inversify';
-import {IterableX} from 'ix/iterable';
+import { Inject, Injectable } from '@nestjs/common';
+import { illegalArgs } from '@thi.ng/errors';
+import { IterableX } from 'ix/iterable';
+
 import {
    BitStrategyKind, ImageStylePolicy, ModelSeedPolicy, RandomArtPlayAssets, RenderingPolicy
 } from '../../config';
@@ -12,11 +14,10 @@ import {
    Mod160ModelSeedStrategy, RawModelSeedStrategy
 } from '../modelSeed';
 import {TICKET_POOL_TYPES} from '../../di';
-import {illegalArgs} from '@thi.ng/errors';
 import {UUID} from '../../../../infrastructure/validation';
 
 
-@injectable()
+@Injectable()
 export class PolicyMetadataAccess implements IPolicyMetadataAccess
 {
    private readonly renderStyles: Map<RenderStyleName, RenderStyleMetadata>;
@@ -29,7 +30,7 @@ export class PolicyMetadataAccess implements IPolicyMetadataAccess
     * @param randomArtPlayAssets
     */
    constructor(
-      @inject(TICKET_POOL_TYPES.PolicyAssets)
+      @Inject(TICKET_POOL_TYPES.PolicyAssets)
       private readonly randomArtPlayAssets: RandomArtPlayAssets
    )
    {

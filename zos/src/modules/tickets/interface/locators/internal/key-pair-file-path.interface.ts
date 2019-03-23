@@ -1,6 +1,6 @@
 import {KeyPairLocator} from '../key-pair-locator.interface';
 
-export interface KeyPairFile
+export interface KeyPairFilePath
 {
    readonly type: 'key-pair-files';
    readonly locator: KeyPairLocator;

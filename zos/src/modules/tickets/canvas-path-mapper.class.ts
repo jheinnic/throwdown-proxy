@@ -3,7 +3,6 @@ import {Path} from '../../infrastructure/validation';
 import {ICanvasPathMapper} from './interface/canvas-path-mapper.interface';
 import {TicketArtworkLocator} from './interface/locators';
 import * as path from 'path';
-import * as crypto from 'crypto';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
