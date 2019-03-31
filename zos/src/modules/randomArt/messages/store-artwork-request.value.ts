@@ -21,23 +21,3 @@ export class StoreArtworkRequest
 export interface IStoreArtworkRequest extends StoreArtworkRequest {
 
 }
-
-// class StoreCanvasTask
-// {
-//    constructor(
-//       public readonly canvasId: CanvasId,
-//       public readonly sourceId: TaskDef,
-//       private readonly onReturn: Chan<number, any>
-//    )
-//    {
-//       console.log('Created storage task for ' + this.sourceId + ' on ' + this.canvasId);
-//    }
-//
-//    async save(): Promise<void>
-//    {
-//       console.log('Saving...');
-//       await sleep(250);
-//       await put(this.onReturn, this.canvasId);
-//       console.log('Saved...')
-//    }
-// }

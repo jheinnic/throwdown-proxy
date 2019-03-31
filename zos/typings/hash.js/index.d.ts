@@ -1,5 +1,7 @@
-declare namespace HashJs
+declare module 'hash.js'
 {
+   import 'hash.js';
+
    export interface BlockHash<T>
    {
       hmacStrength: number

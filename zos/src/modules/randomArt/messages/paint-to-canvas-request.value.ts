@@ -1,19 +1,19 @@
 import {MessageType} from './message-type.enum';
 import { Canvas } from 'canvas';
 import { CanvasPaintedReply } from './canvas-painted-reply.value';
-import { Chan } from 'medium';
 import { IModelSeed } from '../../../apps/modules/roots/paint-gateway/follower/interface/model';
+import { CompletionSignal } from './completion-signal.type';
 
 export class PaintToCanvasRequest
 {
    public readonly messageType: MessageType.PAINT_CANVAS_REQUEST = MessageType.PAINT_CANVAS_REQUEST;
 
-   public readonly completeSignal: Chan<CanvasPaintedReply>;
+   public readonly completeSignal: CompletionSignal<CanvasPaintedReply>;
    public readonly seedModel: IModelSeed;
    public readonly canvas: Canvas;
 
    constructor(
-      completeSignal: Chan<CanvasPaintedReply>,
+      completeSignal: CompletionSignal<CanvasPaintedReply>,
       seedModel: IModelSeed,
       canvas: Canvas
    ) {

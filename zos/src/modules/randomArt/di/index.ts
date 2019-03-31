@@ -1,1 +1,2 @@
-export * from './deferrable-message-queue-factory.interface';
+export * from './tags';
+export * from './types';

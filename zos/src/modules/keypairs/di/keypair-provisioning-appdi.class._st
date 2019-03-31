@@ -1,0 +1,14 @@
+// import {ApplicationInstaller, IContainerRegistryInstallerClient} from '@jchptf/di-app-registry';
+// import {APP_CONFIG_TYPES} from '../../../apps/di';
+// import {Deployment, TicketMintingPolicy} from '../../../apps/oldConfig';
+//
+// export class KeypairProvisioningAppDi implements ApplicationInstaller {
+//    constructor(
+//       @inject(APP_CONFIG_TYPES.Deployment) private readonly deployConfig: Deployment,
+//       @inject(APP_CONFIG_TYPES.TicketMintingPolicy) private readonly ticketMinting: TicketMintingPolicy,
+//
+//    )
+//    public install(client: IContainerRegistryInstallerClient): void
+//    {
+//    }
+// }
