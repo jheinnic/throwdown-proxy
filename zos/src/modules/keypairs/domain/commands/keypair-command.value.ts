@@ -1,6 +1,11 @@
-import {UUID} from '../../../../infrastructure/validation';
+import { UUID } from '../../../../infrastructure/validation';
+import { KeypairCommandType } from './keypair-command-type.type';
 
 export abstract class KeypairCommand {
-   readonly aggregateId: UUID;
-   readonly commandType: KeypairCommandType;
+   public readonly aggregateId: UUID;
+   public static readonly commandType: KeypairCommandType;
+
+   protected constructor( aggregateId: UUID ) {
+      this.aggregateId = aggregateId;
+   }
 }

@@ -1,7 +1,8 @@
-import {MessageType} from './message-type.enum';
-import {ArtworkLocator} from '../interface/locators/artwork-locator.interface';
-import {CompletionSignal} from './completion-signal.interface';
-import {RenderAndStoreReply} from './render-and-store-reply.value';
+import { MessageType } from './message-type.enum';
+import { CompletionSignal } from './completion-signal.type';
+import { RenderAndStoreReply } from './render-and-store-reply.value';
+import { IArtworkSeed } from '../../../apps/modules/roots/paint-gateway/follower/interface/model';
+import { Path } from '../../../infrastructure/validation';
 
 
 export class RenderAndStoreRequest
@@ -9,7 +10,8 @@ export class RenderAndStoreRequest
    public readonly messageType: MessageType.RENDER_AND_STORE_REQUEST = MessageType.RENDER_AND_STORE_REQUEST;
    
    constructor(
-      readonly artworkId: ArtworkLocator,
+      readonly renderContent: IArtworkSeed,
+      readonly storageLocation: Path,
       readonly completionSignal: CompletionSignal<RenderAndStoreReply>
    ) { }
 }

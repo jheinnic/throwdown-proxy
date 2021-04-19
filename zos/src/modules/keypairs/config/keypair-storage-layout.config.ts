@@ -1,6 +1,6 @@
-import {configClass} from '@jchptf/di-app-registry';
+import { configClass } from '@jchptf/config';
 
-@configClass("eth.lotto.deployment.keystore", )
+@configClass("eth.lotto.deployment.keystore")
 export class KeypairStorageLayout
 {
 
