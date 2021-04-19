@@ -2,7 +2,7 @@
 // import * as co-limit from "../src/index";
 
 import '@jchptf/reflection';
-import {ConcurrentWorkFactory} from '../src/services';
+import {ConcurrentWorkFactory} from '@jchptf/coroutines';
 import {expect} from 'chai';
 import sinon = require('sinon');
 import Queue from 'co-priority-queue';
