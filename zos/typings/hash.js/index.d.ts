@@ -1,5 +1,7 @@
-declare namespace HashJs
+declare module 'hash.js'
 {
+   import 'hash.js';
+
    export interface BlockHash<T>
    {
       hmacStrength: number
@@ -125,11 +127,13 @@ declare namespace HashJs
       padLength: 128
       endian: 'big'
    }
+
+   export declare const hash: HashJS;
 }
 
-declare const HashJs: HashJs.Hash;
+declare const hash: HashJS;
 
-export = HashJs
+export = hash
 export as namespace hash;
 
 
