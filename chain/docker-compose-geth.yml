@@ -95,7 +95,7 @@ services:
       - geth-miner-1
       - geth-miner-2
       - geth-miner-3
-      - geth-dashboard
+#      - geth-dashboard
     restart: unless-stopped
     domainname: dev.jchein.name
     hostname: geth-netintel
@@ -106,7 +106,7 @@ services:
       - geth-miner-1:geth-miner-1
       - geth-miner-2:geth-miner-2
       - geth-miner-3:geth-miner-3
-      - geth-dashboard:geth-dashboard
+#      - geth-dashboard:geth-dashboard
     networks:
       chain-backnet:
     environment:
@@ -114,19 +114,19 @@ services:
       - bootnodeIp=172.35.160.100
       - chainSubnet=172.35.160.96/27
 
-  geth-dashboard:
-    image: immutability/ethstats
-    restart: unless-stopped
-    domainname: dev.jchein.name
-    hostname: geth-dashboard
-    ports:
-     - 3001:3000
-    networks:
-     portfolio:
-     chain-backnet:
-       ipv4_address: 172.35.160.99
-    environment:
-     - WS_SECRET=test
+#   geth-dashboard:
+#     image: immutability/ethstats
+#     restart: unless-stopped
+#     domainname: dev.jchein.name
+#     hostname: geth-dashboard
+#     ports:
+#      - 3001:3000
+#     networks:
+#      portfolio:
+#      chain-backnet:
+#        ipv4_address: 172.35.160.99
+#     environment:
+#      - WS_SECRET=test
 
 volumes:
   geth-data-1:
