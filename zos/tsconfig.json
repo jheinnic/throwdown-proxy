@@ -19,6 +19,7 @@
     "importHelpers": false,                 /* Import emit helpers from 'tslib'. */
     // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
+    "skipLibCheck": true,
 
     /* Strict Type-Checking Options */
     "strict": true,                           /* Enable all strict type-checking options. */
@@ -63,6 +64,7 @@
   "compileOnSave": true,
   "include": ["src/**/*.ts", "typings/**/*.d.ts"],
   "exclude": [
+    "attic/**/*",
     "build/**/*",
     "contracts/**/*",
     "dist/**/*",
@@ -70,8 +72,7 @@
     "mypool/**/*",
     "node_modules/**/*",
     "orig/**/*",
-    "src/toys/**/*.ts",
     "src/infrastructure/lib/SHA256Compress.ts",
-    "src/infrastructure/outbound/**/*.ts"
+    "src/modules/tickets/*.ts"
   ]
 }
