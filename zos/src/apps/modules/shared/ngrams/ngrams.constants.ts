@@ -1,22 +1,26 @@
-import {
-   getLocalProviderToken, getModuleIdentifier, getNamedSubtypeIntent,
-} from '@jchptf/api';
-import { IAlphabetMapper } from './interfaces';
 import { NgramAlphabetMapper, TrigramAlphabetMapper } from './components';
+import { blessLocalProviderToken, LocalProviderToken, MODULE_ID } from '@jchptf/nestjs';
 
-export const TRIGRAMS_MODULE = getModuleIdentifier('@jchptf/trigrams');
+export const NGRAM_MODULE = Symbol('@jchptf/trigrams');
+export type NGRAM_MODULE = typeof NGRAM_MODULE;
 
-// export const ALPHABET_MAPPER_TYPE =
-//    getNamedTypeIntent<IAlphabetMapper>('AlphabetMapper');
+export const TRIGRAM_ALPHABET_MAPPER = 'TrigramAlphabetMapper';
+export const NGRAM_ALPHABET_MAPPER = 'NGramAlphabetMapper';
 
-export const TRIGRAM_ALPHABET_MAPPER_TYPE =
-   getNamedSubtypeIntent<IAlphabetMapper, TrigramAlphabetMapper>('TrigramAlphabetMapper');
+export class NGramModuleId {
+   public static readonly [MODULE_ID] = NGRAM_MODULE;
 
-export const NGRAM_ALPHABET_MAPPER_TYPE =
-   getNamedSubtypeIntent<IAlphabetMapper, NgramAlphabetMapper>('NgramAlphabetMapper');
+   [TRIGRAM_ALPHABET_MAPPER]: TrigramAlphabetMapper;
+   [NGRAM_ALPHABET_MAPPER]: NgramAlphabetMapper;
+}
 
-export const TRIGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN =
-   getLocalProviderToken(TRIGRAMS_MODULE, TRIGRAM_ALPHABET_MAPPER_TYPE);
+export type NGramModuleType = typeof NGramModuleId;
 
-export const NGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN =
-   getLocalProviderToken(TRIGRAMS_MODULE, TRIGRAM_ALPHABET_MAPPER_TYPE);
+function blessLocal<Token extends keyof NGramModuleId>(token: Token):
+   LocalProviderToken<NGramModuleId[Token], NGramModuleType, Token>
+{
+   return blessLocalProviderToken(token, NGramModuleId);
+}
+
+export const TRIGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN = blessLocal(TRIGRAM_ALPHABET_MAPPER);
+export const NGRAM_ALPHABET_MAPPER_PROVIDER_TOKEN = blessLocal(NGRAM_ALPHABET_MAPPER);

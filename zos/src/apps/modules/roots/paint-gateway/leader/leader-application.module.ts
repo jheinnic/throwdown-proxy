@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
-import * as cluster from 'cluster';
 import * as util from 'util';
 
-import { ResourceSemaphoreModule } from '@jchptf/semaphore';
+import {
+   SEMAPHORE_RESOURCE_POOL, SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN, SemaphoreModule
+} from '@jchptf/semaphore';
+import { CONSUL_OPTIONS, CONSUL_OPTIONS_PROVIDER_TOKEN, ConsulModule } from '@jchptf/consul';
 import { CoroutinesModule } from '@jchptf/coroutines';
-import { ConsulModule } from '@jchptf/consul';
+import { DynamicProviderBindingStyle } from '@jchptf/nestjs';
 import { ConfigModule } from '@jchptf/config';
 import { MerkleModule } from '@jchptf/merkle';
-import { AsyncModuleParamStyle } from '@jchptf/nestjs';
 
 // import { AppConfigConstants } from '../../../config/app-config.constants';
 // import APP_BOOTSTRAP_PROVIDER_TOKEN = AppConfigConstants.APP_BOOTSTRAP_PROVIDER_TOKEN;
@@ -15,33 +16,39 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
 import { LeaderApplication } from './leader-application.class';
 import { IsaacModule } from '../../../shared/isaac/isaac.module';
 import { WorkerPool } from './worker-pool.service';
-import { APPLICATION_MODULE_ID } from './leader-application.constants';
+import { LeaderApplicationModuleId } from './leader-application.constants';
 
 @Module({
    imports: [
       CoroutinesModule,
       IsaacModule,
-      ResourceSemaphoreModule.forFeature<cluster.Worker>(
-         APPLICATION_MODULE_ID, {
-            style: AsyncModuleParamStyle.VALUE,
-            // useExisting: WorkerPool
-            // useFactory: (workerPool: WorkerPool) => workerPool,
-            // inject: [WorkerPool]
-            useValue: new WorkerPool()
+      SemaphoreModule.forFeature({  // <cluster.Worker, LeaderApplicationModuleId>({
+         forModule: LeaderApplicationModuleId,
+         [SEMAPHORE_RESOURCE_POOL]: {
+            style: DynamicProviderBindingStyle.CLASS,
+            provide: SEMAPHORE_RESOURCE_POOL_PROVIDER_TOKEN,
+            useClass: WorkerPool,
          }
-      ),
-      ConfigModule.forRootWithFeature(
-         {},
-         APPLICATION_MODULE_ID,
-         'apps/config/**/!(*.d).{ts,js}',
-         process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
-      ),
+         // useFactory: (workerPool: WorkerPool) => workerPool,
+         // inject: [WorkerPool]
+         // useValue: new WorkerPool()
+      }),
+      ConfigModule.forRootWithFeature({
+         forModule: LeaderApplicationModuleId,
+         resolveGlobRoot: 'apps/config/**/!(*.d).{ts,js}',
+         loadConfigGlob: process.env['NODE_ENV'] === 'production'
+            ? './dist' : './build/test/fixtures',
+      }),
       ConsulModule.forRoot({
-         style: AsyncModuleParamStyle.VALUE,
-         useValue: {
-            host: 'localhost',
-            secure: false,
-            promisify: util.promisify
+         forModule: LeaderApplicationModuleId,
+         [CONSUL_OPTIONS]: {
+            style: DynamicProviderBindingStyle.VALUE,
+            provide: CONSUL_OPTIONS_PROVIDER_TOKEN,
+            useValue: {
+               host: 'localhost',
+               secure: false,
+               promisify: util.promisify
+            }
          }
       }),
       MerkleModule
@@ -49,7 +56,7 @@ import { APPLICATION_MODULE_ID } from './leader-application.constants';
    controllers: [],
    providers: [WorkerPool, LeaderApplication],
    exports: [
-      CoroutinesModule, IsaacModule, ResourceSemaphoreModule, ConfigModule, MerkleModule,
+      CoroutinesModule, IsaacModule, SemaphoreModule, ConfigModule, MerkleModule,
       LeaderApplication, WorkerPool
    ]
 })

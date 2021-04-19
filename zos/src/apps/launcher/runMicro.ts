@@ -5,8 +5,9 @@ import * as cluster from 'cluster';
 
 import { LeaderApplicationModule } from '../modules/roots/paint-gateway/leader/leader-application.module';
 import { LeaderApplication } from '../modules/roots/paint-gateway/leader/leader-application.class';
-import { FollowerApplicationModule } from '../modules/roots/paint-gateway/follower/follower-application.module';
-import { FollowerApplication } from '../modules/roots/paint-gateway/follower/follower-application.service';
+import { FollowerApplication } from '../modules/roots/paint-gateway/follower/components';
+import { FollowerAppModule } from '../modules/roots/paint-gateway/follower/di/follower-app.module';
+
 
 async function bootstrap()
 {
@@ -21,26 +22,33 @@ async function bootstrap()
                protoPath: require.resolve('@jchgrpc/paint.gateway-node/proto.proto')
             }
          });
-         console.log('Leader started');
+         console.log('Leader context loaded');
          const mainApp = ctx.get(LeaderApplication);
-         console.log('Yielded', await mainApp.run());
 
-         ctx.close();
-         console.log('Closed app context');
+         console.log('Leader application', mainApp);
+         const onDone  = await mainApp.start();
+         console.log(`Yielded ${onDone}`);
+
+         await ctx.close();
+         console.log('Closed leader context');
       } else if (cluster.isWorker) {
          console.log('Follower starting');
-         const ctx = await NestFactory.createApplicationContext(FollowerApplicationModule);
+         const ctx = await NestFactory.createApplicationContext(FollowerAppModule);
          console.log('Follower context loaded');
          const mainApp = ctx.get(FollowerApplication);
-         console.log('Follower application', mainApp);
-         console.log('Yielded', await mainApp.run());
 
-         ctx.close();
+         console.log('Follower application', mainApp);
+         const onDone  = await mainApp.start();
+         console.log(`Yielded ${onDone}`);
+
+         await ctx.close();
          console.log('Closed follower context');
       }
+
       console.log('Process returning');
    } catch (err) {
       console.error('ERROR', err);
+      throw err;
    }
 }
 
@@ -51,4 +59,5 @@ bootstrap()
    .catch((err: any) => {
       console.error('Bootstrap failed!', err);
    });
+
 console.log('Returned from async bootstrap.');

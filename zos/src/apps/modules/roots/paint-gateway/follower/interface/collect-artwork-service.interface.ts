@@ -1,15 +1,16 @@
-import { IModelSeed } from './model';
-import { Path, UUID } from '../../../../../../infrastructure/validation';
+import { IArtworkSeed } from './model';
+import { UUID } from '../../../../../../infrastructure/validation';
 import { IncrementalPlotProgress } from './incremental-plot-progress.interface';
 import { Observable } from 'rxjs';
 
 export interface ICollectArtworkService {
    registerTask(
-      modelSeed: IModelSeed,
-      path: Path,
+      taskId: UUID,
+      modelSeed: IArtworkSeed,
+      // path: Path,
       renderPolicyUuid: UUID,
       storagePolicyUuid: UUID
-   ): UUID;
+   ): void;
 
    monitorTask(taskId: UUID): Observable<IncrementalPlotProgress>
 

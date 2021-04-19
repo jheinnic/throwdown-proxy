@@ -2,28 +2,32 @@ import { Inject, Module } from '@nestjs/common';
 import { Canvas } from 'canvas';
 
 import { CoroutinesModule } from '@jchptf/coroutines';
-import { IResourceSemaphore, PoolSizes, ResourceSemaphoreModule } from '@jchptf/semaphore';
+import {
+   IResourceSemaphore, PoolSizes, SEMAPHORE_RESOURCE_POOL, SemaphoreModule
+} from '@jchptf/semaphore';
 import { ConfigModule } from '@jchptf/config';
 import {
-   APPLICATION_MODULE_ID, CANVAS_SEMAPHORE_RESOURCE_POOL, CANVAS_SEMAPHORE_PROVIDER_TOKEN,
-   CANVAS_SEMAPHORE_TAG,
+   ApplicationModuleId, CANVAS_SEMAPHORE_RESOURCE_POOL, CANVAS_SEMAPHORE_PROVIDER_TOKEN,
 } from './application.constants';
-import { AsyncModuleParamStyle } from '@jchptf/nestjs';
+import { DynamicProviderBindingStyle } from '@jchptf/nestjs';
+
 
 @Module({
    imports: [
       CoroutinesModule,
-      ResourceSemaphoreModule.forFeature<Canvas>(
-         APPLICATION_MODULE_ID, {
-            style: AsyncModuleParamStyle.VALUE,
+      SemaphoreModule.forFeature<Canvas, typeof ApplicationModuleId>({
+         forModule: ApplicationModuleId,
+         [SEMAPHORE_RESOURCE_POOL]: {
+            style: DynamicProviderBindingStyle.VALUE,
             useValue: CANVAS_SEMAPHORE_RESOURCE_POOL
-         }, CANVAS_SEMAPHORE_TAG),
-      ConfigModule.forRootWithFeature(
-         {},
-         APPLICATION_MODULE_ID,
-         'apps/config/**/!(*.d).{ts,js}',
-         process.env['NODE_ENV'] === 'production' ? './dist' : './build/test/fixtures'
-      )
+         }
+      }),
+      ConfigModule.forRootWithFeature({
+         forModule: ApplicationModuleId,
+         resolveGlobRoot: 'apps/config/**/!(*.d).{ts,js}',
+         loadConfigGlob: process.env['NODE_ENV'] === 'production'
+            ? './dist' : './build/test/fixtures',
+      })
    ],
    providers: [
       {
@@ -31,7 +35,7 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
          useFactory: (semaphore: IResourceSemaphore<Canvas>) => {
             console.log('Adding watcher');
             const retVal = semaphore.addWatch(
-               'strtest', (id: string, _old: PoolSizes, newSizes: PoolSizes) => {
+               'stress', (id: string, _old: PoolSizes, newSizes: PoolSizes) => {
                   console.log('watch notifier receives', newSizes, id);
                }
             );
@@ -46,23 +50,17 @@ import { AsyncModuleParamStyle } from '@jchptf/nestjs';
       //    useFactory: simulateWorkload,
       //    inject: [
       //       CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER_TOKEN,
-      //       CANVAS_SEMAPHORE_RETURN_CHANNEL_PROVIDER_TOKEN
+      //       CANVAS_SEMAPHORE_RECYCLING_CHANNEL_PROVIDER_TOKEN
       //    ]
       // }
    ],
-   exports: [
-      CoroutinesModule, ResourceSemaphoreModule, ConfigModule, 'temp'
-   ]
+   exports: [CoroutinesModule, SemaphoreModule, ConfigModule, 'temp']
 })
-export class ApplicationModule
+export class ApplicationModule extends ApplicationModuleId
 {
-
-   constructor(
-      @Inject('temp') watcher: any
-      // @Inject('loadTest') loadTest: any
-   )
+   constructor( @Inject('temp') watcher: any )
    {
-      // console.log('lil watcher, watcher', watcher, 'load tester', loadTest);
+      super();
       console.log('lil watcher, watcher', watcher);
    }
 }

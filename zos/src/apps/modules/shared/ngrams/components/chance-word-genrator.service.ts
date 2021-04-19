@@ -1,5 +1,5 @@
 import { Chance } from 'chance';
-import { IWordGenerator } from './word-generator.interface';
+import { IWordGenerator } from '../interfaces';
 
 export class ChanceWordGenerator implements IWordGenerator
 {
