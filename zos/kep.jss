@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    @jchgrpc/paint.gateway-node": "^0.0.5",
+    "@jchptf/api": "^0.0.45",
+    "@jchptf/config": "^0.0.36",
+    "@jchptf/consul": "^0.0.25",
+    "@jchptf/coroutines": "^0.0.48",
+    "@jchptf/merkle": "^0.0.36",
+    "@jchptf/mixins": "^0.0.11",
+    "@jchptf/nestjs": "^0.0.15",
+    "@jchptf/objecttypes": "^0.0.12",
+    "@jchptf/reflection": "^0.0.12",
+    "@jchptf/semaphore": "^0.0.36",
+    "@jchptf/tupletypes": "^0.0.21",
+    "@jchptf/txtypes": "^0.0.12",
