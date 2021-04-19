@@ -1,19 +1,21 @@
+/// <reference path="../../../../typings/hash.js"
 import { HmacDrbgOptions, HmacDrbg } from 'hmac-drbg';
 
-import { BlockHash, MessageDigest } from 'typings/hash.js';
+// import { BlockHash, MessageDigest } from 'hash.js';
 import { IPseudoRandomSource } from '../interface';
 // import { RANDOMIZE_TYPES, PRNG_ALGORITHM_KINDS, RANDOMIZE_TAGS } from '../di';
 
 const INT32_OVERFLOW = Math.pow(2, 33);
 
 export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<T>)>
- implements IPseudoRandomSource
+   implements IPseudoRandomSource
 {
    private readonly hmacDrbg: any; // HmacDrbg;
 
    constructor(
       // @inject(RANDOMIZE_TYPES.SeedBytes) @tagged(
-      //    RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes: HmacDrbgOptions<T>
+      //    RANDOMIZE_TAGS.PRNGAlgorithm, PRNG_ALGORITHM_KINDS['HMAC-DRBG']) seedBytes:
+      // HmacDrbgOptions<T>
       seedBytes: HmacDrbgOptions<T>
    )
    {
@@ -23,10 +25,10 @@ export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<
       //    entropyEnc: 'hex',
       //    nonce: seedBytes.nonceWord.toString('16'),
       //    nonceEnc: 'hex'
-         // add: [
-         //
-         // ],
-         // addEnc: 'hex'
+      // add: [
+      //
+      // ],
+      // addEnc: 'hex'
       // });
    }
 
@@ -42,7 +44,8 @@ export class HmacDrbgPseudoRandomSource<T extends (BlockHash<T> & MessageDigest<
    public* pseudoRandomIntegers(minValue: number, maxValue: number): IterableIterator<number>
    {
       if (minValue >= maxValue) {
-         throw new Error(`maxValue, ${maxValue}, must be at least one greater than minValue, ${minValue}`);
+         throw new Error(
+            `maxValue, ${maxValue}, must be at least one greater than minValue, ${minValue}`);
       }
 
       const range = maxValue - minValue;

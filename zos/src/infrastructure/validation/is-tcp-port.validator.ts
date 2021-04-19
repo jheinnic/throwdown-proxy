@@ -11,7 +11,7 @@ export function IsTcpPort(validationOptions?: ValidationOptions) {
             constraints: [],
             options: validationOptions,
             validator: {
-                validate: (value: number, args: ValidationArguments) => {
+                validate: (value: number, _args: ValidationArguments) => {
                     // TODO: Add constraint flag to distinguish privileged and unprivileged ranges
                     return (value > 0) && (value < 65536);
                 },
