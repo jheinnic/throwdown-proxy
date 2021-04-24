@@ -1,10 +1,13 @@
+// <reference file="../../../../typings/hash.js/index.d.ts">
 import { Injectable } from '@nestjs/common';
 import { HmacDrbgSeed } from './hmac-drbg-seed.interface';
 import { IPseudoRandomSeedFactory, IPseudoRandomSource } from '../interface';
 import { HmacDrbgPseudoRandomSource } from './hmac-drbg-pseudo-random-source.class';
 import { ConstructorFor } from 'simplytyped';
 import * as crypto from 'crypto';
-import HashJs = require('hash.js');
+import { hash }  from 'hash.js';
+// import HashJs = require('../../../../typings/hash.js');
+// import HashJs = require('hash.js');
 
 @Injectable()
 export class HmacDrbgPseudoRandomSourceFactory implements IPseudoRandomSeedFactory
@@ -19,7 +22,7 @@ export class HmacDrbgPseudoRandomSourceFactory implements IPseudoRandomSeedFacto
    {
       this.seedSource = seedSource;
       return new HmacDrbgPseudoRandomSource({
-         hash: HashJs.sha256 as unknown as ConstructorFor<HashJs.Sha256>,
+         hash: hash.sha256 as unknown as ConstructorFor<hash.Sha256>,
          entropy: this.seedSource.entropyWord.toString('hex'),
          nonce: this.seedSource.nonceWord.toString('hex'),
          minEntropy: 256

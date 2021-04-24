@@ -1,47 +1,36 @@
-import { DynamicModule, Module, Provider } from '@nestjs/common';
-import {
-   AsyncModuleParam, asyncProviderFromParam, DynamicProviderToken, ModuleIdentifier
-} from '@jchptf/nestjs';
+import { DynamicModule, Module } from '@nestjs/common';
+import { buildDynamicModule, IDynamicModuleBuilder, IModule } from '@jchptf/nestjs';
 
 import { ISAAC_GENERATOR_FACTORY_PROVIDER } from './isaac-generator-factory.provider';
-import { ISAAC_SEED_BUFFER_PROVIDER_TOKEN } from './isaac.constants';
-import { getDynamicIsaacGeneratorProviderToken } from './isaac.utilities';
 import {
-   IPseudoRandomSource, IPseudoRandomSourceFactory
-} from '../../../../infrastructure/randomize/interface';
+   ISAAC_GENERATOR, ISAAC_GENERATOR_PROVIDER_TOKEN, ISAAC_SEED_BUFFER,
+   IsaacModuleId, IsaacModuleType
+} from './isaac.constants';
+import { IsaacGeneratorFeatureOptions } from './isaac-generator-feature-options.type';
+
 @Module({
    imports: [],
    controllers: [],
    providers: [ISAAC_GENERATOR_FACTORY_PROVIDER],
    exports: [ISAAC_GENERATOR_FACTORY_PROVIDER]
 })
-export class IsaacModule
+export class IsaacModule extends IsaacModuleId
 {
-   public static forGeneratorFeature(
-      module: ModuleIdentifier,
-      seedBuffer: AsyncModuleParam<Buffer>,
-      tag?: string): DynamicModule
+   public static forGeneratorFeature<Consumer extends IModule>(
+      options: IsaacGeneratorFeatureOptions<Consumer>): DynamicModule
    {
-      const bufferProvider: Provider[] =
-         asyncProviderFromParam(ISAAC_SEED_BUFFER_PROVIDER_TOKEN, seedBuffer);
+      return buildDynamicModule(
+         IsaacModule,
+         options.forModule,
+         (builder: IDynamicModuleBuilder<IsaacModuleType, Consumer>) => {
+            builder.acceptBoundImport(options[ISAAC_SEED_BUFFER]);
 
-      const sourceProviderToken: DynamicProviderToken<IPseudoRandomSource> =
-         getDynamicIsaacGeneratorProviderToken(module, tag);
-      const sourceProvider = {
-         provide: sourceProviderToken,
-         useFactory: (
-            generatorFactory: IPseudoRandomSourceFactory<Buffer>,
-            seedSource: Buffer
-         ) => {
-            return generatorFactory.seedGenerator(seedSource);
-         },
-         inject: [ISAAC_GENERATOR_FACTORY_PROVIDER, ISAAC_SEED_BUFFER_PROVIDER_TOKEN]
-      };
-
-      return {
-         module: IsaacModule,
-         providers: [...bufferProvider, sourceProvider]
-      };
+            const exportGen = options[ISAAC_GENERATOR];
+            if (!! exportGen) {
+               builder.exportFromSupplier(exportGen, ISAAC_GENERATOR_PROVIDER_TOKEN);
+            }
+         }
+      );
    }
 
    // For Future TODO

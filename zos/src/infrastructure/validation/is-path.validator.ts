@@ -10,7 +10,7 @@ export function IsPath(separator: string = '/', validationOptions?: ValidationOp
             constraints: [separator],
             options: validationOptions,
             validator: {
-                validate: (value: any, args: ValidationArguments) => {
+                validate: (value: any, _args: ValidationArguments) => {
                     // try {
                     const result = path.parse(value);
                     if (typeof result === 'object') {

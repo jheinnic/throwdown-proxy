@@ -127,11 +127,13 @@ declare module 'hash.js'
       padLength: 128
       endian: 'big'
    }
+
+   export declare const hash: HashJS;
 }
 
-declare const HashJs: HashJs.Hash;
+declare const hash: HashJS;
 
-export = HashJs
+export = hash
 export as namespace hash;
 
 

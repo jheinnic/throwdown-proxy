@@ -27,6 +27,7 @@ declare module 'cloudinary'
 
    export interface UploadOptions {
       public_id: string;
+      rbg: boolean;
    }
 
    export interface Uploader {
