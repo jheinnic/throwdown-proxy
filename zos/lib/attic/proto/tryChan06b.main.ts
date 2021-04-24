@@ -1,5 +1,5 @@
-import {Chan, chan, put, go, repeat} from 'medium';
-import {co} from 'co';
+import {Chan, put, repeat} from 'medium';
+// import {co} from 'co';
 import {identity} from 'transducers-js';
 import * as fs from 'fs';
 import {ConcurrentWorkFactory} from '@jchptf/coroutines';
@@ -7,18 +7,18 @@ import {ModelSeed} from '../modules/randomArt/messages';
 import Queue from 'co-priority-queue';
 import {Canvas} from 'canvas';
 import {IncrementalPlotProgress, IncrementalPlotter} from '../modules/randomArt/interface';
-import {AutoIterate} from '../../../src/infrastructure/lib';
-import {asyncScheduler} from 'rxjs';
+// import {AutoIterate} from '../../../src/infrastructure/lib';
+// import {asyncScheduler} from 'rxjs';
 import * as util from 'util';
 import * as path from 'path';
-import {Mutable} from '@jchptf/tupletypes';
+import {Mutable} from '@jchptf/objecttypes';
 import {BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle} from '../modules/tickets/config';
 import {Name} from '../../../src/infrastructure/validation';
 import {
    EightFromElevenModelSeedStrategy, RawMappedModelSeedStrategy, TrigramModelSeedStrategy
 } from '../modules/tickets/components/modelSeed';
 import {
-   CanvasCalculator, ICanvasCalculator, IncrementalPlotterFactory, RandomArtModel
+   CanvasCalculator, ICanvasCalculator, IncrementalPlotterFactory, RandomArtModel, CanvasDimensions, RenderScale
 } from '../modules/randomArt';
 import {IPaintModelSeedStrategy} from '../modules/tickets/interface/policies';
 import {Transducer} from 'transducers-js';
@@ -90,27 +90,28 @@ addEightFromEleven(12, 243, 32, 98);
 addEightFromEleven(12, 243, 32, 164);
 */
 
-const dir = '/Users/jheinnic//Documents/randomArt3/pkFixture7';
+const dir = '/Users/jheinnic//Documents/randomArt3/pkFixture9';
 const workFactory = new ConcurrentWorkFactory();
-const autoIterate = new AutoIterate(asyncScheduler, workFactory);
+// const autoIterate = new AutoIterate(asyncScheduler, workFactory);
 
 const keyUuids: string[] = fs.readFileSync(`${dir}/keys.dat`, {encoding: 'utf8'})
    .split(/\n/);
 
 const chanSrc: Chan<string> =
-   workFactory.createSourceLoader(keyUuids[Symbol.iterator](), 4, 4);
+    workFactory.createChan(4);
+workFactory.loadToChan(keyUuids[Symbol.iterator](), chanSrc, 4);
 const chanRdr: Chan<[string, string, Buffer, Buffer]> =
-   chan(2);
+    workFactory.createChan(2);
 const chanSeed: Chan<[string, string, ModelSeed]> =
-   chan(2);
+    workFactory.createChan(2);
 const canvasQueue: Queue<Canvas> =
    new Queue<Canvas>();
 const chanPlotter: Chan<[string, string, Canvas, IncrementalPlotter]> =
-   chan(2);
+    workFactory.createChan(2);
 const chanWriter: Chan<[string, string, Canvas]> =
-   chan(6);
+    workFactory.createChan(6);
 const chanRecycle: Chan<Canvas> =
-   chan(8);
+    workFactory.createChan(8);
 
 const canvasArray: Canvas[] = [
    new Canvas(896, 896, 'image'),
@@ -142,7 +143,7 @@ function* srcToRdrGen(src: string): IterableIterator<any>
 // const srcToRdr: WrappableCoRoutineGenerator<[string, string, Buffer, Buffer], [string]> =
 //    srcToRdrGen;
 
-autoIterate.service(chanSrc, srcToRdrGen, chanRdr, 2);
+workFactory.transformToChan(chanSrc, chanRdr, srcToRdrGen, 2);
 
 function* rdrToSeedGen(rdr: [string, string, Buffer, Buffer])
 {
@@ -165,7 +166,7 @@ function* rdrToSeedGen(rdr: [string, string, Buffer, Buffer])
    return retVal;
 }
 
-autoIterate.serviceMany(chanRdr, rdrToSeedGen, chanSeed, 2);
+workFactory.transformToChan(chanRdr, chanSeed, rdrToSeedGen, 2);
 
 // co(function* () {
 //    while (true) {
@@ -176,7 +177,7 @@ autoIterate.serviceMany(chanRdr, rdrToSeedGen, chanSeed, 2);
 
 const canvasCalculator: ICanvasCalculator = new CanvasCalculator();
 const mapPoints: IncrementalPlotterFactory =
-   canvasCalculator.create(100352, 896, 896, 'square');
+   canvasCalculator.create(100352, new CanvasDimensions(896, 896), new RenderScale(1, 1, 'square'));
 
 function* seedToPlotterGen(seed: [string, string, ModelSeed])
 {
@@ -186,7 +187,7 @@ function* seedToPlotterGen(seed: [string, string, ModelSeed])
    return [seed[0], seed[1], canvas, incrPlotter];
 }
 
-autoIterate.service(chanSeed, seedToPlotterGen, chanPlotter, 2);
+workFactory.transformToChan(chanSeed, chanPlotter, seedToPlotterGen, 2);
 
 const newPlotQueue = new Queue<IncrementalPlotter>();
 const plotterToTask: Map<IncrementalPlotter, [string, string, Canvas]> =
@@ -202,7 +203,8 @@ function trackCompletion(progress: IncrementalPlotProgress)
    }
 }
 
-autoIterate.unwind(newPlotQueue, trackCompletion, 0);
+// TODO: Missing a Chan arguemnt second from last...
+workFactory.unwind(newPlotQueue, trackCompletion, 0);
 
 async function plotterToQueue()
 {
@@ -254,7 +256,7 @@ function* writerToRecycleGen(writer: [string, string, Canvas])
    return canvas;
 }
 
-autoIterate.service(chanWriter, writerToRecycleGen, chanRecycle, 3);
+workFactory.transformToChan(chanWriter, chanRecycle, writerToRecycleGen,3);
 
 co(function* () {
    while (true) {
@@ -315,7 +317,7 @@ function createSourceTxLoader<T, M = T>(
    iterator: IterableIterator<T>, concurrency: number, backlog: number,
    transform: Transducer<T, M>): Chan<T, M>
 {
-   const retChan: Chan<T, M> = chan<T, M>(backlog, transform);
+   const retChan: Chan<T, M> = workFactory.createTxChan<T, M>(transform, backlog);
    let globalDone: boolean = false;
 
    async function queueFromIterator(localIterResult: IteratorResult<T>): Promise<IteratorResult<T>|false>
