@@ -5,8 +5,9 @@ import * as cluster from 'cluster';
 
 import { LeaderApplicationModule } from '../modules/roots/paint-gateway/leader/leader-application.module';
 import { LeaderApplication } from '../modules/roots/paint-gateway/leader/leader-application.class';
-import { FollowerApplicationModule } from '../modules/roots/paint-gateway/follower/follower-application.module';
-import { FollowerApplication } from '../modules/roots/paint-gateway/follower/follower-application.service';
+import { FollowerApplication } from '../modules/roots/paint-gateway/follower/components';
+import { FollowerAppModule } from '../modules/roots/paint-gateway/follower/di/follower-app.module';
+
 
 async function bootstrap()
 {
@@ -32,7 +33,7 @@ async function bootstrap()
          console.log('Closed leader context');
       } else if (cluster.isWorker) {
          console.log('Follower starting');
-         const ctx = await NestFactory.createApplicationContext(FollowerApplicationModule);
+         const ctx = await NestFactory.createApplicationContext(FollowerAppModule);
          console.log('Follower context loaded');
          const mainApp = ctx.get(FollowerApplication);
 

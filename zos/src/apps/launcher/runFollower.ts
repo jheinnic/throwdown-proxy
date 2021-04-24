@@ -1,17 +1,17 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
+import { FollowerAppModule } from '../modules/roots/paint-gateway/follower/di/follower-app.module';
+import {
+   FollowerApplication, FollowerAutoDriver
+} from '../modules/roots/paint-gateway/follower/components';
 
-import { FollowerApplicationModule } from '../modules/roots/paint-gateway/follower/follower-application.module';
-import { FollowerApplication } from '../modules/roots/paint-gateway/follower/follower-application.service';
-import { FollowerAutoDriver } from '../modules/roots/paint-gateway/follower/experiment/follower-auto-driver.service';
 
 async function bootstrap()
 {
    try {
       console.log('Process starting');
       console.log('Follower starting');
-      const ctx = await NestFactory.createApplicationContext(
-         FollowerApplicationModule);
+      const ctx = await NestFactory.createApplicationContext(FollowerAppModule);
       console.log('Follower context loaded');
       const mainApp = ctx.get(FollowerApplication);
       const autoDriver = ctx.get(FollowerAutoDriver);
