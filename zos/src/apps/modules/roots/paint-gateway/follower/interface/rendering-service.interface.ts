@@ -1,11 +1,19 @@
 import { Canvas } from 'canvas';
 
 import { UUID } from '../../../../../../infrastructure/validation';
-import { IncrementalPlotter, IRandomArtworkModel } from '../components/interface';
+import { IArtworkSeed, IncrementalPlotter } from '.';
 
-export interface IRenderingPolicy
+export interface IRenderingService
 {
-   applyPolicy(
-      policyId: UUID, genModel: IRandomArtworkModel, canvas: Canvas, resizeCanvasOk?: boolean
+   // registerSeed( modelSeed: IArtworkSeed ): IRandomArtworkMemento
+   //
+   // renderArtwork(
+   //    policyId: UUID, genModel: IRandomArtworkMemento, canvas: Canvas, resizeCanvasOk?: boolean
+   // ): IncrementalPlotter
+   //
+   // unregisterSeed( memento: IRandomArtworkMemento
+
+   renderArtwork(
+      policyId: UUID, modelSeed: IArtworkSeed, canvas: Canvas, resizeCanvasOk?: boolean
    ): IncrementalPlotter
 }

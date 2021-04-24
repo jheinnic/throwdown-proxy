@@ -1,5 +1,5 @@
 import { IArtworkSeed } from './artwork-seed.interface';
-import { UUID } from '../../../../../../../infrastructure/validation';
+import { UUID } from '../../../../../../../../infrastructure/validation';
 
 export interface ArtworkTaskDefinition
 {
@@ -9,5 +9,3 @@ export interface ArtworkTaskDefinition
    readonly artworkSeed: IArtworkSeed;
    readonly paintEngineVersion: string;
 }
-
-

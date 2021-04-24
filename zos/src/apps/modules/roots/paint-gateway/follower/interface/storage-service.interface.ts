@@ -2,7 +2,9 @@ import { UUID } from '../../../../../../infrastructure/validation';
 import { IArtworkSeed } from './index';
 import { Canvas } from 'canvas';
 
-export interface IStoragePolicy
+export interface IStorageService
 {
-   applyPolicy(uuid: UUID, seed: IArtworkSeed, canvas: Canvas): ICanvasStoragePolicy;
+   saveCanvas(uuid: UUID, seed: IArtworkSeed, canvas: Canvas): void;
+
+   // loadCanvas(seed: IArtworkSeed): Canvas
 }

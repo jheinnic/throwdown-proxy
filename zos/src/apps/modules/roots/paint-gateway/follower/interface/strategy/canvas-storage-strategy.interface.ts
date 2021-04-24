@@ -4,7 +4,10 @@ import { Path } from 'infrastructure/validation';
 
 export interface ICanvasStorageStrategy
 {
-   store(path: Path, canvas: Canvas): Promise<boolean>;
+   saveCanvas(path: Path, canvas: Canvas): Promise<boolean>;
+
+   // TODO!
+   // loadCanvas(path: Path): canvas: Promise<Canvas>;
 }
 // export type ICanvasStorageStrategy =
 //    (taskId: UUID, storagePath: Path, canvas: Canvas) => Promise<UUID>
