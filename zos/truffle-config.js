@@ -12,7 +12,7 @@ module.exports = {
       docker: {
          host: 'localhost',
          port: 8546,
-         gas: 5000000
+         gas: 5000000,
          from: '0x13b285a259f914f257ee899e67bdb5f4171134a7',
          network_id: '3668100'
       }

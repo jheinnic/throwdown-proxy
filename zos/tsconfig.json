@@ -64,6 +64,7 @@
   "compileOnSave": true,
   "include": ["src/**/*.ts", "typings/**/*.d.ts"],
   "exclude": [
+    "attic/**/*",
     "build/**/*",
     "contracts/**/*",
     "dist/**/*",
@@ -71,7 +72,6 @@
     "mypool/**/*",
     "node_modules/**/*",
     "orig/**/*",
-    "src/toys/**/*.ts",
     "src/infrastructure/lib/SHA256Compress.ts",
     "src/modules/tickets/*.ts"
   ]
