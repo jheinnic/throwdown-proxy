@@ -25,7 +25,7 @@ import {
  * Aside from the "workhorse" plot method, there are two methods used to signal the end of a call
  * sequence--one for completion with error, the other for normal end-of-data completion.
  */
-export class RandomArtModel implements IRandomArtworkModel
+export class RandomArtworkModel implements IRandomArtworkModel
 {
    private readonly genModel: any;
    private readonly compute_pixel: (genModel: any, x: number, y: number) => string;
@@ -96,7 +96,7 @@ export class RandomArtModel implements IRandomArtworkModel
       if (context === null) {
          throw new Error('Canvas failed to return a 2D context object?');
       }
-      RandomArtModel.clearImage(canvas, context);
+      RandomArtworkModel.clearImage(canvas, context);
 
       return (source: Iterable<MappedPoint[]>) => {
          return IterableX.as(source).pipe(

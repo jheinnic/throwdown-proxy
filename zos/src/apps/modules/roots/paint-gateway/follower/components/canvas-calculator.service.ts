@@ -7,11 +7,9 @@ import { map } from 'ix/iterable/pipe/map';
 import ndarray from 'ndarray';
 import math from 'mathjs';
 
-import {
-   MappedPoint, ICanvasCalculator, IModelRenderingPolicy, CanvasDimensions, RenderScale,
-   PlotGridData, IWorkPartitions
-} from '../interface';
-import { ModelRenderingPolicy } from './model-rendering-policy.class';
+import { CanvasDimensions, RenderScale, PlotGridData } from '../interface';
+import { ArtworkRenderer } from './artwork-renderer.class';
+import { IArtworkRenderer, ICanvasCalculator, MappedPoint } from './interface';
 
 @Injectable()
 export class CanvasCalculator implements ICanvasCalculator
@@ -102,23 +100,23 @@ export class CanvasCalculator implements ICanvasCalculator
    public computePoints(
       canvasDimensions: CanvasDimensions, renderScale: RenderScale ): PlotGridData
    {
-      const pixelMulti = renderScale.pixelSize;
+      const pixelSize = renderScale.pixelSize;
       const xCount = canvasDimensions.pixelWidth;
       const yCount = canvasDimensions.pixelHeight;
-      const scaleFactor = renderScale.unitScale;
+      const unitScale = renderScale.unitScale;
       const fitOrFill = renderScale.fitOrFill;
 
-      if ((pixelMulti % 2) !== 1)
+      if ((pixelSize % 2) !== 1)
       {
          throw new Error('Preview pixel multiplier must be odd so the approximations center right');
       }
-      if (((xCount % pixelMulti) > 0) || ((yCount % pixelMulti) > 0))
+      if (((xCount % pixelSize) > 0) || ((yCount % pixelSize) > 0))
       {
-         throw new Error('Pixel multiplier must be able evenly divide width and height.');
+         throw new Error('Pixel size multiplier must be able evenly divide width and height.');
       }
 
-      let xScale = scaleFactor;
-      let yScale = scaleFactor;
+      let xScale = unitScale;
+      let yScale = unitScale;
 
       if (xCount === yCount) {
          if (fitOrFill && fitOrFill !== 'square') {
@@ -155,9 +153,9 @@ export class CanvasCalculator implements ICanvasCalculator
          memoize(xCount * yCount)
       );
 
-      const pointCount = xCount * yCount / pixelMulti / pixelMulti;
+      const pointCount = xCount * yCount / pixelSize / pixelSize;
       const dataArray = new Float64Array(2 * pointCount);
-      const dataView = ndarray(dataArray, [xCount / pixelMulti, yCount / pixelMulti, 2]);
+      const dataView = ndarray(dataArray, [xCount / pixelSize, yCount / pixelSize, 2]);
       let pointTuple: MappedPoint;
 
       let xIndex = 0;
@@ -165,9 +163,8 @@ export class CanvasCalculator implements ICanvasCalculator
       let xDelta = 0;
       let yCanvas = 0;
       let yDelta = 0;
-      let multiDelta = (
-         pixelMulti - 1
-      ) / 2;
+      let multiDelta = (pixelSize - 1) / 2;
+
       for (pointTuple of mappedPoints) {
          if (yDelta == multiDelta) {
             if (xDelta == multiDelta) {
@@ -197,29 +194,30 @@ export class CanvasCalculator implements ICanvasCalculator
          }
       }
 
-      return { xCount, yCount, pixelMulti, dataArray };
+      return { xCount, yCount, unitScale, pixelSize, fitOrFill, dataArray };
    }
 
-   public computePartitions(
-      plotGrid: PlotGridData, maxPointsPerSlice: number): IWorkPartitions
+   public compileForRuntime(
+      plotGrid: PlotGridData, maxPointsPerSlice: number): IArtworkRenderer
    {
       const pointCount =
-         plotGrid.xCount * plotGrid.yCount / plotGrid.pixelMulti / plotGrid.pixelMulti;
+         plotGrid.xCount * plotGrid.yCount / plotGrid.pixelSize / plotGrid.pixelSize;
       const sliceSize = CanvasCalculator.findOptimalDivisor(pointCount, maxPointsPerSlice);
       const sliceCount = pointCount / sliceSize;
+      const workPartitions = { sliceCount, sliceSize };
 
-      return { sliceCount, sliceSize };
+      return new ArtworkRenderer(plotGrid, workPartitions);
    }
 
-   public create(
-      maxPointsPerSlice: number, canvasDimensions: CanvasDimensions, renderScale: RenderScale
-   ) : IModelRenderingPolicy
-   {
-      const plotGrid: PlotGridData = this.computePoints(canvasDimensions, renderScale);
-      const workPartitions: IWorkPartitions = this.computePartitions(plotGrid, maxPointsPerSlice);
-
-      return new ModelRenderingPolicy(plotGrid, workPartitions);
-   }
+   // public create(
+   //    maxPointsPerSlice: number, canvasDimensions: CanvasDimensions, renderScale: RenderScale
+   // ) : IArtworkRenderer
+   // {
+   //    const plotGrid: PlotGridData = this.computePoints(canvasDimensions, renderScale);
+   //    const workPartitions: IWorkPartitions = this.compileForRuntime(plotGrid, maxPointsPerSlice);
+   //
+   //    return new ArtworkRenderer(plotGrid, workPartitions);
+   // }
 }
 
 

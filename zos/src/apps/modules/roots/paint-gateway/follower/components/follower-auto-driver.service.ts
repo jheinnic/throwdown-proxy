@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import uuid = require('uuid');
-import { sprintf } from 'sprintf-js';
 import { randomBytes } from 'crypto';
 import { Injectable } from '@nestjs/common';
 
-import { Name, Path, UUID } from 'infrastructure/validation';
-import { FollowerApplication } from '../follower-application.service';
+import { Name, UUID } from 'infrastructure/validation';
 import { TrigramModelSeedStrategy } from '../../../../../../modules/tickets/components/modelSeed';
 import { AbstractAsyncModelSeedStrategy } from "../../../../../../modules/tickets/components/modelSeed/abstract-async-model-seed.strategy.class";
-import { BitStrategyKind, PrefixSelectStyle } from '../../../../../../modules/tickets/config';
+import { FollowerApplication } from './follower-application.service';
+import { BitStrategyKind } from '../../../../../../modules/tickets/config/bit-strategy-kind.enum';
+import { PrefixSelectStyle } from '../../../../../../modules/tickets/config/prefix-select-style.enum';
 
 @Injectable()
 export class FollowerAutoDriver
 {
-   private seedStrategy: AbstractAsyncModelSeedStrategy
+   private seedStrategy: AbstractAsyncModelSeedStrategy;
 
    constructor(private readonly mainApp: FollowerApplication)
    {
@@ -41,7 +41,7 @@ export class FollowerAutoDriver
          .toString() as UUID;
       const storagePolicy = uuid.v4()
          .toString() as UUID;
-      let iter = 1;
+      // let iter = 1;
 
       try {
          while (true) {
@@ -56,31 +56,30 @@ export class FollowerAutoDriver
                randomBytes(18)
             ];
 
-            // @ts-ignore
-            const loopPfx = sprintf('%03d', iter);
+            // const loopPfx = sprintf('%03d', iter);
             for (let ii = 0; ii < 3; ii += 1) {
                const prefix = prefixes[ii];
                for (let jj = 0; jj < 3; jj += 1) {
                   const suffix = suffixes[jj];
 
                   const modelSeed = await this.seedStrategy.extractSeed(prefix, suffix);
-                  const firstName =
-                     Buffer.from(modelSeed.prefixBits)
-                        .toString('ascii');
-                  const lastName =
-                     Buffer.from(modelSeed.suffixBits)
-                        .toString('ascii');
-                  const fileName = `${loopPfx}-${firstName}_${lastName}.png`;
+                  // const firstName =
+                  //    Buffer.from(modelSeed.prefixBits)
+                  //       .toString('ascii');
+                  // const lastName =
+                  //    Buffer.from(modelSeed.suffixBits)
+                  //       .toString('ascii');
+                  // const fileName = `${loopPfx}-${firstName}_${lastName}.png`;
 
                   const taskId = await this.mainApp.submitTask(
-                     modelSeed, fileName as Path, renderPolicy, storagePolicy
+                     modelSeed, renderPolicy, storagePolicy
                   );
 
                   console.log(`Submitted ${await taskId}`);
                }
             }
 
-            iter += 1;
+            // iter += 1;
          }
       } catch (err) {
          console.error('Closed follower context abnormally!  Exiting...', err);

@@ -1,4 +1,5 @@
-import { CanvasDimensions, PlotGridData, RenderScale } from './model';
+import { CanvasDimensions, RenderScale } from '../../interface/model/common';
+import { PlotGridData } from '../../interface/model/deployed';
 import { IArtworkRenderer } from './artwork-renderer.interface';
 
 export interface ICanvasCalculator
@@ -28,7 +29,7 @@ export interface ICanvasCalculator
       renderScale?: RenderScale
    ): PlotGridData
 
-   computePartitions(
+   compileForRuntime(
       plotGridData: PlotGridData,
       maxPointsPerSlice: number
    ): IArtworkRenderer

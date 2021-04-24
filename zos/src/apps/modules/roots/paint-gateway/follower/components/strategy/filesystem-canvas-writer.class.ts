@@ -4,15 +4,15 @@ import * as fs from 'fs';
 
 import { ILimiter } from '@jchptf/coroutines';
 
-import { IArtworkSeed } from '../interface';
-import { IDirectoryUtils } from '../../../../../../infrastructure/lib/directory-utils.interface';
-import { Path, UUID } from '../../../../../../infrastructure/validation';
+import { ICanvasStorageStrategy } from '../../interface';
+import { IDirectoryUtils } from '../../../../../../../infrastructure/lib/directory-utils.interface';
+import { Path, UUID } from '../../../../../../../infrastructure/validation';
 
-export class CanvasWriter implements ICanvasStoragePolicy
+export class FilesystemCanvasWriter implements ICanvasStorageStrategy
 {
    private readonly directoryCheck: Promise<string>;
    private readonly writeOutputFile:
-      (uuid: UUID, filePath: Path, canvas: Canvas) => Promise<UUID>;
+      (filePath: Path, canvas: Canvas) => Promise<boolean>;
 
    constructor(
       private readonly outputDir: string,
@@ -31,16 +31,15 @@ export class CanvasWriter implements ICanvasStoragePolicy
             this.dirUtils.ensureWritableDir(this.outputDir);
       }
 
-      this.writeOutputFile = this.limiter(this.doStore.bind(this));
+      this.writeOutputFile = this.limiter(
+         this.doStore.bind(this));
    }
 
-   public async store(
-      uuid: UUID,
-      _modelSeed: IArtworkSeed,
+   public async saveCanvas(
       filePath: Path,
-      canvasAdapter: Canvas): Promise<UUID>
+      canvasAdapter: Canvas): Promise<boolean>
    {
-      return this.writeOutputFile(uuid, filePath, canvasAdapter);
+      return this.writeOutputFile(filePath, canvasAdapter);
    }
 
    private async doStore(uuid: UUID, filePath: Path, canvas: Canvas): Promise<UUID>

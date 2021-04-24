@@ -1,10 +1,11 @@
 import { Canvas } from 'canvas';
 import { OperatorFunction } from 'ix/interfaces';
 
-import { IncrementalPlotProgress } from '.';
-import { MappedPoint } from './model';
+import { MappedPoint } from './mapped-point.interface';
+import { IncrementalPlotProgress } from '../../interface';
 
-export interface IRandomArtModel {
+
+export interface IRandomArtworkModel {
    plot(
       canvas: Canvas, sliceCount?: number, pixelMulti?: number
    ): OperatorFunction<MappedPoint[], IncrementalPlotProgress>

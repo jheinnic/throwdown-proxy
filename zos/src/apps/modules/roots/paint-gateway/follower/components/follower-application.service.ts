@@ -1,30 +1,26 @@
 import { Chan, CLOSED, put, repeatTake, close } from 'medium';
 import { Canvas } from 'canvas';
 import { AsyncSink } from 'ix';
-import { illegalState } from '@thi.ng/errors';
 import { Inject } from '@nestjs/common';
 import * as cluster from 'cluster';
-
-import { IAdapter } from '@jchptf/api';
-import { IChanMonitor } from '@jchptf/coroutines/dist/interfaces/chan-monitor.interface';
-
-import { Path, UUID } from '../../../../../infrastructure/validation';
-import {
-   CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER_TOKEN,
-   CANVAS_SEMAPHORE_RETURN_CHANNEL_PROVIDER_TOKEN,
-   PLOTTER_COMPLETED_MONITOR_PROVIDER_TOKEN,
-   TASK_REQUEST_CHANNEL_PROVIDER_TOKEN, RENDER_POLICY_LOOKUP_PROVIDER_TOKEN,
-   STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN,
-   SUBMIT_PAINT_PLOTTER_SINK_PROVIDER_TOKEN, PLOTTER_PROGRESS_CHANNEL_PROVIDER_TOKEN,
-   PLOTTER_COMPLETED_CHANNEL_PROVIDER_TOKEN
-} from './follower-application.constants';
-import {
-   IModelRenderingPolicy, IncrementalPlotter, ICanvasStoragePolicy, ArtworkTaskDefinition,
-   IModelSeed, IncrementalPlotProgress,
-} from './interface';
-import { RandomArtModel } from './components';
 import uuid = require('uuid');
-import { CONCURRENT_WORK_FACTORY, IConcurrentWorkFactory } from '@jchptf/coroutines';
+
+import { CONCURRENT_WORK_FACTORY, IConcurrentWorkFactory, IChanMonitor } from '@jchptf/coroutines';
+import { IAdapter } from '@jchptf/api';
+
+import {
+   CANVAS_RESERVATION_CHANNEL_PROVIDER_TOKEN, CANVAS_RECYCLING_CHANNEL_PROVIDER_TOKEN,
+   TASK_REQUEST_CHANNEL_PROVIDER_TOKEN, RENDER_SERVICE_PROVIDER_TOKEN,
+   STORAGE_SERVICE_PROVIDER_TOKEN, SUBMIT_PAINT_PLOTTER_SINK_PROVIDER_TOKEN,
+   PLOTTER_PROGRESS_CHANNEL_PROVIDER_TOKEN, PLOTTER_COMPLETED_CHANNEL_PROVIDER_TOKEN,
+   PLOTTER_COMPLETED_MONITOR_PROVIDER_TOKEN,
+} from '../di/follower-app.constants';
+
+import { UUID } from '../../../../../../infrastructure/validation';
+import {
+   IncrementalPlotter, IncrementalPlotProgress, ArtworkTaskDefinition, IStorageService,
+   IRenderingService, IArtworkSeed
+} from '../interface';
 
 export class FollowerApplication
 {
@@ -34,9 +30,9 @@ export class FollowerApplication
    constructor(
       @Inject(TASK_REQUEST_CHANNEL_PROVIDER_TOKEN)
       private readonly inbound: IAdapter<Chan<any, ArtworkTaskDefinition>>,
-      @Inject(CANVAS_SEMAPHORE_RESERVATION_CHANNEL_PROVIDER_TOKEN)
+      @Inject(CANVAS_RESERVATION_CHANNEL_PROVIDER_TOKEN)
       private readonly canvasReservations: IAdapter<Chan<any, IAdapter<Canvas>>>,
-      @Inject(CANVAS_SEMAPHORE_RETURN_CHANNEL_PROVIDER_TOKEN)
+      @Inject(CANVAS_RECYCLING_CHANNEL_PROVIDER_TOKEN)
       private readonly canvasReturns: IAdapter<Chan<IAdapter<Canvas>, any>>,
       @Inject(SUBMIT_PAINT_PLOTTER_SINK_PROVIDER_TOKEN)
       private readonly paintDriver: AsyncSink<IncrementalPlotter>,
@@ -46,10 +42,10 @@ export class FollowerApplication
       private readonly plotCompleteChannel: IAdapter<Chan<IncrementalPlotter>>,
       @Inject(PLOTTER_COMPLETED_MONITOR_PROVIDER_TOKEN)
       private readonly paintMonitor: IChanMonitor<IncrementalPlotter>,
-      @Inject(RENDER_POLICY_LOOKUP_PROVIDER_TOKEN)
-      private readonly paintPolicyLookup: (key: UUID) => IModelRenderingPolicy,
-      @Inject(STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN)
-      private readonly storagePolicyLookup: (key: UUID) => ICanvasStoragePolicy,
+      @Inject(RENDER_SERVICE_PROVIDER_TOKEN)
+      private readonly renderingService: IRenderingService,
+      @Inject(STORAGE_SERVICE_PROVIDER_TOKEN)
+      private readonly storageService: (key: UUID) => IStorageService,
       @Inject(CONCURRENT_WORK_FACTORY)
       private readonly concurrentWorkFactory: IConcurrentWorkFactory)
    {
@@ -126,23 +122,20 @@ export class FollowerApplication
             const canvas: Canvas = canvasAdapter.unwrap();
 
             try {
-               const paintPolicy = this.paintPolicyLookup(nextTask.renderPolicy);
-               const artModel = new RandomArtModel(nextTask.modelSeed);
-               const plotIterator = paintPolicy.create(artModel, canvas, true);
-               const completeSignal = this.paintMonitor.request(plotIterator);
+               const plotIterator =
+                  this.renderingService.renderArtwork(
+                     nextTask.renderPolicy, nextTask.artworkSeed, canvas, true);
+
+               const completeSignal =
+                  this.paintMonitor.request(plotIterator);
 
                this.paintDriver.write(plotIterator);
                await completeSignal;
 
-               const storagePolicy = this.storagePolicyLookup(nextTask.storagePolicy);
-               const returnUuid =
-                  await storagePolicy.store(
-                     nextTask.taskId, nextTask.modelSeed, nextTask.storagePath, canvas);
-
-               if (returnUuid !== nextTask.taskId) {
-                  throw illegalState(
-                     `Writer returned ${returnUuid}, but expected ${nextTask.taskId}`);
-               }
+               const storagePolicy =
+                  this.storageService(nextTask.storagePolicy);
+               await storagePolicy.saveCanvas(
+                  nextTask.taskId, nextTask.artworkSeed, canvas);
 
                console.log('Took:', nextTask, 'on', canvas);
             } catch (err) {
@@ -170,19 +163,19 @@ export class FollowerApplication
 
 
    public async submitTask(
-      modelSeed: IModelSeed,
-      storagePath: Path,
+      modelSeed: IArtworkSeed,
+      // storagePath: Path,
       renderPolicy: UUID,
       storagePolicy: UUID
    ): Promise<UUID>
    {
-      // const modelSeed: IModelSeed = strategy.extractSeed(xBuffer, yBuffer);
+      // const artworkSeed: IArtworkSeed = strategy.extractSeed(xBuffer, yBuffer);
       const taskId: UUID = uuid.v4() as UUID;
 
       const result = await put(this.inbound.unwrap(), {
             taskId,
             modelSeed,
-            storagePath,
+            // storagePath,
             renderPolicy: renderPolicy,
             storagePolicy: storagePolicy,
             paintEngineVersion: '1.0.0'

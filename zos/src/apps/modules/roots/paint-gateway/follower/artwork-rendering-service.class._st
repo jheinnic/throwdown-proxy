@@ -17,8 +17,8 @@ import { asyncScheduler, SchedulerAction, SchedulerLike } from 'rxjs';
 import { Nominal } from 'simplytyped';
 import { IWatch, iWatch, Watch } from '@jchptf/api';
 import { chan, Chan, CLOSED, go, put, sleep } from 'medium';
-import { AbstractModelSeedStrategy } from '../../../../../../modules/tickets/components/modelSeed';
-import { IModelSeed } from '../../../../../../modules/randomArt/interface';
+import { AbstractModelSeedStrategy } from '../../../../../../modules/tickets/components/artworkSeed';
+import { IArtworkSeed } from '../../../../../../modules/randomArt/interface';
 import { map } from 'transducers-js';
 // import {AutoIterate} from '../../infrastructure/lib';
 
@@ -38,7 +38,7 @@ export class ArtworkRenderingService
    {
       const incomingChan =
          this.concurrentWorkFactory.createTxChan(
-            map<[Buffer, Buffer], Promise<IModelSeed>>(
+            map<[Buffer, Buffer], Promise<IArtworkSeed>>(
                async (input: [Buffer, Buffer]) => {
                   return await this.modelSeedStrategy.extractSeed(input[0], input[1]);
                }
@@ -62,11 +62,11 @@ export class ArtworkRenderingService
 //       const myCanvasSubject = new Subject<[Canvas, MyCanvasRenderingContext2D]>();
 //       const myCanvasProvider = new CanvasProvider(readAheadChannel, myCanvasSubject);
 //       const myCanvasPlotter = new CanvasPlotter();
-//       const myCanvasWriter = new CanvasWriter(ellipticModelGenConfig.outputRoot);
+//       const myCanvasWriter = new FilesystemCanvasWriter(ellipticModelGenConfig.outputRoot);
 //       const myCanvas = new Canvas(480, 480);
 //       const mapPoints: PointMapping = new PointMapping(480, 0, 1, 480, 0, 1);
-//       const randomModel: RandomArtModel =
-//          new RandomArtModel(prefix, suffix, false, myCanvas, myCanvas.getContext('2d')!);
+//       const randomModel: RandomArtworkModel =
+//          new RandomArtworkModel(prefix, suffix, false, myCanvas, myCanvas.getContext('2d')!);
 //
 //       const points = [...mapPoints.createPlotter(randomModel)];
 //       console.log(points);
@@ -541,7 +541,7 @@ class CanvasPainter
    }
 }
 
-class CanvasWriter
+class FilesystemCanvasWriter
 {
    constructor(private readonly newStoreTaskQueue: AsyncSink<CanvasStoreTask>) { }
 
@@ -605,7 +605,7 @@ const processMgr =
 const canvasPainter =
    new CanvasPainter(newPaintTaskQueue, asyncScheduler, 250, 100);
 const canvasWriter =
-   new CanvasWriter(newStoreTaskQueue);
+   new FilesystemCanvasWriter(newStoreTaskQueue);
 
 processMgr.start();
 canvasPainter.start();

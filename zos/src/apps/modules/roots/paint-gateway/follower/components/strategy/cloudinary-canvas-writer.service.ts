@@ -1,79 +1,61 @@
-import * as crypto from 'crypto';
 import * as util from 'util';
 import * as path from 'path';
 // import * as fs from 'fs';
 
 import { CloudinaryV2, UploadOptions, UploadResult } from 'cloudinary';
 import { Inject, Injectable } from '@nestjs/common';
-import { BitInputStream } from '@thi.ng/bitstream';
 import { Transform } from 'stream';
 import { Canvas } from 'canvas';
 
-import { ICanvasStorageStrategy, IArtworkSeed } from '../interface';
-import { Path, UUID } from 'infrastructure/validation';
-import { CloudinaryCredentials } from '../config/cloudinary-credentials.config';
-import { SeedToDirPath } from '../config/seed-to-dir-path.config';
-import { CLOUDINARY_SERVER_CLIENT_PROVIDER_TOKEN } from '../di/follower-app.constants';
+import { Path } from 'infrastructure/validation';
+import { ICanvasStorageStrategy } from '../../interface/strategy';
+import { ICloudinaryWriterConfig } from '../../interface/model/deployed';
+import {
+   CLOUDINARY_SERVER_CLIENT_PROVIDER_TOKEN, CLOUDINARY_WRITER_CONFIG_PROVIDER_TOKEN
+} from '../../../../../shared/cloudinary/cloudinary.constants';
 
 @Injectable()
 export class CloudinaryCanvasWriter implements ICanvasStorageStrategy
 {
-   private readonly bitsPerTier: number[];
-
+   // private readonly bitsPerTier: ReadonlyArray<number>;
    // private shutdownRequested: boolean = false;
    // private gracefullyShutdown: boolean = false;
 
    constructor(
-      credentials: CloudinaryCredentials,
-      private readonly seedToPath: SeedToDirPath,
+      @Inject(CLOUDINARY_WRITER_CONFIG_PROVIDER_TOKEN)
+      private readonly writerConfig: ICloudinaryWriterConfig,
       @Inject(CLOUDINARY_SERVER_CLIENT_PROVIDER_TOKEN)
       private readonly cloudinary: CloudinaryV2)
    {
       // TODO: Cloudinary client should be injected pre-authenticated.
-      this.cloudinary.config({
-         cloud_name: credentials.cloud_name,
-         api_key: credentials.api_key,
-         api_secret: credentials.api_secret
-      });
+      // this.cloudinary.config({
+      //    cloud_name: writerConfig.cloudName,
+      //    api_key: writerConfig.apiKey,
+      //    api_secret: writerConfig.apiSecret
+      // });
 
-      const bitsPerTierStr: string[] = seedToPath.bitsPerTier.split(':');
-      this.bitsPerTier = new Array<number>(bitsPerTierStr.length);
-      for (let ii = 0; ii < bitsPerTierStr.length; ii += 1) {
-         this.bitsPerTier[ii] = parseInt(bitsPerTierStr[ii]);
-      }
-   }
+      // this.pathToRoot = writerConfig.pathToRoot;
+  }
 
-   public async store(
-      uuid: UUID, modelSeed: IArtworkSeed,
-      fileName: Path, canvas: Canvas
-   ): Promise<UUID>
+   public async saveCanvas(filePath: Path, canvas: Canvas): Promise<boolean>
    {
-      const hashStream = crypto.createHash(this.seedToPath.hashAlgorithm);
-      hashStream.update(modelSeed.prefixBits);
-      hashStream.update(modelSeed.suffixBits);
-      const hashBuffer = hashStream.digest();
-      const reader = new BitInputStream(hashBuffer);
-      const filePath = path.join(
-         this.seedToPath.dirRoot,
-         ...reader.readFields(this.bitsPerTier).map(
-            (value: Buffer) => value.toString('hex')),
-         `${fileName}.png`
-      ) as Path;
+     // Note: this.bitsPerTier is required by @thi.ng/BitInputSteam to not be readonly,
+      //       Although it does not modify the input, we still have to deal with a clone of
+      //       the original input because of this call signature mishap.
+      const fullFilePath = path.join( this.writerConfig.pathToRoot, filePath ) as Path;
 
-      return this.doStore(uuid, filePath, canvas);
-   }
-
-   private async doStore(uuid: UUID, filePath: Path, canvas: Canvas): Promise<UUID>
-   {
+      // this.doStore(filePath, canvas);
       console.log(`Saving ${filePath}...`);
 
       // TODO: Get the Cloudinary Client here by Semaphore instead, and use that
       //       in lieu of having an injected ILimiter.
-      return await new Promise<UUID>(
+      return new Promise<boolean>(
          (resolve, reject) => {
             const stream = canvas.createPNGStream();
             const options: UploadOptions = {
-               public_id: filePath
+               public_id: filePath,
+               rbg: true,
+               ...this.writerConfig,
             };
             const out: Transform = this.cloudinary.uploader.upload_stream(
                (err: any, result: UploadResult): void => {
@@ -91,9 +73,9 @@ export class CloudinaryCanvasWriter implements ICanvasStorageStrategy
             out.on('close', () => {
                console.warn(JSON.stringify(out));
                console.warn(util.inspect(out, true, 8, true));
-               console.log(`Saved bytes to ${filePath}`);
+               console.log(`onClose of ${fullFilePath}`);
 
-               resolve(uuid);
+               resolve(true);
             });
 
             // stream.on('end', () => {
