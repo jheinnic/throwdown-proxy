@@ -1,7 +1,7 @@
 import {MessageType} from './message-type.enum';
 import { Canvas } from 'canvas';
 import { CanvasPaintedReply } from './canvas-painted-reply.value';
-import { IModelSeed } from '../../../apps/modules/roots/paint-gateway/follower/interface/model';
+import { IArtworkSeed } from '../../../apps/modules/roots/paint-gateway/follower/interface/model';
 import { CompletionSignal } from './completion-signal.type';
 
 export class PaintToCanvasRequest
@@ -9,12 +9,12 @@ export class PaintToCanvasRequest
    public readonly messageType: MessageType.PAINT_CANVAS_REQUEST = MessageType.PAINT_CANVAS_REQUEST;
 
    public readonly completeSignal: CompletionSignal<CanvasPaintedReply>;
-   public readonly seedModel: IModelSeed;
+   public readonly seedModel: IArtworkSeed;
    public readonly canvas: Canvas;
 
    constructor(
       completeSignal: CompletionSignal<CanvasPaintedReply>,
-      seedModel: IModelSeed,
+      seedModel: IArtworkSeed,
       canvas: Canvas
    ) {
       this.completeSignal = completeSignal;

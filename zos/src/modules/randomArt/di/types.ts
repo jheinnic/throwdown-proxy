@@ -5,7 +5,7 @@ type RandomArtTypes = 'RandomArtGenerator' | 'CanvasCalculator' | 'CanvasWriter'
 export const RANDOM_ART_TYPES: SymbolEnum<RandomArtTypes> = {
    RandomArtGenerator: Symbol('RandomArtGenerator'),
    CanvasCalculator: Symbol('CanvasCalculator'),
-   CanvasWriter: Symbol('CanvasWriter'),
+   CanvasWriter: Symbol('FilesystemCanvasWriter'),
    CanvasPathMapper: Symbol('CanvasPathMapper'),
    RootPathName: Symbol('RootPathName')
 };

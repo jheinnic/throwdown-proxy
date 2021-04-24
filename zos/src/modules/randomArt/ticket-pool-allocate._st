@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 import {Subject} from 'rxjs';
 
-import {CanvasPlotter, CanvasWriter, RandomArtGenerator, TaskLoader} from './components';
+import {CanvasPlotter, FilesystemCanvasWriter, RandomArtGenerator, TaskLoader} from './components';
 
 import {} from '../../infrastructure/merkle/merkle-locator-factory.class';
 import {
@@ -445,7 +445,7 @@ function launchPaintContent()
    const myCanvasSubject = new Subject<[Canvas, MyCanvasRenderingContext2D]>();
    const myCanvasProvider = new CanvasProvider(readAheadChannel, myCanvasSubject);
    const myCanvasPlotter = new CanvasPlotter();
-   const myCanvasWriter = new CanvasWriter(ellipticModelGenConfig.outputRoot);
+   const myCanvasWriter = new FilesystemCanvasWriter(ellipticModelGenConfig.outputRoot);
    const facade =
       new RandomArtGenerator(myCanvasProvider, myTaskLoader, myCanvasPlotter, myCanvasWriter);
 

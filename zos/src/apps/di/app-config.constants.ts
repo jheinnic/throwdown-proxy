@@ -1,16 +1,2 @@
-import {AppBootstrap} from '../config/app-bootstrap.config';
-import {
-   getLocalProviderToken, getModuleIdentifier, getNamedTypeIntent, LocalProviderToken,
-   ModuleIdentifier, TypeIdentifier
-} from '@jchptf/nestjs';
-
-export namespace AppConfigConstants {
-   export const MODULE_ID: ModuleIdentifier =
-      getModuleIdentifier('@jchptf/bootstrap')
-
-   export const APP_BOOTSTRAP: TypeIdentifier<AppBootstrap> =
-      getNamedTypeIntent<AppBootstrap>("AppBootstrap");
-
-   export const APP_BOOTSTRAP_PROVIDER_TOKEN: LocalProviderToken<AppBootstrap> =
-      getLocalProviderToken<AppBootstrap>(MODULE_ID, APP_BOOTSTRAP);
-}
+export const APP_CONFIG_MODULE_ID = Symbol('@jchptf/config/appConfig');
+export type APP_CONFIG_MODULE_ID = typeof APP_CONFIG_MODULE_ID;

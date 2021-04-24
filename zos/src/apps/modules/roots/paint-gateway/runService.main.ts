@@ -6,16 +6,20 @@ import { Transport } from '@nestjs/microservices';
 
 import { LeaderApplicationModule } from './leader/leader-application.module';
 import { LeaderApplication } from './leader/leader-application.class';
-import { FollowerApplicationModule } from './follower/follower-application.module';
-import { FollowerApplication } from './follower/follower-application.service';
-import { FollowerAutoDriver } from './follower/experiment/follower-auto-driver.service';
+import { FollowerAppModule } from './follower/di/follower-app.module';
+import { FollowerApplication } from './follower/components/follower-application.service';
+import { FollowerAutoDriver } from './follower/components/follower-auto-driver.service';
 
 async function bootstrap()
 {
+   // TODO: Use separate try catch blocks for Context setup, main program execution, and Context
+   //       teardown so we may attempt to close out the Context if we every lang in the main
+   //       program's error handler.
    try {
-      console.log('Process starting');
+      console.log('Process bootstrapping');
       if (cluster.isMaster) {
-         console.log('Leader starting');
+         console.log('Leader bootstrapping');
+
          const ctx =
             await NestFactory.createMicroservice(LeaderApplicationModule, {
                transport: Transport.GRPC,
@@ -24,26 +28,32 @@ async function bootstrap()
                   protoPath: require.resolve('@jchgrpc/paint.gateway-node/proto.proto')
                }
             });
+         console.log('Leader context loaded');
+
          ctx.useGlobalPipes(new ValidationPipe());
-         console.log('Leader started');
-
          const mainApp = ctx.get(LeaderApplication);
-         console.log('Yielded', await mainApp.start());
+         console.log('Launching leader main program...');
 
-         ctx.close();
-         console.log('Closed app context');
+         const lifecyclePromise = mainApp.start();
+         console.log('Leader has been launched');
+
+         await lifecyclePromise;
+         console.log('Application lifecycle has completed normally.  Shutting down.');
+
+         await ctx.close();
       } else if (cluster.isWorker) {
-         console.log('Follower starting');
-         const ctx = await NestFactory.createApplicationContext(
-            FollowerApplicationModule);
+         console.log('Follower bootstrapping');
+
+         const ctx = await NestFactory.createApplicationContext(FollowerAppModule);
          console.log('Follower context loaded');
+
          const mainApp = ctx.get(FollowerApplication);
          const autoDriver = ctx.get(FollowerAutoDriver);
+         console.log('Launching follower main program...');
 
          // Ramp up...
          const lifecyclePromise = mainApp.start();
          console.log('Follower has asynchronously started its application');
-         // const driverWorkloadPromise = driveWorkload(mainApp);
          const driverWorkloadPromise = autoDriver.start();
          console.log('Follower has asynchronously begun driving a workload');
 
@@ -51,11 +61,12 @@ async function bootstrap()
          await driverWorkloadPromise;
          console.log('Workload driver has completed normally.');
          await lifecyclePromise;
-         console.log('Application lifecycle has completed normally.');
+         console.log('Application lifecycle has completed normally.  Shutting down.');
+
          await ctx.close();
-         console.log('Closed follower NestContext normally.  Exiting...');
       }
-      console.log('Process exiting gracefully...');
+
+      console.log('Closed application context. Process exiting gracefully...');
    } catch (err) {
       console.error('Process exiting abnormally on trapped error!', err);
       throw err;

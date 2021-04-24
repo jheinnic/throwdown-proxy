@@ -7,7 +7,7 @@ import * as util from 'util';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
-import {CanvasPlotter, CanvasProvider, CanvasWriter, RandomArtGenerator, TaskLoader} from './v1/components';
+import {CanvasPlotter, CanvasProvider, FilesystemCanvasWriter, RandomArtGenerator, TaskLoader} from './v1/components';
 
 import {MerkleLocatorFactory} from '../../infrastructure/merkle/merkle-locator-factory.class';
 import {
@@ -408,7 +408,7 @@ function launchPaintContent()
    const myCanvasSubject = new Subject<[Canvas, MyCanvasRenderingContext2D]>();
    const myCanvasProvider = new CanvasProvider(readAheadChannel, myCanvasSubject);
    const myCanvasPlotter = new CanvasPlotter();
-   const myCanvasWriter = new CanvasWriter(ellipticModelGenConfig.outputRoot);
+   const myCanvasWriter = new FilesystemCanvasWriter(ellipticModelGenConfig.outputRoot);
    const facade =
       new RandomArtGenerator(myCanvasProvider, myTaskLoader, myCanvasPlotter, myCanvasWriter);
 

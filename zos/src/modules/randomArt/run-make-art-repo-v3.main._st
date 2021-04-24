@@ -39,7 +39,7 @@ import {CanvasDimensions} from './messages';
 import {ITaskContentAdapter} from './interface';
 import {TicketArtworkLocator, ITicketPoolStagingArea} from '../tickets/interface';
 import {TicketPoolAssembly} from '../tickets/ticket-pool-staging-area.service';
-import {PointMapping, RandomArtGenerator, RandomArtModel} from './components';
+import {PointMapping, RandomArtGenerator, RandomArtworkModel} from './components';
 import {BitStrategyKind, PrefixSelectStyle} from '../tickets/config';
 import GenKeyPairOptions = ec.GenKeyPairOptions;
 
@@ -396,11 +396,11 @@ function launchPaintContent()
    const myCanvasSubject = new Subject<[Canvas, MyCanvasRenderingContext2D]>();
    const myCanvasProvider = new CanvasProvider(readAheadChannel, myCanvasSubject);
    const myCanvasPlotter = new CanvasPlotter();
-   const myCanvasWriter = new CanvasWriter(ellipticModelGenConfig.outputRoot);
+   const myCanvasWriter = new FilesystemCanvasWriter(ellipticModelGenConfig.outputRoot);
    const myCanvas = new Canvas(480, 480);
    const mapPoints: PointMapping = new PointMapping(480, 0, 1, 480, 0, 1);
-   const randomModel: RandomArtModel =
-      new RandomArtModel(prefix, suffix, false, myCanvas, myCanvas.getContext('2d')!);
+   const randomModel: RandomArtworkModel =
+      new RandomArtworkModel(prefix, suffix, false, myCanvas, myCanvas.getContext('2d')!);
 
    const points = [...mapPoints.createPlotter(randomModel)];
    console.log(points);
