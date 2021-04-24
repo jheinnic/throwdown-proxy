@@ -3,7 +3,7 @@ import { BitInputStream } from '@thi.ng/bitstream';
 import { IPaintModelSeedStrategy } from '../../interface';
 import { BitStrategyKind, ModelSeedPolicy, PrefixSelectStyle } from '../../config';
 import { Name } from '../../../../infrastructure/validation';
-import { IModelSeed } from '../../../../apps/modules/roots/paint-gateway/follower/interface/model';
+import { IArtworkSeed } from '../../../../apps/modules/roots/paint-gateway/follower/interface/model';
 
 export abstract class AbstractAsyncModelSeedStrategy implements IPaintModelSeedStrategy {
    constructor(protected readonly policyData: ModelSeedPolicy) { }
@@ -14,7 +14,7 @@ export abstract class AbstractAsyncModelSeedStrategy implements IPaintModelSeedS
 
    public abstract get strategyKind(): BitStrategyKind;
 
-   public async extractSeed(publicKeyX: Buffer, publicKeyY: Buffer): Promise<IModelSeed>
+   public async extractSeed(publicKeyX: Buffer, publicKeyY: Buffer): Promise<IArtworkSeed>
    {
       let xBuffer: Buffer = Buffer.from(publicKeyX);
       let yBuffer: Buffer = Buffer.from(publicKeyY);
