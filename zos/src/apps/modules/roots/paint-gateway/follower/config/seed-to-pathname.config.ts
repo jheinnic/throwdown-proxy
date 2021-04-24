@@ -1,10 +1,15 @@
-import { ArrayMinSize, IsDefined, IsIn, IsPositive } from 'class-validator';
+import { ArrayMinSize, IsDefined, IsIn, IsNotEmpty, IsPositive } from 'class-validator';
 
 import { configClass, configProp } from '@jchptf/config';
 
-@configClass('jchptf.paintGateway.seedToDir')
-export class SeedToFilePath
+@configClass('jchptf.paintGateway.seedToPath')
+export class SeedToPathname
 {
+   @configProp('pathToRoot')
+   @IsDefined()
+   @IsNotEmpty()
+   public readonly pathToRoot: string = '';
+
    @configProp('hashAlgorithm')
    @IsDefined()
    @IsIn(['md5', 'sha256', 'ripemd160', 'sha1', 'whirlpool'])

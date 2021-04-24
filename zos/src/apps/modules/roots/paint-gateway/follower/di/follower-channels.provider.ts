@@ -1,23 +1,24 @@
-import { Chan } from 'medium';
-
 import {
-   CONCURRENT_WORK_FACTORY, CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, IConcurrentWorkFactory
+   CONCURRENT_WORK_FACTORY, CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN, IConcurrentWorkFactory,
 } from '@jchptf/coroutines';
-import { AsyncFunc, SyncFunc } from '@jchptf/txtypes';
-import { IAdapter } from '@jchptf/api';
-import { IFromFactoryCall } from '@jchptf/nestjs';
-import { IChanMonitor } from '@jchptf/coroutines/dist/interfaces/chan-monitor.interface';
-
-import { ArtworkTaskDefinition } from './interface/model';
-import {
-   ICanvasCalculator, ICanvasStoragePolicy, IModelRenderingPolicy, IncrementalPlotProgress,
-   IncrementalPlotter
-} from './interface';
-import { UUID } from '../../../../../infrastructure/validation';
-import { CanvasCalculator, CanvasWriter } from './components';
 import { Provider } from '@nestjs/common';
-import { WrappedChan } from './interface/wrapped-chan.interface';
-import { FollowerAppModuleId } from './di/follower-app.constants';
+import { IFromFactoryCall } from '@jchptf/nestjs';
+
+import { UUID } from '../../../../../../infrastructure/validation';
+import {
+   ArtworkTaskDefinition, ICanvasStorageStrategy, IncrementalPlotProgress, IncrementalPlotter,
+} from '../interface';
+import {
+   CanvasCalculator, FilesystemCanvasWriter, ICanvasCalculator, WrappedChan
+} from '../components';
+import {
+   FollowerAppModuleType, PLOTTER_COMPLETED_CHANNEL_PROVIDER_TOKEN,
+   PLOTTER_COMPLETED_MONITOR_PROVIDER_TOKEN, PLOTTER_PROGRESS_CHANNEL_PROVIDER_TOKEN,
+   RENDER_SERVICE_PROVIDER_TOKEN,
+   STORAGE_SERVICE_PROVIDER_TOKEN, SUBMIT_PAINT_PLOTTER_SINK_PROVIDER_TOKEN,
+   TASK_REQUEST_CHANNEL_PROVIDER_TOKEN
+} from './follower-app.constants';
+import { directoryUtils } from '../../../../../../infrastructure/lib/directory-utils.constants';
 
 // TODO: Instead of reusing the abstractions used to bridge dependencies from the consumer
 //       of a Dynamic Module to its supplier across the method call that produces it,
@@ -29,7 +30,7 @@ import { FollowerAppModuleId } from './di/follower-app.constants';
 //       slots.
 export const REQUEST_CHANNEL_PROVIDER:
    IFromFactoryCall<WrappedChan<ArtworkTaskDefinition>,
-      typeof FollowerAppModuleId,
+      FollowerAppModuleType, string | symbol,
       (factory: IConcurrentWorkFactory) => WrappedChan<ArtworkTaskDefinition>> =
    {
       provide: TASK_REQUEST_CHANNEL_PROVIDER_TOKEN,
@@ -39,10 +40,10 @@ export const REQUEST_CHANNEL_PROVIDER:
       inject: [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN]
    };
 
-export const SUBMIT_PAINT_PLOTTER_SINK_PROVIDER:
-   IFromFactoryCall<WrappedChan<IncrementalPlotter>,
-      typeof FollowerAppModuleId,
-      (factory: IConcurrentWorkFactory) => WrappedChan<IncrementalPlotter>> =
+export const SUBMIT_PAINT_PLOTTER_SINK_PROVIDER =
+   // IFromFactoryCall<AsyncSink<IncrementalPlotter>,
+   //    FollowerAppModuleType, string | symbol,
+   //    (factory: IConcurrentWorkFactory) => AsyncSink<IncrementalPlotter>> =
    {
       provide: SUBMIT_PAINT_PLOTTER_SINK_PROVIDER_TOKEN,
       useFactory: (concurrentFactory: IConcurrentWorkFactory) => {
@@ -51,32 +52,19 @@ export const SUBMIT_PAINT_PLOTTER_SINK_PROVIDER:
       inject: [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN],
    };
 
-export const PLOT_PROGRESS_CHANNEL_PROVIDER:
-   IFromFactoryCall<WrappedChan<any, IncrementalPlotProgress>,
-      typeof FollowerAppModuleId,
-      (factory: IConcurrentWorkFactory) => WrappedChan<IncrementalPlotProgress>> =
+export const PLOTTER_PROGRESS_CHANNEL_PROVIDER =
+   // IFromFactoryCall<WrappedChan<any, IncrementalPlotProgress>,
+   //    FollowerAppModuleType,
+   //    (factory: IConcurrentWorkFactory) => WrappedChan<IncrementalPlotProgress>> =
    {
-      provide: PLOT_PROGRESS_CHANNEL_PROVIDER_TOKEN,
+      provide: PLOTTER_PROGRESS_CHANNEL_PROVIDER_TOKEN,
       useFactory: (concurrentFactory: IConcurrentWorkFactory) => {
          return concurrentFactory.createChan<IncrementalPlotProgress>();
       },
       inject: [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN],
    };
 
-export const PLOT_COMPLETE_CHANNEL_PROVIDER:
-   IFromFactoryCall<WrappedChan<any, IncrementalPlotProgress>,
-      typeof FollowerAppModuleId,
-      (factory: IConcurrentWorkFactory) => WrappedChan<IncrementalPlotProgress>> =
-   {
-      provide: PLOT_COMPLETE_CHANNEL_PROVIDER_TOKEN,
-      useFactory: (concurrentFactory: IConcurrentWorkFactory) => {
-         return concurrentFactory.createChan<IncrementalPlotProgress>();
-      },
-      inject: [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN],
-   };
-
-export const plotCompleteChannelProvider: NestProvider<IAdapter<Chan<any, IncrementalPlotter>>,
-   AsyncFunc<[IConcurrentWorkFactory], IAdapter<Chan<IncrementalPlotter>>>> =
+export const PLOTTER_COMPLETED_CHANNEL_PROVIDER =
    {
       provide: PLOTTER_COMPLETED_CHANNEL_PROVIDER_TOKEN,
       useFactory:
@@ -84,17 +72,17 @@ export const plotCompleteChannelProvider: NestProvider<IAdapter<Chan<any, Increm
             return concurrentFactory.createChan<IncrementalPlotter>();
          },
       inject:
-         [CONCURRENT_WORK_FACTORY]
+         [CONCURRENT_WORK_FACTORY_PROVIDER_TOKEN]
    };
 
-export const plotCompleteMonitorProvider: NestProvider<IChanMonitor<IncrementalPlotter>,
-   AsyncFunc<[IConcurrentWorkFactory, IAdapter<Chan<IncrementalPlotter>>],
-      IChanMonitor<IncrementalPlotter>>> =
+export const PLOTTER_COMPLETED_MONITOR_PROVIDER = // : NestProvider<IChanMonitor<IncrementalPlotter>,
+   // AsyncFunc<[IConcurrentWorkFactory, WrappedChan<IncrementalPlotter>],
+   //    IChanMonitor<IncrementalPlotter>>> =
    {
       provide: PLOTTER_COMPLETED_MONITOR_PROVIDER_TOKEN,
       useFactory: async (
          concurrentFactory: IConcurrentWorkFactory,
-         progressChan: IAdapter<Chan<any, IncrementalPlotter>>) => {
+         progressChan: WrappedChan<IncrementalPlotter>) => {
          return concurrentFactory.createMonitor<IncrementalPlotter>(
             progressChan.unwrap()
          );
@@ -103,13 +91,13 @@ export const plotCompleteMonitorProvider: NestProvider<IChanMonitor<IncrementalP
          [CONCURRENT_WORK_FACTORY, PLOTTER_COMPLETED_CHANNEL_PROVIDER_TOKEN]
    };
 
-export const renderPolicyLookupProvider: NestProvider<(uuid: UUID) => IModelRenderingPolicy,
-   (calc: ICanvasCalculator) => (uuid: UUID) => IModelRenderingPolicy> =
+export const RENDER_SERVICE_PROVIDER = //: NestProvider<(uuid: UUID) => IModelRenderingPolicy,
+   // (calc: ICanvasCalculator) => (uuid: UUID) => IModelRenderingPolicy> =
    {
-      provide: RENDER_POLICY_LOOKUP_PROVIDER_TOKEN,
+      provide: RENDER_SERVICE_PROVIDER_TOKEN,
       useFactory: (calc: ICanvasCalculator) => {
-         const retVal = calc.create(
-            5000, {
+         const plotGridData = calc.computePoints(
+            {
                pixelHeight: 400,
                pixelWidth: 400
             }, {
@@ -118,18 +106,18 @@ export const renderPolicyLookupProvider: NestProvider<(uuid: UUID) => IModelRend
                fitOrFill: 'square'
             }
          );
-         return (_uuid: UUID) => retVal;
+         return calc.compileForRuntime(plotGridData, 5000);
       },
       inject: [CanvasCalculator],
    };
 
-// export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasStoragePolicy,
-//    SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStoragePolicy>>> =
+// export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasStorageStrategy,
+//    SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStorageStrategy>>> =
 //    {
-//       provide: STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN,
+//       provide: STORAGE_SERVICE_PROVIDER_TOKEN,
 //       useFactory:
 //          (concurrentFactory: IConcurrentWorkFactory) => {
-//             const retVal: ICanvasStoragePolicy = new CanvasWriter(
+//             const retVal: ICanvasStorageStrategy = new FilesystemCanvasWriter(
 //                '/Users/jheinnic/Documents/randomArt3/20180313',
 //                directoryUtils,
 //                concurrentFactory.createLimiter(3, 10)
@@ -140,13 +128,13 @@ export const renderPolicyLookupProvider: NestProvider<(uuid: UUID) => IModelRend
 //       inject: [CONCURRENT_WORK_FACTORY]
 //    };
 
-export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasStoragePolicy,
-   SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStoragePolicy>>> =
+export const STORAGE_SERVICE_PROVIDER = // : NestProvider<(uuid: UUID) => ICanvasStoragePolicy,
+   // SyncFunc<[IConcurrentWorkFactory], SyncFunc<[UUID], ICanvasStoragePolicy>>> =
    {
-      provide: STORAGE_POLICY_LOOKUP_PROVIDER_TOKEN,
+      provide: STORAGE_SERVICE_PROVIDER_TOKEN,
       useFactory:
          (concurrentFactory: IConcurrentWorkFactory) => {
-            const retVal: ICanvasStoragePolicy = new CanvasWriter(
+            const retVal: ICanvasStorageStrategy = new FilesystemCanvasWriter(
                '/Users/jheinnic/Documents/randomArt3/20180320',
                directoryUtils,
                concurrentFactory.createLimiter(3, 10)
@@ -161,10 +149,10 @@ export const storagePolicyLookupProvider: NestProvider<(uuid: UUID) => ICanvasSt
 
 export const followerChannelProviders: Provider[] = [
    REQUEST_CHANNEL_PROVIDER,
-   submitPaintPlotterSinkProvider,
-   plotProgressChannelProvider,
-   plotCompleteChannelProvider,
-   plotCompleteMonitorProvider,
-   renderPolicyLookupProvider,
-   storagePolicyLookupProvider
+   SUBMIT_PAINT_PLOTTER_SINK_PROVIDER,
+   PLOTTER_PROGRESS_CHANNEL_PROVIDER,
+   PLOTTER_COMPLETED_CHANNEL_PROVIDER,
+   PLOTTER_COMPLETED_MONITOR_PROVIDER,
+   RENDER_SERVICE_PROVIDER,
+   STORAGE_SERVICE_PROVIDER
 ];
