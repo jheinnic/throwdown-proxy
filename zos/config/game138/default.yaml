@@ -235,7 +235,11 @@ jchptf:
     cloudinary:
       cloud_name: dwcg6g6c7
       api_key: 767797216479369
+      api_secret: 5AvEfQAwJUbjLjYpv9YDF-IZ2RU
     seedToDir:
-      dirRoot: randomArt3
-      hashAlgorithm: md5
+      prefixSuffixSeparator: _
+      prefixBeforeSuffix: true
+      fileNameEncoding: ascii
       bitsPerTier: 12:10:8
+      hashAlgorithm: md5
+      rootDir: randomArt3
