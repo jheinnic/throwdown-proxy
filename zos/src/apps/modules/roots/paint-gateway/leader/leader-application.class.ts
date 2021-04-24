@@ -3,13 +3,13 @@ import { cpus } from "os";
 import { Inject, Injectable } from '@nestjs/common';
 
 import { IResourceSemaphore } from '@jchptf/semaphore';
-import { WORKER_SEMAPHORE_PROVIDER } from './leader-application.constants';
+import { WORKER_SEMAPHORE_PROVIDER_TOKEN } from './leader-application.constants';
 
 
 @Injectable()
 export class LeaderApplication {
    constructor(
-      @Inject(WORKER_SEMAPHORE_PROVIDER) private readonly workerSemaphore: IResourceSemaphore<Worker>
+      @Inject(WORKER_SEMAPHORE_PROVIDER_TOKEN) private readonly workerSemaphore: IResourceSemaphore<Worker>
    )
    { }
 
