@@ -39,7 +39,7 @@ export class TrigramModelSeedStrategy extends AbstractModelSeedStrategy {
             freqSum.push(prefixSum[0]);
          }
       }).catch(function (err) {
-         if (err) console.log(err);
+         if (err) console.error(err);
       }).then(() => {
          this.on = true;
       })
