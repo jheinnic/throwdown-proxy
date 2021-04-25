@@ -1,7 +1,7 @@
-import {BitOutputStream} from "@thi.ng/bitstream";
-import * as merkleLib from "merkle-lib";
-import * as readline from "readline";
-import {SHA256Compress} from "./SHA256Compress";
+import { BitOutputStream } from '@thi.ng/bitstream';
+import * as merkleLib from 'merkle-lib';
+import * as readline from 'readline';
+import { SHA256Compress } from './SHA256Compress';
 
 const merkle =  merkleLib.default;
 

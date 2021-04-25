@@ -1,4 +1,4 @@
-import {BitOutputStream} from '@thi.ng/bitstream';
+import tBitOutputStream} from '@thi.ng/bitstream';
 import * as readline from 'readline';
 import {SHA256Compress} from './SHA256Compress';
 

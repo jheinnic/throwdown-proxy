@@ -1,4 +1,4 @@
-const range = require('rxjs').range;
+
 const interval = require('rxjs').interval;
 const take = require('rxjs/operators').take;
 const AsyncObservableIterator = require('./async-iterator.class').AsyncObservableIterator;

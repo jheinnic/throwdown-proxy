@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const BigNumber = require('bignumber.js');
 const cfg = BigNumber.config();
 cfg.RANGE[1] = 1000000000;
