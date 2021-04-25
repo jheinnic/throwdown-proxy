@@ -22,11 +22,6 @@ import { CANVAS_SEMAPHORE_RESOURCE_POOL } from './follower-app.providers';
          resolveGlobRoot: 'apps/config/**/!(*.d).{ts,js}',
          loadConfigGlob: process.env['NODE_ENV'] === 'production' ? './dist' : './dist',
       }),
-      ConfigModule.forFeature<typeof FollowerAppModuleId>({
-         forModule: FollowerAppModule,
-         resolveGlobRoot: 'apps/config/**/!(*.d).{ts,js}',
-         loadConfigGlob: process.env['NODE_ENV'] === 'production' ? './dist' : './dist',
-      }),
       SemaphoreModule.forFeature<IAdapter<Canvas>, typeof FollowerAppModuleId>({
          forModule: FollowerAppModuleId,
          [SEMAPHORE_RESOURCE_POOL]: {

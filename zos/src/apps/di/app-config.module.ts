@@ -7,7 +7,6 @@ import { APP_CONFIG_MODULE_ID } from './app-config.constants';
 import { DynamicProviderBindingStyle, MODULE_ID } from '@jchptf/nestjs';
 
 @Module({
-
    imports: [
       ConfigModule.forRootWithFeature({
          forModule: AppConfigModule,

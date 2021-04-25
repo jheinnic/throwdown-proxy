@@ -1,11 +1,11 @@
-import {injectable} from 'inversify';
+// import {injectable} from 'inversify';
 import {co} from 'co';
 import {Canvas} from 'canvas';
 import {any, Chan, chan} from 'medium';
 import {IncrementalPlotterFactory} from '../interface';
 import {AssignCanvasRequest, PaintToCanvasRequest} from '../messages';
 
-@injectable()
+// @injectable()
 export class RandomArtPainter {
    // @ts-ignore
    private inputRequestChannel: Chan<PaintToCanvasRequest>;
@@ -16,8 +16,8 @@ export class RandomArtPainter {
 
    constructor(
       inputRequestChannel: Chan<PaintToCanvasRequest>,
-      plotGenerator: IncrementalPlotterFactory,
-      // concurrentWorkFactory: IConcurrentWorkFactory,
+      plotGenerator: IncrementalPlotterFactory
+      // concurrentWorkFactory: IConcurrentWorkFactory
    ) {
       this.inputRequestChannel = inputRequestChannel;
       this.plotGenerator = plotGenerator;

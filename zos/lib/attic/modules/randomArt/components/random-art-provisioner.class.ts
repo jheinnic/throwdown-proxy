@@ -1,4 +1,4 @@
-import {injectable} from 'inversify';
+// import {injectable} from 'inversify';
 import {IConcurrentWorkFactory} from '@jchptf/coroutines';
 import {AssignCanvasRequest} from '../messages';
 import {IncrementalPlotterFactory} from '../interface';
@@ -6,7 +6,7 @@ import {co} from 'co';
 import {Canvas} from 'canvas';
 import {any, Chan} from 'medium';
 
-@injectable()
+// @injectable()
 export class RandomArtCanvasManager {
    // @ts-ignore
    private inputTaskChannel: Chan<AssignCanvasRequest>;

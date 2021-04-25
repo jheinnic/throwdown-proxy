@@ -1,4 +1,4 @@
-import {injectable} from 'inversify';
+// import {injectable} from 'inversify';
 import {Iterable} from 'ix';
 import {generate, IterableX} from 'ix/iterable';
 import {flatMap} from 'ix/iterable/pipe/flatmap';
@@ -12,7 +12,7 @@ import {
 } from '../interface';
 import {PointMapping} from './point-mapping.class';
 
-@injectable()
+// @injectable()
 export class CanvasCalculator implements ICanvasCalculator
 {
    /**

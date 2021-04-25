@@ -11,8 +11,8 @@ import ndarray from 'ndarray';
 import {stepRange} from '../../../../../src/infrastructure/lib';
 import {PlottingPartialObserver} from './plotting-partial-observer.class';
 import {
-   IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory, MappedPoint,
-   IncrementalPlotProgress, PlotGridData
+   IncrementalPlotObserver, IncrementalPlotter, IncrementalPlotterFactory,
+   IncrementalPlotProgress, PlotGridData, MappedPoint
 } from '../interface';
 
 export class PointMapping implements IncrementalPlotterFactory

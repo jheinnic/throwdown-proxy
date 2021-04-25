@@ -1,4 +1,4 @@
-import {IterableX} from '../../../node_modules/ix/iterable/iterablex';
+import {IterableX} from 'ix/iterable';
 
 class StepRangeIterable extends IterableX<[number, number]> {
    private _start: number;
