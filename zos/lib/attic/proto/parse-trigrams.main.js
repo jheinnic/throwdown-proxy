@@ -26,11 +26,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 // @ts-ignore
 var co_stream_1 = require("co-stream");
-var sources_1 = require("../../../src/infrastructure/randomize/sources");
+var index_1 = require("../../../src/infrastructure/randomize/sources/index");
 var bs = require("binary-search");
 var co_1 = require("co");
 var trigrams = [];
@@ -42,7 +42,7 @@ co_1.co(function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                input = fs.createReadStream('../../english_trigrams.txt'), reader = new co_stream_1.LineReader(input), start = Date.now();
+                input = fs.createReadStream('../../english_trigrams.txt'), reader = new co_stream_1.cs.LineReader(input), start = Date.now();
                 _a.label = 1;
             case 1: return [4 /*yield*/, reader.read()];
             case 2:
@@ -58,7 +58,7 @@ co_1.co(function () {
                 return [2 /*return*/];
         }
     });
-})["catch"](function (err) {
+}).catch(function (err) {
     if (err)
         console.log(err);
 })
@@ -73,7 +73,7 @@ co_1.co(function () {
     //    }, {}));
     .then(function () {
     console.log('Fin!');
-    var foo = new sources_1.IsaacCSPRNG([93, 84, 891, 9227, 292, 19, 9283, 173, 842]);
+    var foo = new index_1.IsaacCSPRNG([93, 84, 891, 9227, 292, 19, 9283, 173, 842]);
     for (var ii = 0; ii < 1000; ii++) {
         var prefix = '';
         var suffix = '';
@@ -91,18 +91,11 @@ co_1.co(function () {
             prefix = prefix + trigrams[pIdx];
             suffix = suffix + trigrams[sIdx];
         }
-        prefix = prefix.toLowerCase();
-        suffix = suffix.toLowerCase();
-
         console.log(prefix + ' ' + suffix);
     }
     console.log(prefixSum);
     var length = trigrams.length;
     for (var ii = 0; ii < length; ii++) {
-        fs.appendFile('trigram_prefix_sums.dat', trigrams[ii] + " " + freqSum[ii] + "\n", function(err, flag) {
-            if (!! err) {
-                console.error(err);
-            }
-        });
+        fs.writeFileSync('trigram_prefix_sums.dat', trigrams[ii] + " " + freqSum[ii] + "\n");
     }
 });
