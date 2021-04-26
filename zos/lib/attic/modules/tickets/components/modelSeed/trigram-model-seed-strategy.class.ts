@@ -59,8 +59,9 @@ export class TrigramModelSeedStrategy extends AbstractModelSeedStrategy {
       const words = Math.floor(bitsToUse / 32);
       const sourceBits = new Uint32Array(selectedBytes.readWords(words, 32));
       const output = new Uint8Array(3*words);
+      const scale = 1.0 * this.prefixSum[0] / ((1 << 32) - 1);
       for (let ii=0, jj=0; ii < words; ii++, jj+=3 ) {
-         const nextP = sourceBits[ii] % this.prefixSum[0];
+         const nextP = Math.floor(sourceBits[ii] * scale);
          let pIdx = bs(this.freqSum, nextP, naturalOrder);
          if (pIdx < 0) {
             pIdx = -1 * (
