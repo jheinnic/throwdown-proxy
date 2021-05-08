@@ -147,7 +147,7 @@
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.1",
     "karma-jasmine": "~1.1.1",
-    "ng-packagr": "^3.0.1",
+    "ng-packagr": "^10.1.1",
     "node-pre-gyp": "^0.10.0",
     "nodemon": "^1.17.5",
     "solc": "^0.4.24",
