@@ -76,7 +76,7 @@
     "json5": "^2.0.1",
     "kismatch": "^0.0.83",
     "machina": "^4.0.2",
-    "mathjs": "^5.1.2",
+    "mathjs": "^7.5.1",
     "medium": "^1.0.2",
     "merkle-lib": "^2.0.10",
     "merkle-tree-payment-pool": "^1.0.1",
