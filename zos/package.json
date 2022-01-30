@@ -62,7 +62,7 @@
     "fluent-interface-builder": "^2.0.1",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
-    "grpc": "1.18.0",
+    "grpc": "1.24.9",
     "harmony-reflect": "^1.6.1",
     "hashring": "^3.2.0",
     "hdkey": "^1.0.0",
