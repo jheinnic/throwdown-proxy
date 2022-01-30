@@ -84,7 +84,7 @@
     "jsprim": "^1.4.1",
     "keycloak-angular": "^4.0.0-beta.1",
     "keycloak-js": "4.0.0-beta.2",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.21",
     "mathjs": "^7.5.1",
     "medium": "^1.0.2",
     "ndarray": "^1.0.18",
