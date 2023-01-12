@@ -37,7 +37,7 @@
     "chanel": "^2.2.0",
     "class-transformer": "^0.1.9",
     "class-transformer-validator": "^0.6.0",
-    "class-validator": "^0.9.1",
+    "class-validator": "^0.14.0",
     "cloudinary": "^1.13.2",
     "co-limiter": "^1.0.3",
     "co-priority-queue": "^1.0.3",
